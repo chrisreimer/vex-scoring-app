@@ -33,15 +33,18 @@ let yC=667/2;
 let extraSize=0.81
 
 let blueOffset = 0;
+let labelsOn=false;
+  let labels=['A','B','C','D','E','F','G','H','I']
+  let labelToggle
 
 let gear;
 
 function preload(){
-  gear=loadImage('https://vexscoring.app//gear.png')
+  gear=loadImage('/gear.png')
   //gear=loadImage('https://drive.google.com/file/d/1oZfHtFR_aJ2bLwVM_qLet3yyWAudr3Rl/view?usp=sharing')
-regular=loadFont('https://vexscoring.app//NEXT%20ART_Regular.otf')
-semibold=loadFont('https://vexscoring.app//NEXT%20ART_SemiBold.otf')
-bold=loadFont('https://vexscoring.app//NEXT%20ART_Bold.otf')
+regular=loadFont('/NEXT%20ART_Regular.otf')
+semibold=loadFont('/NEXT%20ART_SemiBold.otf')
+bold=loadFont('/NEXT%20ART_Bold.otf')
 }
 
 
@@ -81,6 +84,9 @@ menuB[2] = new Button(-79.69, 233.45, 375 * 0.375, 667 * 0.2, 667 * 0.015, "Remo
 menuB[3] = new Button(79.69, 233.45, 375 * 0.375, 667 * 0.2, 375 * 0.015, "ORCAH", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
 back = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "«", color(0, 0), color(210), 667 * 0.02, 667 * 0.06, color(50), color(45));
 set = new Button(154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40), color(45));
+
+labelToggle = new Button(0, -100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Goal Labels: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.065, color(50), color(45));
+
 //print("loaded")
 
   //fullScreen();
@@ -162,6 +168,9 @@ function nmatch() {
   }
 
   fields[0].update();
+  if(goalSelected==-1){
+    if(labelsOn)fieldLabels();
+  }
 }
 
 function skills() {
@@ -177,6 +186,10 @@ function skills() {
     goalSelected = -1;
   }
   fields[1].update();
+    if(goalSelected==-1)
+    {
+      if(labelsOn)fieldLabels();
+    }
 }
 
 function remote() {
@@ -200,8 +213,10 @@ function remote() {
     } else if (fieldSelected != -1) fieldSelected = -1;
     else appState = 0;
   }
-
   rField[0].update();
+    if(goalSelected==-1){
+      if(labelsOn)fieldLabels();
+    }
 }
 
 function orcah() {
@@ -225,6 +240,9 @@ function orcah() {
     else appState = 0;
   }
   rField[1].update();
+    if(goalSelected==-1){
+      if(labelsOn)fieldLabels();
+    }
 }
 
 function setting() {
@@ -232,6 +250,19 @@ function setting() {
   //textSize(15*sF)
   fill(200);
   text("Settings", xC, yC - 288.81 * sF);
+  labelToggle.drawButton();
+  if(labelToggle.clicked){
+    if(labelsOn){
+      labelsOn=false
+      labelToggle.bText="Goal Labels: OFF"
+      labelToggle.s=color(0,0)
+    }
+    else {
+      labelsOn=true
+      labelToggle.bText="Goal Labels: ON"
+      labelToggle.s=color(210)
+    }
+  }
   back.drawButton();
   if (back.clicked) appState = 0;
   /*
@@ -284,10 +315,16 @@ function keyReleased() {
 }
 
 
-
-
-
-
+function fieldLabels(){
+  textFont(regular,20*sF)
+  fill(210);
+  noStroke();
+  for(let i=0;i<9;i++){
+    //text(labels[i],xC+((i%3-1)*375*.25-20)*sF,yC+((floor(i/3))*375*.25-667*.2-10)*sF)
+    if(appState==1||appState==2)text(labels[i],xC+((i%3-1)*375*.25-27)*sF,yC+((floor(i/3))*375*.25-667*.2+40)*sF)
+    else if(appState>=3) text(labels[i],xC+((i%3-1)*375*.25-27)*sF,yC+((floor(i/3))*375*.25-667*.2+65)*sF)
+  }
+}
 
 
 
@@ -970,6 +1007,12 @@ class Goal {
     stroke(200, 200, 0);
     fill(250, 250, 0);
     rect(xC + (this.ID % 3 * 375 * 0.06 + 375 * 0.29) * sF, yC + (floor(this.ID / 3.0) % 3 * 375 * 0.06 - 299.75) * sF, 375 * 0.06 * sF, 375 * 0.06 * sF, 375 * 0.02 * sF);
+    if(labelsOn){
+      fill(40)
+      noStroke();
+      textFont(semibold,20*sF)
+      text(labels[this.ID],xC + (this.ID % 3 * 375 * 0.06 + 375 * 0.29) * sF, yC + (floor(this.ID / 3.0) % 3 * 375 * 0.06 - 299.75+7) * sF);
+    }
   }
 
 
@@ -1620,4 +1663,3 @@ class remoteField {
     } else this.rFields[r].resetField(t);
   }
 }
-
