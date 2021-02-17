@@ -26,11 +26,11 @@ let blueOffset = 0;
 let gear;
 
 function preload(){
-  gear=loadImage('https://www.chrisreimer.ca/files/gear.png')
+  gear=loadImage('https://chrisreimer.github.io/vex-scoring-app/gear.png')
   //gear=loadImage('https://drive.google.com/file/d/1oZfHtFR_aJ2bLwVM_qLet3yyWAudr3Rl/view?usp=sharing')
-regular=loadFont('https://www.chrisreimer.ca/files/NEXTARTRegular.otf')
-semibold=loadFont('https://www.chrisreimer.ca/files/NEXTARTSemiBold.otf')
-bold=loadFont('https://www.chrisreimer.ca/files/NEXTARTBold.otf')
+regular=loadFont('https://chrisreimer.github.io/vex-scoring-app/NEXTARTRegular.otf')
+semibold=loadFont('https://chrisreimer.github.io/vex-scoring-app/NEXTARTSemiBold.otf')
+bold=loadFont('https://chrisreimer.github.io/vex-scoring-app/NEXTARTBold.otf')
 }
 
 
