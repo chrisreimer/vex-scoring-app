@@ -30,16 +30,18 @@ let pSF;
 let xC=375/2;
 let yC=667/2;
 
+let extraSize=0.81
+
 let blueOffset = 0;
 
 let gear;
 
 function preload(){
-  gear=loadImage('/gear.png')
+  gear=loadImage('https://vexscoring.app//gear.png')
   //gear=loadImage('https://drive.google.com/file/d/1oZfHtFR_aJ2bLwVM_qLet3yyWAudr3Rl/view?usp=sharing')
-regular=loadFont('/NEXT%20ART_Regular.otf')
-semibold=loadFont('/NEXT%20ART_SemiBold.otf')
-bold=loadFont('/NEXT%20ART_Bold.otf')
+regular=loadFont('https://vexscoring.app//NEXT%20ART_Regular.otf')
+semibold=loadFont('https://vexscoring.app//NEXT%20ART_SemiBold.otf')
+bold=loadFont('https://vexscoring.app//NEXT%20ART_Bold.otf')
 }
 
 
@@ -309,6 +311,16 @@ class BallCounter {
     this.blueUp.sWeight = 667 * 0.004 * this.scale * 2;
     this.blueDown.sWeight = 667 * 0.004 * this.scale * 2;
     this.doubler = new Button(this.x, this.y + 667 * 0.26 * this.scale, 375 * 0.6 * this.scale, 667 * 0.08 * this.scale, 667 * 0.02, "Not Doubled", color(100), color(210), 667 * 0.015 * this.scale, 375 * 0.06 * this.scale, color(50), color(45));
+    if(this.scale==extraSize){
+      this.redUp.x-=80;
+      this.redDown.x-=80;
+      this.blueUp.x+=80;
+      this.blueDown.x+=80;
+      this.redUp.y+=35;
+      this.blueUp.y+=35;
+      this.redDown.y-=40;
+      this.blueDown.y-=40;
+    }
   }
 
   drawCounter() {
@@ -321,12 +333,23 @@ class BallCounter {
       //textSize(375 * 0.1 * this.scale * sF)
       text(this.fieldNum, xC + this.x * sF, yC + (this.y - 667 * 0.05 * this.scale) * sF);
     }
-    fill(210, 30, 30);
-    stroke(250, 60, 60);
-    ellipse(xC + (this.x - this.scale * 375 * 0.14) * sF, yC + this.y * sF, 375 * 0.25 * this.scale * sF, 375 * 0.25 * this.scale * sF);
-    fill(30, 30, 210);
-    stroke(60, 60, 250);
-    ellipse(xC + (this.x + this.scale * 375 * 0.14) * sF, yC + this.y * sF, 375 * 0.25 * this.scale * sF, 375 * 0.25 * this.scale * sF);
+    if(this.scale!=extraSize){
+      fill(210, 30, 30);
+      stroke(250, 60, 60);
+      ellipse(xC + (this.x - this.scale * 375 * 0.14) * sF, yC + this.y * sF, 375 * 0.25 * this.scale * sF, 375 * 0.25 * this.scale * sF);
+      fill(30, 30, 210);
+      stroke(60, 60, 250);
+      ellipse(xC + (this.x + this.scale * 375 * 0.14) * sF, yC + this.y * sF, 375 * 0.25 * this.scale * sF, 375 * 0.25 * this.scale * sF);
+    }
+    else{
+      fill(210, 30, 30);
+      stroke(250, 60, 60);
+      ellipse(xC + (this.x - this.scale * 375 * 0.14) * sF, yC + (this.y+25)* sF, 375 * 0.25 * this.scale * sF, 375 * 0.25 * this.scale * sF);
+      fill(30, 30, 210);
+      stroke(60, 60, 250);
+      ellipse(xC + (this.x + this.scale * 375 * 0.14) * sF, yC + (this.y+25) * sF, 375 * 0.25 * this.scale * sF, 375 * 0.25 * this.scale * sF);
+    }
+
     this.redUp.drawButton();
     this.redDown.drawButton();
     this.blueUp.drawButton();
@@ -338,8 +361,16 @@ class BallCounter {
     //textFont(dual,width*.2*scale);
     textFont(regular, 375 * 0.2 * this.scale * sF);
     //textSize(375 * 0.1 * this.scale * sF)
+    if(this.scale!=extraSize){
     text(this.redCount, xC + (this.x - this.scale * 375 * 0.14) * sF, yC + (this.y + this.scale * 667 * 0.0375) * sF);
     text(this.blueCount, xC + (this.x + this.scale * 375 * 0.14) * sF, yC + (this.y + this.scale * 667 * 0.0375) * sF);
+  }
+  else{
+    text(this.redCount, xC + (this.x - this.scale * 375 * 0.14) * sF, yC + (this.y + this.scale * 667 * 0.0375+25) * sF);
+    text(this.blueCount, xC + (this.x + this.scale * 375 * 0.14) * sF, yC + (this.y + this.scale * 667 * 0.0375+25) * sF);
+    textFont(regular,33*this.scale*sF)
+    text("4-7 Balls",xC,yC+(this.y-30)*sF)
+  }
   }
 
   setScale(newScale, amount, i) {
@@ -819,7 +850,7 @@ class Goal {
     this.mainB = [];
     this.optionB = [];
 
-    this.extras=new BallCounter(0,260,0.6);
+    this.extras=new BallCounter(0,260,extraSize);
     this.extraBalls=[0,0,0];
 
     this.pos = new Position(((id % 3 - 1) * 375 * 0.25), floor(id / 3) * 375 * 0.25 - 667 * 0.2);
@@ -833,8 +864,8 @@ class Goal {
     this.mainB[2] = new Button(0, 97.025, 375 * 0.3, 375 * 0.3, 375 * 0.3, "", color(0, 0), color(0, 0), 0, 1, color(0, 0), color(0, 0));
     for (let i = 0; i < 3; i++) {
       this.mainB[i].sWeight = 667 * 0.007;
-      this.optionB[i] = new Button(-375 * 0.2, -142.975 + 375 * 0.32 * i, 375 * 0.15, 375 * 0.15, 375 * 0.15, "", color(0, 0), color(0, 0), 0, 1, color(0, 0), color(0, 0));
-      this.optionB[i + 3] = new Button(375 * 0.2, -142.975 + 375 * 0.32 * i, 375 * 0.15, 375 * 0.15, 375 * 0.15, "", color(0, 0), color(0, 0), 0, 1, color(0, 0), color(0, 0));
+      this.optionB[i] = new Button(-375 * 0.2, -142.975 + 375 * 0.32 * i, 375 * 0.15, 375 * 0.15, 375 * 0.15, "+", color(0, 0), color(210,70), 17, 50, color(0, 0), color(0, 0));
+      this.optionB[i + 3] = new Button(375 * 0.2, -142.975 + 375 * 0.32 * i, 375 * 0.15, 375 * 0.15, 375 * 0.15, "+", color(0, 0), color(210,70), 17, 50, color(0, 0), color(0, 0));
       this.circularBalls = true;
       this.mainB[i].circle = this.circularBalls;
       this.optionB[i].circle = this.circularBalls;
@@ -1589,3 +1620,4 @@ class remoteField {
     } else this.rFields[r].resetField(t);
   }
 }
+
