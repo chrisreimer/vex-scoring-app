@@ -619,17 +619,15 @@ class Field {
       if(goalSelected==-1){
       fill(200,25,25);
       stroke(250,60,60);
-      ellipse(xC+110*sF,yC-310*sF,20*sF,20*sF)
+      ellipse(xC+110*sF,yC-298*sF,20*sF,20*sF)
       fill(25,25,200);
       stroke(60,60,250);
-      ellipse(xC+110*sF,yC-280*sF,20*sF,20*sF)
+      ellipse(xC+110*sF,yC-268*sF,20*sF,20*sF)
       fill(210);
       noStroke();
-      textAlign(LEFT);
       textFont(regular,25*sF);
-      text(this.redBalls,xC+130*sF,yC-300*sF)
-      text(this.blueBalls,xC+130*sF,yC-270*sF)
-      textAlign(CENTER)
+      text(this.redBalls,xC+140*sF,yC-288*sF)
+      text(this.blueBalls,xC+140*sF,yC-258*sF)
     }
     }
     if (goalSelected == -1 && appState == 1) {
