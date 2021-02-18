@@ -40,11 +40,11 @@ let labelsOn=false;
 let gear;
 
 function preload(){
-  gear=loadImage('/gear.png')
+  gear=loadImage('https://vexscoring.app//gear.png')
   //gear=loadImage('https://drive.google.com/file/d/1oZfHtFR_aJ2bLwVM_qLet3yyWAudr3Rl/view?usp=sharing')
-regular=loadFont('/NEXT%20ART_Regular.otf')
-semibold=loadFont('/NEXT%20ART_SemiBold.otf')
-bold=loadFont('/NEXT%20ART_Bold.otf')
+regular=loadFont('https://vexscoring.app//NEXT%20ART_Regular.otf')
+semibold=loadFont('https://vexscoring.app//NEXT%20ART_SemiBold.otf')
+bold=loadFont('https://vexscoring.app//NEXT%20ART_Bold.otf')
 }
 
 
@@ -615,6 +615,22 @@ class Field {
       else if (this.redScore > 126) fill(250, 60, 60);
       noStroke();
       text(this.redScore, xC, yC - 667 * 0.35 * sF);
+
+      if(goalSelected==-1){
+      fill(200,25,25);
+      stroke(250,60,60);
+      ellipse(xC+110*sF,yC-310*sF,20*sF,20*sF)
+      fill(25,25,200);
+      stroke(60,60,250);
+      ellipse(xC+110*sF,yC-280*sF,20*sF,20*sF)
+      fill(210);
+      noStroke();
+      textAlign(LEFT);
+      textFont(regular,25*sF);
+      text(this.redBalls,xC+130*sF,yC-300*sF)
+      text(this.blueBalls,xC+130*sF,yC-270*sF)
+      textAlign(CENTER)
+    }
     }
     if (goalSelected == -1 && appState == 1) {
       //textFont(dual, height*.06);
