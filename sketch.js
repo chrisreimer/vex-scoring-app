@@ -947,16 +947,49 @@ class Goal {
     this.drawMiniMap();
     this.remoteC.redCount = this.remoteBalls[1];
     this.remoteC.blueCount = this.remoteBalls[2];
+
+
+    if(this.remoteBalls[1]==0){
+      this.remoteC.redDown.f=color(100)
+    }
+    else this.remoteC.redDown.f=color(210)
+
+    if(this.remoteBalls[2]==0){
+      this.remoteC.blueDown.f=color(100)
+    }
+    else this.remoteC.blueDown.f=color(210)
+
+    if(this.remoteBalls[1]==15){
+      this.remoteC.redUp.f=color(100)
+    }
+    else this.remoteC.redUp.f=color(210)
+
+    if(this.remoteBalls[2]==15){
+      this.remoteC.blueUp.f=color(100)
+    }
+    else this.remoteC.blueUp.f=color(210)
+
+    if((appState==4&&this.remoteBalls[1]+this.remoteBalls[2]==3)){
+      this.remoteC.redUp.f=color(100);
+      this.remoteC.blueUp.f=color(100);
+    }
+    else if(appState==4){
+      this.remoteC.redUp.f=color(210);
+      this.remoteC.blueUp.f=color(210);
+    }
+
     this.remoteC.drawCounter();
     if (this.remoteC.redUp.clicked) {
       this.remoteBalls[1]++;
       if (this.remoteBalls[1] > 15) this.remoteBalls[1] = 15;
+      if(appState==4&&this.remoteBalls[1]+this.remoteBalls[2]>3)this.remoteBalls[1]--;
     } else if (this.remoteC.redDown.clicked) {
       this.remoteBalls[1]--;
       if (this.remoteBalls[1] < 0) this.remoteBalls[1] = 0;
     } else if (this.remoteC.blueUp.clicked) {
       this.remoteBalls[2]++;
       if (this.remoteBalls[2] > 15) this.remoteBalls[2] = 15;
+      if(appState==4&&this.remoteBalls[1]+this.remoteBalls[2]>3)this.remoteBalls[2]--;
     } else if (this.remoteC.blueDown.clicked) {
       this.remoteBalls[2]--;
       if (this.remoteBalls[2] < 0) this.remoteBalls[2] = 0;
@@ -1066,13 +1099,30 @@ class Goal {
       if (this.mainB[i].clicked) this.balls[i] = 0;
     }
 
+    if(this.extraBalls[1]==0){
+      this.extras.redDown.f=color(100)
+    }
+    else this.extras.redDown.f=color(210)
+    if(this.extraBalls[2]==0){
+      this.extras.blueDown.f=color(100)
+    }
+    else this.extras.blueDown.f=color(210)
+    if(this.extraBalls[1]+this.extraBalls[2]==4){
+      this.extras.redUp.f=color(100)
+      this.extras.blueUp.f=color(100)
+    }
+    else {
+      this.extras.redUp.f=color(210)
+      this.extras.blueUp.f=color(210)
+    }
+
     this.extras.redCount=this.extraBalls[1];
-        this.extras.blueCount=this.extraBalls[2];
-        this.extras.drawCounter();
-        if(this.extras.redUp.clicked&&this.extraBalls[1]+this.extraBalls[2]<4)this.extraBalls[1]+=1;
-        else if(this.extras.redDown.clicked&&this.extraBalls[1]>0)this.extraBalls[1]-=1;
-        else if(this.extras.blueUp.clicked&&this.extraBalls[1]+this.extraBalls[2]<4)this.extraBalls[2]+=1;
-        else if(this.extras.blueDown.clicked&&this.extraBalls[2]>0)this.extraBalls[2]-=1;
+    this.extras.blueCount=this.extraBalls[2];
+    this.extras.drawCounter();
+    if(this.extras.redUp.clicked&&this.extraBalls[1]+this.extraBalls[2]<4)this.extraBalls[1]+=1;
+    else if(this.extras.redDown.clicked&&this.extraBalls[1]>0)this.extraBalls[1]-=1;
+    else if(this.extras.blueUp.clicked&&this.extraBalls[1]+this.extraBalls[2]<4)this.extraBalls[2]+=1;
+    else if(this.extras.blueDown.clicked&&this.extraBalls[2]>0)this.extraBalls[2]-=1;
 
 
     this.escape.drawButton();
@@ -1677,3 +1727,4 @@ class remoteField {
     } else this.rFields[r].resetField(t);
   }
 }
+
