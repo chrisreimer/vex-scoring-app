@@ -1075,6 +1075,16 @@ class Goal {
       this.balls[1] = this.balls[0];
       this.balls[0] = 0;
     }
+    if(this.extraBalls[1]*this.extraBalls[2]==0&&this.balls[2]==0&&this.extraBalls[1]+this.extraBalls[2]>0){
+      if(this.extraBalls[1]>0){
+        this.balls[2]=1;
+        this.extraBalls[1]-=1;
+      }
+      else if(this.extraBalls[2]>0){
+        this.balls[2]=2;
+        this.extraBalls[2]-=1;
+      }
+    }
   }
 
 
