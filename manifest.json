@@ -11,11 +11,11 @@
       "src": "/images/icons/72x72.png",
       "type": "image/png", "sizes": "72x72"
     },
-    {
-      "src": "/images/icons/96x96.png",
-      "type": "image/png", "sizes": "96x96"
-    },
-    {
+    {
+      "src": "/images/icons/96x96.png",
+      "type": "image/png", "sizes": "96x96"
+    },
+    {
       "src": "/images/icons/128x128.png",
       "type": "image/png","sizes": "128x128"
     },
