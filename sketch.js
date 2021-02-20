@@ -1,4 +1,3 @@
-
 let fields = [] //=new Field[2];
 let rField = [] //=new remoteField[2];
 let menuB=[] //=new Button[4];
@@ -26,17 +25,19 @@ let extraSize=0.81
 
 let blueOffset = 0;
 let labelsOn=false;
-  let labels=['A','B','C','D','E','F','G','H','I']
-  let labelToggle
+let labels=['A','B','C','D','E','F','G','H','I']
+let labelToggle
+
+let counterOn=false;
+let counterToggle
 
 let gear;
 
 function preload(){
-  gear=loadImage('https://vexscoring.app//gear.png')
-  //gear=loadImage('https://drive.google.com/file/d/1oZfHtFR_aJ2bLwVM_qLet3yyWAudr3Rl/view?usp=sharing')
-regular=loadFont('https://vexscoring.app//NEXT%20ART_Regular.otf')
-semibold=loadFont('https://vexscoring.app//NEXT%20ART_SemiBold.otf')
-bold=loadFont('https://vexscoring.app//NEXT%20ART_Bold.otf')
+  gear=loadImage('/gear.png')
+regular=loadFont('/NEXT%20ART_Regular.otf')
+semibold=loadFont('/NEXT%20ART_SemiBold.otf')
+bold=loadFont('/NEXT%20ART_Bold.otf')
 }
 
 
@@ -78,6 +79,7 @@ back = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "«",
 set = new Button(154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40), color(45));
 
 labelToggle = new Button(0, -100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Goal Labels: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.065, color(50), color(45));
+counterToggle = new Button(0, 0, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Ball Counter: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.065, color(50), color(45));
 
 //print("loaded")
 
@@ -253,6 +255,19 @@ function setting() {
       labelsOn=true
       labelToggle.bText="Goal Labels: ON"
       labelToggle.s=color(210)
+    }
+  }
+  counterToggle.drawButton();
+  if(counterToggle.clicked){
+    if(counterOn){
+      counterOn=false
+      counterToggle.bText="Ball Counter: OFF"
+      counterToggle.s=color(0,0)
+    }
+    else {
+      counterOn=true
+      counterToggle.bText="Ball Counter: ON"
+      counterToggle.s=color(210)
     }
   }
   back.drawButton();
@@ -608,20 +623,21 @@ class Field {
       noStroke();
       text(this.redScore, xC, yC - 667 * 0.35 * sF);
 
-      if(goalSelected==-1){
-      fill(200,25,25);
-      stroke(250,60,60);
-      ellipse(xC+110*sF,yC-298*sF,20*sF,20*sF)
-      fill(25,25,200);
-      stroke(60,60,250);
-      ellipse(xC+110*sF,yC-268*sF,20*sF,20*sF)
-      fill(210);
-      noStroke();
-      textFont(regular,25*sF);
-      text(this.redBalls,xC+140*sF,yC-288*sF)
-      text(this.blueBalls,xC+140*sF,yC-258*sF)
+
     }
-    }
+    if(goalSelected==-1&&counterOn&&(appState==1||appState==2)){
+    fill(200,25,25);
+    stroke(250,60,60);
+    ellipse(xC+110*sF,yC-298*sF,20*sF,20*sF)
+    fill(25,25,200);
+    stroke(60,60,250);
+    ellipse(xC+110*sF,yC-268*sF,20*sF,20*sF)
+    fill(210);
+    noStroke();
+    textFont(regular,25*sF);
+    text(this.redBalls,xC+140*sF,yC-288*sF)
+    text(this.blueBalls,xC+140*sF,yC-258*sF)
+  }
     if (goalSelected == -1 && appState == 1) {
       //textFont(dual, height*.06);
       textFont(regular, 375*.08*sF);
@@ -1719,4 +1735,5 @@ class remoteField {
     } else this.rFields[r].resetField(t);
   }
 }
+
 
