@@ -3,6 +3,7 @@ let rField = [] //=new remoteField[2];
 let menuB=[] //=new Button[4];
 let back
 let set
+let inf
 let appState = 0; //0=menu,1=match,2=skills,3=remote,4=ORCAH
 let goalSelected = -1; //-1=none,0-8=goal
 let fieldSelected = -1;
@@ -30,6 +31,9 @@ let labelToggle
 
 let counterOn=false;
 let counterToggle
+
+let orcahAnalog=false;
+let orcahToggle
 
 let pGoalSelected=[0,0,0,0];
 let pFieldSelected=[0,0]
@@ -80,9 +84,10 @@ menuB[2] = new Button(-79.69, 233.45, 375 * 0.375, 667 * 0.2, 667 * 0.015, "Remo
 menuB[3] = new Button(79.69, 233.45, 375 * 0.375, 667 * 0.2, 375 * 0.015, "ORCAH", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
 back = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "«", color(0, 0), color(210), 667 * 0.02, 667 * 0.06, color(50), color(45));
 set = new Button(154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40), color(45));
-
-labelToggle = new Button(0, -100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Goal Labels: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.065, color(50), color(45));
-counterToggle = new Button(0, 0, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Ball Counter: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.065, color(50), color(45));
+inf = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "?", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40), color(45));
+labelToggle = new Button(0, -100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Goal Labels: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
+counterToggle = new Button(0, 0, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Ball Counter: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
+orcahToggle = new Button(0, 100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "ORCAH Goals: Numbers", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
 
 //print("loaded")
 
@@ -125,6 +130,8 @@ function draw() {
     orcah();
   } else if (appState == -1) {
     setting();
+  } else if(appState==-2){
+    info();
   }
 }
 
@@ -149,6 +156,8 @@ function menu() {
   set.drawButton();
   if (set.clicked) appState = -1;
   image(gear,xC+154.15*sF, yC-300.15*sF,40*sF,40*sF);
+  inf.drawButton();
+  if(inf.clicked)appState=-2;
 }
 
 function nmatch() {
@@ -273,6 +282,17 @@ function setting() {
       counterToggle.s=color(210)
     }
   }
+  orcahToggle.drawButton();
+  if(orcahToggle.clicked){
+    if(orcahAnalog){
+      orcahAnalog=false
+      orcahToggle.bText="ORCAH Goals: Numbers"
+    }
+    else {
+      orcahAnalog=true
+      orcahToggle.bText="ORCAH Goals: Balls"
+    }
+  }
   back.drawButton();
   if (back.clicked) appState = 0;
   /*
@@ -284,6 +304,19 @@ function setting() {
   fill(60,60,250);
   rect(xC+20,yC,40,40);
   */
+}
+
+function info(){
+  textFont(regular, 30 * sF);
+  //textSize(15*sF)
+  fill(200);
+  text("Info", xC, yC - 288.81 * sF);
+  noStroke();
+  fill(210);
+  textSize(20*sF);
+  text("This website is setup as a\nProgressive Web App (PWA).\nThis means that it can be\ninstalled as an application\non mobile devices, and\nwill run while offline.\n\nOn Android devices there\nwill be an automatic pop-up\nasking if you want to add\nit to the Home Screen.\n\nTo download on iOS,\ntap the share button,\n(A square with an arrow\npointing up) and then\ntap 'Add to Home Screen'.",xC,yC-225)
+  back.drawButton();
+  if(back.clicked)appState=0;
 }
 
 function keyReleased() {
@@ -499,7 +532,7 @@ class Field {
     this.colours[0] = color(210);
     this.colours[1] = color(250, 30, 30);
     this.colours[2] = color(30, 30, 250);
-    this.auton = new Button(0, 173.42, 262.5, 667 * 0.08, 667 * 0.02, "Auton: Tied", color(0, 0), color(210), 667 * 0.015, 375 * 0.06, color(50), color(45));
+    this.auton = new Button(0, 173.42, 262.5, 667 * 0.08, 667 * 0.02, "Auton: Tied", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
     this.reset = new Button(-70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Field\nReset", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50), color(45));
     this.clear = new Button(70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Clear\nField", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50), color(45));
   }
@@ -1194,8 +1227,8 @@ class Goal {
 
   ballStroke(x) {
     if (x == 0) return color(180);
-    else if (x == 1) return color(230, 60, 60); //(200, 25, 25);
-    else if (x == 2) return color(60, 60, 230); //(25, 25, 200);
+    else if (x == 1) return color(250, 60, 60); //(200, 25, 25);
+    else if (x == 2) return color(60, 60, 250); //(25, 25, 200);
     return color(20, 190, 20);
   }
 
@@ -1252,20 +1285,38 @@ class Goal {
                 text("x2", xC+this.pos.x*sF, yC+(this.pos.y+15)*sF);
               }
             }
-      stroke(this.ballStroke(1));
-          strokeWeight(667 * 0.004*sF);
-      fill(250, 60, 60);
-      //noFill();
-      ellipse(xC + (this.pos.x - 375 * 0.04) * sF, yC + (this.pos.y + 667 * 0.05) * sF, 667 * 0.05 * sF, 667 * 0.05 * sF);
-      stroke(this.ballStroke(2));
-      fill(60, 60, 250);
-      ellipse(xC + (this.pos.x + 375 * 0.04) * sF, yC + (this.pos.y + 667 * 0.05) * sF, 667 * 0.05 * sF, 667 * 0.05 * sF);
-      fill(210);
-      noStroke();
-      textFont(semibold, 667*0.0175*2*sF);
-      //textSize(667 * 0.0175 * sF);
-      text(this.remoteBalls[1], xC + (this.pos.x - 375 * 0.04) * sF, yC + (this.pos.y + 667 * 0.062) * sF);
-      text(this.remoteBalls[2], xC + (this.pos.x + 375 * 0.04) * sF, yC + (this.pos.y + 667 * 0.062) * sF);
+
+      if(appState==4&&orcahAnalog){
+        strokeWeight(667 * 0.004*sF);
+        fill(this.ballColour(1))
+        stroke(this.ballStroke(1))
+        for(let i=0;i<this.remoteBalls[1];i++){
+          if(this.remoteBalls[2]==0)ellipse(xC + (this.pos.x) * sF, yC + (this.pos.y - 667 * 0.025 * (i-2)) * sF, 667 * 0.05 * sF, 667 * 0.05 * sF);
+          else ellipse(xC + (this.pos.x - 375 * 0.04) * sF, yC + (this.pos.y - 667 * 0.025 * (i-2)) * sF, 667 * 0.05 * sF, 667 * 0.05 * sF);
+        }
+        fill(this.ballColour(2));
+        stroke(this.ballStroke(2))
+        for(let i=0;i<this.remoteBalls[2];i++){
+          if(this.remoteBalls[1]==0)ellipse(xC + (this.pos.x) * sF, yC + (this.pos.y - 667 * 0.025 * (i-2)) * sF, 667 * 0.05 * sF, 667 * 0.05 * sF);
+          else ellipse(xC + (this.pos.x + 375 * 0.04) * sF, yC + (this.pos.y - 667 * 0.025 * (i-2)) * sF, 667 * 0.05 * sF, 667 * 0.05 * sF);
+        }
+      }
+      else {
+        stroke(this.ballStroke(1));
+        strokeWeight(667 * 0.004*sF);
+        fill(250, 60, 60);
+        //noFill();
+        ellipse(xC + (this.pos.x - 375 * 0.04) * sF, yC + (this.pos.y + 667 * 0.05) * sF, 667 * 0.05 * sF, 667 * 0.05 * sF);
+        stroke(this.ballStroke(2));
+        fill(60, 60, 250);
+        ellipse(xC + (this.pos.x + 375 * 0.04) * sF, yC + (this.pos.y + 667 * 0.05) * sF, 667 * 0.05 * sF, 667 * 0.05 * sF);
+        fill(210);
+        noStroke();
+        textFont(semibold, 667*0.0175*2*sF);
+        //textSize(667 * 0.0175 * sF);
+        text(this.remoteBalls[1], xC + (this.pos.x - 375 * 0.04) * sF, yC + (this.pos.y + 667 * 0.062) * sF);
+        text(this.remoteBalls[2], xC + (this.pos.x + 375 * 0.04) * sF, yC + (this.pos.y + 667 * 0.062) * sF);
+      }
     }
   }
 }
@@ -1376,7 +1427,7 @@ class remoteField {
         this.rFields[i] = new Field(i + 1, i);
       }
     }
-    this.autonAll = new Button(0, 667 * 0.26, 375 * 0.7, 667 * 0.08, 667 * 0.02, "Auton: Tied", color(0, 0), color(210), 667 * 0.015, 375 * 0.06, color(50), color(45));
+    this.autonAll = new Button(0, 667 * 0.26, 375 * 0.7, 667 * 0.08, 667 * 0.02, "Auton: Tied", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
     this.resetAll = new Button(-70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Reset\nAll", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50), color(45));
     this.clearAll = new Button(70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Clear\nAll", color(0, 0), color(210), -375 * 0.01, 375 * 0.06, color(50), color(45));
     this.offset1 = 375 * 0.275;
@@ -1778,4 +1829,3 @@ class remoteField {
     } else this.rFields[r].resetField(t);
   }
 }
-
