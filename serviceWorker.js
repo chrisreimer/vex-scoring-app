@@ -2,7 +2,7 @@ const staticScoringApp = "vex-scoring-app-v1"
 const assets = [
   "/",
   "/index.html",
-  "/sketch.js",
+  "/sketch2.js",
   "/gear.png",
   "/NEXT%20ART_Regular.otf",
   "/NEXT%20ART_SemiBold.otf",
