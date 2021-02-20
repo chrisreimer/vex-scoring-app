@@ -4,13 +4,13 @@
   "start_url": "index.html",
   "display": "fullscreen",
   "background_color": "#282828",
-  "theme_color": "#282828",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "/images/icons/72x72.png",
-      "type": "image/png", "sizes": "72x72"
-    },
+  "theme_color": "#282828",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/images/icons/72x72.png",
+      "type": "image/png", "sizes": "72x72"
+    },
     {
       "src": "/images/icons/96x96.png",
       "type": "image/png", "sizes": "96x96"
