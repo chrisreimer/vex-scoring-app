@@ -284,9 +284,8 @@ function setting() {
 }
 
 function keyReleased() {
-  /*
-  if (keyCode == LEFT) {
-    println("left");
+  
+  if (keyCode == LEFT_ARROW) {
     if (goalSelected != -1) goalSelected = (goalSelected + 8) % 9;
     else {
       if (fieldSelected != -1) {
@@ -297,8 +296,7 @@ function keyReleased() {
         }
       }
     }
-  } else if (keyCode == RIGHT) {
-    println("right");
+  } else if (keyCode == RIGHT_ARROW) {
     if (goalSelected != -1) goalSelected = (goalSelected + 1) % 9;
     else {
       if (fieldSelected != -1) {
@@ -309,7 +307,7 @@ function keyReleased() {
         }
       }
     }
-  } else if (keyCode == DOWN) {
+  } else if (keyCode == DOWN_ARROW) {
     if (goalSelected != -1) {
       goalSelected = -1;
       if (appState == 3) rField[0].resetCounterScale();
@@ -318,7 +316,7 @@ function keyReleased() {
       fieldSelected = -1;
     } else appState = 0;
   }
-  */
+  
 }
 
 
@@ -564,6 +562,15 @@ class Field {
     else if (this.remoteTeam == 2) stroke(60, 60, 250);
     rect(xC, yC - 6.3 * sF, 375 * 0.7 * sF, 375 * 0.7 * sF, 667 * 0.02 * sF);
 
+    if(appState==1||appState==2){
+      noStroke();
+      fill(30,120);
+      strokeWeight(10);
+      for(let i=0;i<9;i++){
+        ellipse(xC+(i%3-1)*375*.25*sF, yC+((floor(i/3)-1)*375*.25-6.3)*sF,35,35);
+      }
+    }
+    
     this.drawRows();
 
     for (let i = 0; i < 9; i++) {
