@@ -1,6 +1,6 @@
 {
-//"name": "Vex Scoring App",
-"short_name": "Scoring App",
+  "name": "Vex Scoring App",
+  "short_name": "Scoring App",
   "start_url": "index.html",
   "display": "fullscreen",
   "background_color": "#282828",
