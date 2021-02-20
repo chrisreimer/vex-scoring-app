@@ -31,6 +31,9 @@ let labelToggle
 let counterOn=false;
 let counterToggle
 
+let pGoalSelected=[0,0,0,0];
+let pFieldSelected=[0,0]
+
 let gear;
 
 function preload(){
@@ -284,7 +287,7 @@ function setting() {
 }
 
 function keyReleased() {
-  
+
   if (keyCode == LEFT_ARROW) {
     if (goalSelected != -1) goalSelected = (goalSelected + 8) % 9;
     else {
@@ -309,14 +312,28 @@ function keyReleased() {
     }
   } else if (keyCode == DOWN_ARROW) {
     if (goalSelected != -1) {
+      pGoalSelected[appState-1]=goalSelected;
       goalSelected = -1;
       if (appState == 3) rField[0].resetCounterScale();
       else if (appState == 4) rField[1].resetCounterScale();
     } else if (fieldSelected != -1) {
+      if(appState>=3)pFieldSelected[appState-3]=fieldSelected;
       fieldSelected = -1;
     } else appState = 0;
+  } else if(keyCode == UP_ARROW&&appState>0){
+    if(fieldSelected ==-1&&appState>2){
+      if(appState==3){
+        fieldSelected=pFieldSelected[0];
+      }
+      else if(appState==4){
+        fieldSelected=pFieldSelected[1];
+      }
+    }
+    else if(goalSelected==-1){
+      goalSelected=pGoalSelected[appState-1];
+    }
   }
-  
+
 }
 
 
@@ -563,14 +580,15 @@ class Field {
     rect(xC, yC - 6.3 * sF, 375 * 0.7 * sF, 375 * 0.7 * sF, 667 * 0.02 * sF);
 
     if(appState==1||appState==2){
-      noStroke();
-      fill(30,120);
-      strokeWeight(10);
-      for(let i=0;i<9;i++){
-        ellipse(xC+(i%3-1)*375*.25*sF, yC+((floor(i/3)-1)*375*.25-6.3)*sF,35,35);
-      }
+    noStroke();
+    fill(30,120);
+    strokeWeight(10);
+    for(let i=0;i<9;i++){
+    ellipse(xC+(i%3-1)*375*.25*sF, yC+((floor(i/3)-1)*375*.25-6.3)*sF,35,35);
     }
-    
+  }
+
+
     this.drawRows();
 
     for (let i = 0; i < 9; i++) {
@@ -1141,7 +1159,10 @@ class Goal {
 
 
     this.escape.drawButton();
-    if (this.escape.clicked) goalSelected = -1;
+    if (this.escape.clicked){
+      pGoalSelected[appState-1]=goalSelected;
+       goalSelected = -1;
+     }
   }
 
   leftOption(x) {
@@ -1396,12 +1417,17 @@ class remoteField {
     if (fieldSelected != -1 || goalSelected != -1) {
       this.escape.drawButton();
       if (this.escape.clicked) {
-        if (goalSelected == -1 && fieldSelected != -1) fieldSelected = -1;
+        if (goalSelected == -1 && fieldSelected != -1) {
+          if(appState==3)pFieldSelected[0]=fieldSelected;
+          else if(appState==4)pFieldSelected[1]=fieldSelected;
+          fieldSelected = -1;
+        }
         //else if(goalSelected!=-1&&fieldSelected==-1)goalSelected=-1;
         else {
           if (fieldSelected == -1) {
             this.resetCounterScale();
           }
+          pGoalSelected[appState-1]=goalSelected;
           goalSelected = -1;
         }
       }
@@ -1742,5 +1768,4 @@ class remoteField {
     } else this.rFields[r].resetField(t);
   }
 }
-
 
