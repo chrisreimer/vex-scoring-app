@@ -1,9 +1,9 @@
 {
   "name": "Vex Scoring App",
   "short_name": "Scoring App",
-  "start_url": "index.html",
-  "display": "fullscreen",
-  "background_color": "#282828",
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "background_color": "#282828",
   "theme_color": "#282828",
   "orientation": "portrait",
   "icons": [
