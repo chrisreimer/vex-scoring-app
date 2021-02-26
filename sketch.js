@@ -89,6 +89,32 @@ labelToggle = new Button(0, -100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Goal Label
 counterToggle = new Button(0, 0, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Ball Counter: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
 orcahToggle = new Button(0, 100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "ORCAH Goals: Numbers", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
 
+let labelSave = getItem('labelSave');
+if(!(labelSave===null)){
+  labelsOn=labelSave;
+  if(labelsOn){
+    labelToggle.bText="Goal Labels: ON"
+    labelToggle.s=color(210)
+  }
+}
+
+let counterSave = getItem('counterSave');
+if(!(counterSave===null)){
+  counterOn=counterSave;
+  if(counterOn){
+    counterToggle.bText="Ball Counter: ON"
+    counterToggle.s=color(210)
+  }
+}
+
+let orcahSave = getItem('orcahSave');
+if(!(orcahSave===null)){
+  orcahAnalog=orcahSave;
+  if(orcahAnalog){
+    orcahToggle.bText="ORCAH Goals: Balls"
+  }
+}
+
 //print("loaded")
 
   //fullScreen();
@@ -262,11 +288,13 @@ function setting() {
       labelsOn=false
       labelToggle.bText="Goal Labels: OFF"
       labelToggle.s=color(0,0)
+      storeItem('labelSave',false)
     }
     else {
       labelsOn=true
       labelToggle.bText="Goal Labels: ON"
       labelToggle.s=color(210)
+      storeItem('labelSave',true)
     }
   }
   counterToggle.drawButton();
@@ -275,11 +303,13 @@ function setting() {
       counterOn=false
       counterToggle.bText="Ball Counter: OFF"
       counterToggle.s=color(0,0)
+      storeItem('counterSave',false)
     }
     else {
       counterOn=true
       counterToggle.bText="Ball Counter: ON"
       counterToggle.s=color(210)
+      storeItem('counterSave',true)
     }
   }
   orcahToggle.drawButton();
@@ -287,10 +317,12 @@ function setting() {
     if(orcahAnalog){
       orcahAnalog=false
       orcahToggle.bText="ORCAH Goals: Numbers"
+      storeItem('orcahSave',false)
     }
     else {
       orcahAnalog=true
       orcahToggle.bText="ORCAH Goals: Balls"
+      storeItem('orcahSave',true)
     }
   }
   back.drawButton();
