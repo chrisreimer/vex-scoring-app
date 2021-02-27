@@ -1,3 +1,5 @@
+console.log("0.0.1");
+
 /*
 const staticScoringApp = "vex-scoring-app-v1"
 const assets = [
