@@ -715,7 +715,7 @@ class Field {
 
 
     }
-    if(goalSelected==-1&&counterOn&&(appState==1||appState==2)){
+    if(goalSelected==-1&&counterOn&&(appState==1||appState==2||appState==3)){
     fill(200,25,25);
     stroke(250,60,60);
     ellipse(xC+110*sF,yC-298*sF,20*sF,20*sF)
@@ -1657,7 +1657,7 @@ class remoteField {
 
   drawScore() {
 
-    if (goalSelected == -1) {
+    if (goalSelected == -1&&!(remoteType==2&&counterOn)) {
       strokeWeight(667 * 0.004 * sF);
       fill(130);
       stroke(100);
