@@ -1,4 +1,4 @@
-console.log("0.0.1");
+console.log("0.0.2");
 
 /*
 const staticScoringApp = "vex-scoring-app-v1"
