@@ -166,7 +166,7 @@ function menu() {
   //textFont(dual, width*0.08);
   textFont(regular, 30*sF);
   //textSize(15 * sF)
-  text("Changed Up\nScoring App.", xC, yC - 273.5 * sF);
+  text("Change Up\nScoring App", xC, yC - 273.5 * sF);
   //textFont(dual, width*0.04);
   textFont(regular, 15 * sF);
   //textSize(7.5*sF)
