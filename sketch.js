@@ -1657,7 +1657,7 @@ class remoteField {
 
   drawScore() {
 
-    if (goalSelected == -1&&!(remoteType==2&&counterOn)) {
+    if (goalSelected == -1&&!(this.remoteType==2&&counterOn)) {
       strokeWeight(667 * 0.004 * sF);
       fill(130);
       stroke(100);
