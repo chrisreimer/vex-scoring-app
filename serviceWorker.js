@@ -41,6 +41,8 @@ self.addEventListener('install', function (evt) {
         cache.addAll([
             "/index.html",
             "/sketch.js",
+            "/p5.js",
+            "/manifest.json",
             "/gear.png",
             "/NEXT%20ART_Regular.otf",
             "/NEXT%20ART_SemiBold.otf",
