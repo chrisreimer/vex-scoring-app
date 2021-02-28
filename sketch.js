@@ -43,8 +43,8 @@ let gearFound=false;
 
 function preload(){
   
-  gear=getItem('gear_v_1');
-  if(gear==null){
+  //gear=getItem('gear_v_1');
+  if(gear===null){
     gear=loadImage('/gear.png')
     gearFound=true;
     //storeItem('gear_v_1',gear);
