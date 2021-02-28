@@ -1,4 +1,4 @@
-let version="0.0.4";
+let version="0.0.5";
 
 let fields = [] //=new Field[2];
 let rField = [] //=new remoteField[2];
@@ -44,9 +44,8 @@ let gear;
 let gearFound=false;
 
 function preload(){
-  
+
   gear=loadImage('/gear.png')
-  
   regular=loadFont('/NEXT%20ART_Regular.otf')
   semibold=loadFont('/NEXT%20ART_SemiBold.otf')
   bold=loadFont('/NEXT%20ART_Bold.otf')
@@ -72,7 +71,7 @@ function setup() {
   rectMode(CENTER);
   textAlign(CENTER);
   imageMode(CENTER);
-  
+
   rField[0] = new remoteField(1);
 rField[1] = new remoteField(2);
 for (let i = 0; i < 2; i++) {
@@ -732,8 +731,23 @@ class Field {
     fill(210);
     noStroke();
     textFont(regular,25*sF);
-    text(this.redBalls,xC+140*sF,yC-288*sF)
-    text(this.blueBalls,xC+140*sF,yC-258*sF)
+    if(appState==4){
+      if((this.remoteTeam==1&&this.redBalls>7)||this.redBalls>16){
+        fill(250,60,60)
+      }
+      else fill(210);
+      text(this.redBalls,xC+140*sF,yC-288*sF)
+
+      if((this.remoteTeam==2&&this.blueBalls>7)||this.blueBalls>16){
+        fill(250,60,60)
+      }
+      else fill(210);
+      text(this.blueBalls,xC+140*sF,yC-258*sF)
+    }
+    else{
+      text(this.redBalls,xC+140*sF,yC-288*sF)
+      text(this.blueBalls,xC+140*sF,yC-258*sF)
+    }
   }
     if (goalSelected == -1 && appState == 1) {
       //textFont(dual, height*.06);
