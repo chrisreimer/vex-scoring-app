@@ -43,7 +43,6 @@ let gearFound=false;
 
 function preload(){
   
-  //gear=getItem('gear_v_1');
   gear=loadImage('/gear.png')
   
   regular=loadFont('/NEXT%20ART_Regular.otf')
