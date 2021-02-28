@@ -41,7 +41,13 @@ let pFieldSelected=[0,0]
 let gear;
 
 function preload(){
+  
+gear=getItem('gear_v_1');
+if(gear==null){
   gear=loadImage('/gear.png')
+  storeItem('gear_v_1',gear);
+}
+  
 regular=loadFont('/NEXT%20ART_Regular.otf')
 semibold=loadFont('/NEXT%20ART_SemiBold.otf')
 bold=loadFont('/NEXT%20ART_Bold.otf')
