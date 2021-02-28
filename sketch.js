@@ -44,11 +44,7 @@ let gearFound=false;
 function preload(){
   
   //gear=getItem('gear_v_1');
-  if(gear===null){
-    gear=loadImage('/gear.png')
-    gearFound=true;
-    //storeItem('gear_v_1',gear);
-  }
+  gear=loadImage('/gear.png')
   
   regular=loadFont('/NEXT%20ART_Regular.otf')
   semibold=loadFont('/NEXT%20ART_SemiBold.otf')
@@ -75,10 +71,6 @@ function setup() {
   rectMode(CENTER);
   textAlign(CENTER);
   imageMode(CENTER);
-
-  if(gearFound){
-    storeItem('gear_v_1',gear);
-  }
   
   rField[0] = new remoteField(1);
 rField[1] = new remoteField(2);
