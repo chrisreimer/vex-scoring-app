@@ -39,18 +39,20 @@ let pGoalSelected=[0,0,0,0];
 let pFieldSelected=[0,0]
 
 let gear;
+let gearFound=false;
 
 function preload(){
   
-gear=getItem('gear_v_1');
-if(gear==null){
-  gear=loadImage('/gear.png')
-  storeItem('gear_v_1',gear);
-}
+  gear=getItem('gear_v_1');
+  if(gear==null){
+    gear=loadImage('/gear.png')
+    gearFound=true;
+    //storeItem('gear_v_1',gear);
+  }
   
-regular=loadFont('/NEXT%20ART_Regular.otf')
-semibold=loadFont('/NEXT%20ART_SemiBold.otf')
-bold=loadFont('/NEXT%20ART_Bold.otf')
+  regular=loadFont('/NEXT%20ART_Regular.otf')
+  semibold=loadFont('/NEXT%20ART_SemiBold.otf')
+  bold=loadFont('/NEXT%20ART_Bold.otf')
 }
 
 
@@ -74,7 +76,10 @@ function setup() {
   textAlign(CENTER);
   imageMode(CENTER);
 
-
+  if(gearFound){
+    storeItem('gear_v_1',gear);
+  }
+  
   rField[0] = new remoteField(1);
 rField[1] = new remoteField(2);
 for (let i = 0; i < 2; i++) {
