@@ -1,3 +1,5 @@
+let version="0.0.4";
+
 let fields = [] //=new Field[2];
 let rField = [] //=new remoteField[2];
 let menuB=[] //=new Button[4];
@@ -346,6 +348,9 @@ function info(){
   fill(200);
   text("Info", xC, yC - 288.81 * sF);
   noStroke();
+  fill(100);
+  textSize(15*sF);
+  text("Version "+version,xC, yC+288.81*sF);
   fill(210);
   textSize(20*sF);
   text("This website is setup as a\nProgressive Web App (PWA).\nThis means that it can be\ninstalled as an application\non mobile devices, and\nwill run while offline.\n\nOn Android devices there\nwill be an automatic pop-up\nasking if you want to add\nit to the Home Screen.\n\nTo download on iOS,\ntap the share button,\n(A square with an arrow\npointing up) and then\ntap 'Add to Home Screen'.",xC,yC-190*sF)
