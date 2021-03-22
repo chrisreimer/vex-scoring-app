@@ -3,7 +3,7 @@ let version="0.0.5";
 let fields = [] //=new Field[2];
 let rField = [] //=new remoteField[2];
 let menuB=[] //=new Button[4];
-let back
+let back //back, settings, and info buttons
 let set
 let inf
 let appState = 0; //0=menu,1=match,2=skills,3=remote,4=ORCAH
@@ -19,10 +19,10 @@ let regular;
 let semibold;
 let bold;
 
-let sF=1;
-let pSF;
-let xC=375/2;
-let yC=667/2;
+let sF=1; //Scale Factor
+let pSF; //Previous Scale Factor
+let xC=375/2; //Horizontal Center Position
+let yC=667/2; //Vertical Center Position
 
 let extraSize=0.81
 
@@ -61,8 +61,8 @@ function setup() {
   //gear=loadImage("gear.png");
   //surface.setResizable(true);
   //size(700,700);
-  let xf = width / 375.0;
-  let yf = height / 667.0;
+  let xf = width / 375.0;//Horizontal Scale Factor
+  let yf = height / 667.0;//Vertical Scale Factor
   if (xf < yf) sF = xf;
   else sF = yf;
   pSF = sF;
@@ -536,13 +536,13 @@ class BallCounter {
 class Field {
 
   constructor(rSide, id) {
-    this.goals = [];
+    this.goals = [];  //0 -> A, 2 -> C, 7 -> I
     this.colours = [];
 
     this.remoteGoalScore = [0,0,0,0,0,0,0,0,0];
     this.remoteBallScore = 0;
 
-    this.ballM = [0, 1, 1];
+    this.ballM = [0, 1, 1];//Ball Point Multiplier (Needed for LRT)
     this.ID = id;
     this.remoteTeam = rSide;
 
