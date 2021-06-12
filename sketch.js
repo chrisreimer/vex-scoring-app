@@ -45,10 +45,10 @@ let gearFound=false;
 
 function preload(){
 
-  gear=loadImage('/gear.png')
-  regular=loadFont('/NEXT%20ART_Regular.otf')
-  semibold=loadFont('/NEXT%20ART_SemiBold.otf')
-  bold=loadFont('/NEXT%20ART_Bold.otf')
+  gear=loadImage('https://vexscoring.app/gear.png')
+  regular=loadFont('https://vexscoring.app/NEXT%20ART_Regular.otf')
+  semibold=loadFont('https://vexscoring.app/NEXT%20ART_SemiBold.otf')
+  bold=loadFont('https://vexscoring.app/NEXT%20ART_Bold.otf')
 }
 
 
