@@ -48,8 +48,8 @@ function preload(){
 }
 
 function setup() {
-  //createCanvas(windowWidth, windowHeight);
-  createCanvas(375, 667);
+  createCanvas(windowWidth, windowHeight);
+  //createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
@@ -1028,7 +1028,7 @@ class Mogo {
   moveMogo(target){
     //console.log(this.zone);
     this.index = fields[appState+remoteFieldSelected].zoneMogos[this.zone].indexOf(this);
-    console.log(this.index);
+    //console.log(this.index);
     if (this.index > -1) {
       fields[appState+remoteFieldSelected].zoneMogos[this.zone].splice(this.index, 1);
     }
