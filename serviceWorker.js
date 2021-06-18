@@ -1,4 +1,4 @@
-console.log("0.0.4");
+console.log("0.0.5");
 
 var VERSION = 'v3';
 
@@ -7,6 +7,7 @@ var cacheFirstFiles = [
   // If loading from cache, fetch from network in the background to update the resource. Examples:
   "/index.html",
   "/sketch.js",
+  "/tippingpoint.js",
   "/p5.js",
   "/manifest.json",
   "/gear.png",
