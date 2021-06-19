@@ -7,6 +7,7 @@ var cacheFirstFiles = [
   // If loading from cache, fetch from network in the background to update the resource. Examples:
   "/index.html",
   "/sketch.js",
+  "/tip.html",
   "/tippingpoint.js",
   "/p5.js",
   "/manifest.json",
