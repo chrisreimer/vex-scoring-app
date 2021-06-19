@@ -1,4 +1,4 @@
-let version="0.0.2"
+let version="0.0.3"
 
 let yellow; //Color Presets
 let purple;
@@ -201,9 +201,12 @@ function updateMenu(){
   fill(200);
   noStroke();
   text("Tipping Point\nScoring App",0,-265);
-  textFont(regular,15);
-  fill(150);
-  text("By Chris Reimer",0,-200);
+  textFont(regular,25);
+  fill(red.light3);
+  text("BETA "+version,0,-200);
+  //textFont(regular,15);
+  //fill(150);
+  //text("By Chris Reimer",0,-200);
   for(let i=0;i<5;i++){
     menuButtons[i].updateButton();
     if(menuButtons[i].clicked)appState=i+1;
@@ -227,6 +230,11 @@ function updateRemote(){
 }
 
 function updateInfo(){
+  fill(210);
+  textSize(17);
+  text("This app is still in development,\nand may require you to manually\nclear the cache to be updated.\n\nThis site is a Progressive Web App,\nand can be downloaded to the\nhome screen using the share\nbutton on iOS, or through the\npop-up window on Android.\n\nBugs and Suggestions\ncan be submitted at:",0,-120);
+  textFont(17);
+  text("https://discord.gg/PFMRPrhdmQ",0,40);
 }
 
 function updateSettings(){
