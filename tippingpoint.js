@@ -547,7 +547,7 @@ class Field{
   updateField(){
 
     if(postClick==2)this.scoreField();
-    if(mogoSelected!=5)this.displayScores();
+    
 
     if(mogoSelected==-1){ //Main Field Screen
 
@@ -722,6 +722,7 @@ class Field{
     else if(mogoSelected>=0){
       this.mogos[mogoSelected].editMogo();
     }
+    if(mogoSelected!=5)this.displayScores();
   }
 
   displayScoresFull(){
