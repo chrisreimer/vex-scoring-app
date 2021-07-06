@@ -84,7 +84,7 @@ function setup() {
 
   backButton=new Button(-155,-300,55,55," « ");
   //backButton.textA="<<";
-  backButton.tSize=25;
+  backButton.tSize=40;
   backButton.fillA=color(40,40,45);
 
   settingButtons[0]=new Button(0,-100,300,65,"Ring Counters: Fancy")
