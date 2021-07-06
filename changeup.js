@@ -174,7 +174,8 @@ function menu() {
   textFont(regular, 15 * sF);
   //textSize(7.5*sF)
   fill(150);
-  text("By Chris Reimer", xC, yC - 200 * sF);
+  //text("By Chris Reimer", xC, yC - 200 * sF);
+  text("Version: "+version, xC, yC - 200 * sF);
   fill(55);
   noStroke();
 
