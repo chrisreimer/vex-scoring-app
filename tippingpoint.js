@@ -1,4 +1,4 @@
-let version="0.0.3"
+let version="0.0.4"
 
 let yellow; //Color Presets
 let purple;
@@ -22,6 +22,7 @@ let appState=0;
 let menuButtons=[]; //Menu Buttons
 let backButton;
 let settingButtons=[];
+let linkButtons=[];
 
 let remoteFieldSelected=0;  //0=Red, 1=Blue
 let mogoSelected=-1; //-1 = Main Field, >=0 = Mogo Editor
@@ -48,8 +49,8 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  //createCanvas(375, 667);
+  //createCanvas(windowWidth, windowHeight);
+  createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
@@ -89,6 +90,10 @@ function setup() {
   settingButtons[0].setExtraData(2,"Ring Counters: Simple",20);
   settingButtons[1]=new Button(0,0,300,65,"Ring Counters: Left");
   settingButtons[1].setExtraData(2,"Ring Counters: Right",20);
+
+  linkButtons[0]=new Button(0,100,200,65,"Join Server");
+  linkButtons[0].setColors(color(88, 101, 242),color(73, 86, 222),0,0,0,0,0)
+  linkButtons[0].tSize=20;
 
   hideRings=new Button(135,-280,75,75,"Hide\nRings");
   hideRings.setExtraData(2,"Show\nRings",17);
@@ -201,12 +206,12 @@ function updateMenu(){
   fill(200);
   noStroke();
   text("Tipping Point\nScoring App",0,-265);
-  textFont(regular,25);
-  fill(red.light3);
-  text("BETA "+version,0,-200);
   //textFont(regular,15);
   //fill(150);
   //text("By Chris Reimer",0,-200);
+  textFont(regular,25);
+  fill(red.light3);
+  text("BETA "+version,0,-200);
   for(let i=0;i<5;i++){
     menuButtons[i].updateButton();
     if(menuButtons[i].clicked)appState=i+1;
@@ -232,9 +237,14 @@ function updateRemote(){
 function updateInfo(){
   fill(210);
   textSize(17);
-  text("This app is still in development,\nand may require you to manually\nclear the cache to be updated.\n\nThis site is a Progressive Web App,\nand can be downloaded to the\nhome screen using the share\nbutton on iOS, or through the\npop-up window on Android.\n\nBugs and Suggestions\ncan be submitted at:",0,-120);
-  textFont(17);
-  text("https://discord.gg/PFMRPrhdmQ",0,40);
+  text("This app is still in development,\nand may require you to manually\nclear the cache to be updated.\n\nThis site is a Progressive Web App,\nand can be downloaded to the\nhome screen using the share\nbutton on iOS, or through the\npop-up window on Android.\n\nBugs and Suggestions\ncan be submitted in\nour discord server.",0,-110);
+  linkButtons[0].updateButton();
+  if(linkButtons[0].clicked){
+    window.open("https://discord.gg/PFMRPrhdmQ");
+  }
+  //textFont(17);
+  //text("https://discord.gg/PFMRPrhdmQ",0,40);
+  //text("This website is setup as a\nProgressive Web App (PWA).\nThis means that it can be\ninstalled as an application\non mobile devices, and\nwill run while offline.\n\nOn Android devices there\nwill be an automatic pop-up\nasking if you want to add\nit to the Home Screen.\n\nTo download on iOS,\ntap the share button,\n(A square with an arrow\npointing up) and then\ntap 'Add to Home Screen'.",xC,yC-190*sF)
 }
 
 function updateSettings(){
@@ -350,6 +360,7 @@ class mogoNode{
     this.y=y_;
     this.id=id_;
     this.zone=floor(this.id/7);
+    this.mogoID=-1;
   }
   drawNode(){
     //if(this.zone==1||this.zone==0)fill(240,60,60,60);
@@ -388,19 +399,19 @@ class Field{
     this.platButtons[1]=new Button(-102,246+32.5,122-6,55,"Unbalanced");
     this.platButtons[1].setExtraData(2,"Balanced",15);
     this.platButtons[1].setColors(0,0,0,0,0,blue.light2,blue.light2);
-    this.platButtons[2]=new Button(27-32.5,246+32.5,55,55,0);
+    this.platButtons[2]=new Button(27-32.5,246+32.5,52.5,52.5,0);
     this.platButtons[2].tSize=30;
     //this.platButtons[2].setColors(red.dark3,red.dark4,0,0,0,0,0);
     //this.platButtons[2].setColors(0,0,0,0,red.light1,0,red.light1);
     //this.platButtons[2].setColors(0,0,0,0,red.light1,0,0);
-    this.platButtons[2].setColors(0,0,0,0,0,0,red.light2);
-    this.platButtons[3]=new Button(27+32.5,246+32.5,55,55,0);
+    this.platButtons[2].setColors(0,0,0,0,color(0,0),0,red.light2);
+    this.platButtons[3]=new Button(27+32.5,246+32.5,52.5,52.5,0);
     this.platButtons[3].tSize=30;
     //this.platButtons[3].setColors(blue.dark3,blue.dark4,0,0,0,0,0);
     //this.platButtons[3].setColors(0,0,0,0,blue.light1,0,blue.light1);
     //this.platButtons[3].setColors(0,0,0,0,blue.light1,0,0);
     this.platButtons[3].setColors(0,0,0,0,0,0,blue.light2);
-    this.platButtons[4]=new Button(27,246+32.5,55*2+5,55,"0")
+    this.platButtons[4]=new Button(27,246+32.5,55*2+5,55,0)
     this.platButtons[4].tSize=30;
 
     //Nodes set the position of the mogos depending on which zone they are in, and how many mogos are in that zone.
@@ -536,6 +547,20 @@ class Field{
     if(mogoSelected==-1){ //Main Field Screen
 
       this.drawField();
+
+      let highlight=-1;
+      if(dragging&&this.draggedMogo!=-1){
+        highlight=this.mogos[this.draggedMogo].findZone();
+        noStroke();
+        fill(30,240,30,30);
+        if(highlight==1){
+          rect(-125.5,0,64,138);
+        }
+        else if(highlight==3){
+          rect(125.5,0,64,138);
+        }
+      }
+
       for(let i=0;i<this.platforms.length;i++){
        this.platforms[i].drawPlatform();
       }
@@ -546,7 +571,7 @@ class Field{
         //console.log(this.draggedMogo);
 
       if(dragging&&this.draggedMogo!=-1){
-        let highlight=this.mogos[this.draggedMogo].findZone();
+        //let highlight=this.mogos[this.draggedMogo].findZone();
         fill(30,240,30,60);
         noStroke();
         if(highlight==0){
@@ -555,6 +580,7 @@ class Field{
         else if(highlight==1){
           rect(-125.5,-113,64,88,12,0,0,0)
           rect(-125.5,113,64,88,0,0,0,12)
+          //rect(-125.5,0,64,314,12,0,0,12);
           rect(-73.25,0,40.5,314)
         }
         else if(highlight==2){
@@ -582,7 +608,7 @@ class Field{
 
       if(this.draggedMogo!=-1)this.mogos[this.draggedMogo].drawMogo();
       //for(let i=0;i<this.nodes[0][6].length;i++){
-        //this.nodes[0][6][i].drawNode();
+        //this.nodes[1][6][i].drawNode();
       //}
 
       if(this.parked.toggled){
@@ -590,6 +616,36 @@ class Field{
         stroke(30,30,35);
         strokeWeight(20);
         rect(0,246,320,120,15);
+
+        strokeWeight(3);
+        noFill();
+        stroke(30,30,35);
+        rect(27-32.5,246+32.5,55,55,15);
+        rect(27+32.5,246+32.5,55,55,15);
+
+        if(this.platButtons[2].textA>0){
+          stroke(red.light2);
+          fill(red.light2);
+          rect(27-32.5,246+32.5,55,55,15);
+        }
+        if(this.platButtons[2].textA<2){
+          //stroke(30,30,35);
+          stroke(30,30,35);
+          fill(30,30,35);
+          rect(27-32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
+        }
+
+        if(this.platButtons[3].textA>0){
+          stroke(blue.light2);
+          fill(blue.light2);
+          rect(27+32.5,246+32.5,55,55,15);
+        }
+        if(this.platButtons[3].textA<2){
+          stroke(30,30,35);
+          fill(30,30,35);
+          rect(27+32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
+        }
+
         for(let i=0;i<4;i++){
           this.platButtons[i].updateButton();
           if(i>1){
@@ -772,9 +828,19 @@ class Field{
     this.auton.sWeight=4;
     this.platButtons[0].toggled=false;
     this.platButtons[1].toggled=false;
+    this.platButtons[2].textA=0;
+    this.platButtons[3].textA=0;
+    this.platButtons[4].textA=0;
     this.platforms[0]=new Platform(-125,0,red);
     this.platforms[1]=new Platform(125,0,blue);
     this.mogos=[];
+    /*
+    for(let i=0;i<5;i++){
+      for(let j=0;j<this.zoneMogos[i].length;j++){
+        this.zoneMogos[i][j].mogoID=-1;
+      }
+    }
+    */
     this.zoneMogos=[[],[],[],[],[]];
     this.mogos[2]=new Mogo(80,-133-5,blue,0,2);
     this.mogos[3]=new Mogo(125,100-10,blue,0,3);
@@ -784,10 +850,10 @@ class Field{
     this.mogos[5]=new Mogo(0,0,yellow,2,5);
     this.mogos[6]=new Mogo(0,100,yellow,1,6);
 
-    this.zoneMogos[1].push(this.mogos[0]);
-    this.zoneMogos[1].push(this.mogos[1]);
-    this.zoneMogos[3].push(this.mogos[2]);
-    this.zoneMogos[3].push(this.mogos[3]);
+    this.zoneMogos[1][0]=(this.mogos[0]);
+    this.zoneMogos[1][1]=(this.mogos[1]);
+    this.zoneMogos[3][0]=(this.mogos[2]);
+    this.zoneMogos[3][1]=(this.mogos[3]);
     this.zoneMogos[2].push(this.mogos[4]);
     this.zoneMogos[2].push(this.mogos[5]);
     this.zoneMogos[2].push(this.mogos[6]);
@@ -811,10 +877,18 @@ class Field{
       //if(!this.mogos[i].dragged)this.zoneMogos[this.mogos[i].zone].push(this.mogos[i]);
     //}
 
-    for(let i=0;i<5;i++){
+    for(let i=0;i<5;i+=2){
       for(let j=0;j<this.zoneMogos[i].length;j++){
         this.zoneMogos[i][j].setAtNode(this.nodes[i][this.zoneMogos[i].length-1][j]);
         this.mogoDrawList.push(this.zoneMogos[i][j]);
+      }
+    }
+    for(let i=1;i<4;i+=2){
+      for(let j=0;j<7;j++){
+        if(this.zoneMogos[i][j]!=null){
+          this.zoneMogos[i][j].setAtNode(this.nodes[i][6][j]);
+          this.mogoDrawList.push(this.zoneMogos[i][j]);
+        }
       }
     }
     this.mogoDrawList.sort(this.compareY);
@@ -867,7 +941,8 @@ class RingCounter{
     this.minus.setColors(purple.dark3,purple.dark4,0,0,purple.medium,0,0);
     this.minus.tSize=40;
   }
-  updateCounter(){
+  updateCounter(r){
+    this.ringCount=r;
     this.x=this.xOriginal;
     this.plus.x=this.xOriginal;
     this.minus.x=this.xOriginal;
@@ -957,20 +1032,20 @@ class Mogo {
       this.ringCounters[4]=new RingCounter(-190,4);
     }
     this.zoneButtons=[];
-    this.zoneButtons[0]=new Button(-130,265,55,55,"0");
-    this.zoneButtons[0].setExtraData(2,"0",30);
+    this.zoneButtons[0]=new Button(-130,265,55,55,"");
+    this.zoneButtons[0].setExtraData(2,"",30);
     this.zoneButtons[0].setColors(0,0,0,0,0,red.medium,red.medium);
-    this.zoneButtons[1]=new Button(-65,265,55,55,"1");
-    this.zoneButtons[1].setExtraData(2,"1",30);
+    this.zoneButtons[1]=new Button(-65,265,55,55,"");
+    this.zoneButtons[1].setExtraData(2,"",30);
     this.zoneButtons[1].setColors(0,0,0,0,0,red.light2,red.light2);
-    this.zoneButtons[2]=new Button(0,265,55,55,"2");
-    this.zoneButtons[2].setExtraData(2,"2",30);
+    this.zoneButtons[2]=new Button(0,265,55,55,"N");
+    this.zoneButtons[2].setExtraData(2,"N",30);
     this.zoneButtons[2].setColors(0,0,0,0,0,yellow.light2,yellow.light2);
-    this.zoneButtons[3]=new Button(65,265,55,55,"3");
-    this.zoneButtons[3].setExtraData(2,"3",30);
+    this.zoneButtons[3]=new Button(65,265,55,55,"");
+    this.zoneButtons[3].setExtraData(2,"",30);
     this.zoneButtons[3].setColors(0,0,0,0,0,blue.light2,blue.light2);
-    this.zoneButtons[4]=new Button(130,265,55,55,"4");
-    this.zoneButtons[4].setExtraData(2,"4",30);
+    this.zoneButtons[4]=new Button(130,265,55,55,"");
+    this.zoneButtons[4].setExtraData(2,"",30);
     this.zoneButtons[4].setColors(0,0,0,0,0,blue.medium,blue.medium);
   }
 
@@ -978,7 +1053,7 @@ class Mogo {
   editMogo(){
     this.drawMogo();
     for(let i=0;i<this.ringCounters.length;i++){
-      if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.ringCounters[i].updateCounter();
+      if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.ringCounters[i].updateCounter(this.rings[i]);
       this.rings[i]=this.ringCounters[i].ringCount;
     }
     fill(30,30,35);
@@ -995,6 +1070,7 @@ class Mogo {
         this.moveMogo(i);
       }
     }
+    this.drawIcons();
   }
 
   checkDragged(){
@@ -1038,13 +1114,19 @@ class Mogo {
     this.index = fields[appState+remoteFieldSelected].zoneMogos[this.zone].indexOf(this);
     //console.log(this.index);
     if (this.index > -1) {
-      fields[appState+remoteFieldSelected].zoneMogos[this.zone].splice(this.index, 1);
+      if(this.zone!=1&&this.zone!=3)fields[appState+remoteFieldSelected].zoneMogos[this.zone].splice(this.index, 1);
+      else {
+        fields[appState+remoteFieldSelected].zoneMogos[this.zone].splice(this.index, 1, null);
+      }
     }
     //fields[appState+remoteFieldSelected].zoneMogos[this.zone]=fields[appState+remoteFieldSelected].zoneMogos[this.zone].filter(this.isntMogo);
     //delete fields[appState+remoteFieldSelected].zoneMogos[this.zone][fields[appState+remoteFieldSelected].zoneMogos.indexOf(this)];
     if(target!=-1){
       this.zone=target;
-      fields[appState+remoteFieldSelected].zoneMogos[this.zone].push(this);
+      if(target!=1&&target!=3)fields[appState+remoteFieldSelected].zoneMogos[this.zone].push(this);
+      else{
+        fields[appState+remoteFieldSelected].zoneMogos[this.zone][this.findClosestEmptyNode(target)]=this;
+      }
     }
     fields[appState+remoteFieldSelected].updateMogoList();
   }
@@ -1059,19 +1141,107 @@ class Mogo {
     return false;
   }
 
+  findClosestEmptyNode(t){
+    this.closest=-1;
+    this.distance=1000;
+    for(let i=0;i<7;i++){
+      this.m=fields[appState+remoteFieldSelected].zoneMogos[t][i];
+      if(this.m==null){
+        this.d=dist(translatedMouseX,translatedMouseY,fields[appState+remoteFieldSelected].nodes[t][6][i].x,fields[appState+remoteFieldSelected].nodes[t][6][i].y);
+        if(this.distance>this.d){
+          this.distance=this.d;
+          this.closest=i;
+        }
+      }
+    }
+    return this.closest;
+  }
+
 
   ringScore(){
     this.sum=0;
     this.sum+=this.rings[0];
     this.sum+=(this.rings[1]+this.rings[2])*3;
     this.sum+=(this.rings[3]+this.rings[4])*10;
-    if((this.zone<2&&(this.id==2||this.id==3))||(this.zone>2&&(this.id==0||this.id==1)))this.sum=0;
+    //if((this.zone<2&&(this.id==2||this.id==3))||(this.zone>2&&(this.id==0||this.id==1)))this.sum=0;
     return this.sum;
   }
 
   setAtNode(mNode){
     this.x=mNode.x;
     this.y=mNode.y;
+  }
+
+  drawIcons(){
+    push();
+    translate(this.zoneButtons[0].x,this.zoneButtons[0].y);
+    this.drawPlat(red.medium);
+    pop();
+
+    push();
+    translate(this.zoneButtons[1].x,this.zoneButtons[1].y);
+    this.drawHouse(red.light2);
+    pop();
+
+    push();
+    translate(this.zoneButtons[2].x,this.zoneButtons[2].y);
+    pop();
+
+    push();
+    translate(this.zoneButtons[3].x,this.zoneButtons[3].y);
+    this.drawHouse(blue.light2);
+    pop();
+
+    push();
+    translate(this.zoneButtons[4].x,this.zoneButtons[4].y);
+    this.drawPlat(blue.medium);
+    pop();
+  }
+
+  drawPlat(iconColor){
+    strokeWeight(3);
+    noFill();
+    stroke(iconColor);
+    rect(0,0,25,40,7);
+    noStroke();
+    fill(iconColor);
+    rect(0,-15,15,1.5);
+    rect(0,-11,15,3);
+    rect(0,-6, 15,4);
+    rect(0,0,15,5);
+    rect(0,6,15,4);
+    rect(0,11,15,3);
+    rect(0,15,15,1.5);
+  }
+
+  drawHouse(iconColor){
+    stroke(iconColor);
+    noFill();
+    beginShape();
+    vertex(0, -14);
+    vertex(14, 0);
+    vertex(10, 0);
+    vertex(10, 13);
+    vertex(-10, 13);
+    vertex(-10, 0);
+    vertex(-14, 0);
+    vertex(0, -14);
+    endShape();
+    fill(iconColor);
+    beginShape();
+    vertex(-1.5,13);
+    vertex(-1.5,4);
+    vertex(1.5,4);
+    vertex(1.5,13);
+    vertex(-2,13);
+    endShape();
+    beginShape();
+    vertex(7,-7);
+    vertex(7,-11);
+    vertex(9,-11);
+    vertex(9,-5);
+    vertex(7,-7);
+    endShape();
   }
 
   drawMogo() {
