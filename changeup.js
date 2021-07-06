@@ -81,16 +81,16 @@ for (let i = 0; i < 2; i++) {
 rField[0].resetFields(-1, 3);
 rField[1].resetFields(-1, 4);
 
-menuB[0] = new Button(0, -100, 375 * 0.8, 667 * 0.2, 667 * 0.015, "Match", color(0, 0), color(210), 667 * 0.01, 375 * 0.08, color(50), color(45));
-menuB[1] = new Button(0, 66.7, 375 * 0.8, 667 * 0.2, 667 * 0.015, "Skills", color(0, 0), color(210), 667 * 0.01, 375 * 0.08, color(50), color(45));
-menuB[2] = new Button(-79.69, 233.45, 375 * 0.375, 667 * 0.2, 667 * 0.015, "Remote", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
-menuB[3] = new Button(79.69, 233.45, 375 * 0.375, 667 * 0.2, 375 * 0.015, "ORCAH", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
-back = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "«", color(0, 0), color(210), 667 * 0.02, 667 * 0.06, color(40), color(45));
-set = new Button(154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40), color(45));
-inf = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "?", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40), color(45));
-labelToggle = new Button(0, -100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Goal Labels: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
-counterToggle = new Button(0, 0, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Ball Counter: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
-orcahToggle = new Button(0, 100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "ORCAH Goals: Numbers", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
+menuB[0] = new Button(0, -100, 375 * 0.8, 667 * 0.2, 667 * 0.015, "Match", color(0, 0), color(210), 667 * 0.01, 375 * 0.08, color(50,50,55), color(45,45,50));
+menuB[1] = new Button(0, 66.7, 375 * 0.8, 667 * 0.2, 667 * 0.015, "Skills", color(0, 0), color(210), 667 * 0.01, 375 * 0.08, color(50,50,55), color(45,45,50));
+menuB[2] = new Button(-79.69, 233.45, 375 * 0.375, 667 * 0.2, 667 * 0.015, "Remote", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50,50,55), color(45,45,50));
+menuB[3] = new Button(79.69, 233.45, 375 * 0.375, 667 * 0.2, 375 * 0.015, "ORCAH", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50,50,55), color(45,45,50));
+back = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "«", color(0, 0), color(210), 667 * 0.02, 667 * 0.06, color(40,40,45), color(45,45,50));
+set = new Button(154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40,40,45), color(45,45,50));
+inf = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "?", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40,40,45), color(45,45,50));
+labelToggle = new Button(0, -100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Goal Labels: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50,50,55), color(45,45,50));
+counterToggle = new Button(0, 0, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Ball Counter: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50,50,55), color(45,45,50));
+orcahToggle = new Button(0, 100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "ORCAH Goals: Numbers", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50,50,55), color(45,45,50));
 
 let labelSave = getItem('labelSave');
 if(!(labelSave===null)){
@@ -520,10 +520,10 @@ class BallCounter {
       this.y = -22.975 + 667 * 0.12 * (i % 2 * 2 - 1);
     }
 
-    this.redUp = new Button(this.x - this.scale * 375 * 0.14, this.y - this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 375 * 0.004, "+", color(250, 60, 60), color(210), 667 * 0.035 * this.scale, 375 * 0.2 * this.scale, color(50), color(45));
-    this.redDown = new Button(this.x - this.scale * 375 * 0.14, this.y + this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "-", color(250, 60, 60), color(210), 667 * 0.035 * this.scale, 375 * 0.2 * this.scale, color(50), color(45));
-    this.blueUp = new Button(this.x + this.scale * 375 * 0.14, this.y - this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "+", color(60, 60, 250), color(210), 667 * 0.035 * this.scale, 375 * 0.2 * this.scale, color(50), color(45));
-    this.blueDown = new Button(this.x + this.scale * 375 * 0.14, this.y + this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "-", color(60, 60, 250), color(210), 667 * 0.035 * this.scale, 375 * 0.2 * this.scale, color(50), color(45));
+    this.redUp = new Button(this.x - this.scale * 375 * 0.14, this.y - this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 375 * 0.004, "+", color(250, 60, 60), color(210), 667 * 0.035 * this.scale, 375 * 0.2 * this.scale, color(50,50,55), color(45,45,50));
+    this.redDown = new Button(this.x - this.scale * 375 * 0.14, this.y + this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "-", color(250, 60, 60), color(210), 667 * 0.035 * this.scale, 375 * 0.2 * this.scale, color(50,50,55), color(45,45,50));
+    this.blueUp = new Button(this.x + this.scale * 375 * 0.14, this.y - this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "+", color(60, 60, 250), color(210), 667 * 0.035 * this.scale, 375 * 0.2 * this.scale, color(50,50,55), color(45,45,50));
+    this.blueDown = new Button(this.x + this.scale * 375 * 0.14, this.y + this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "-", color(60, 60, 250), color(210), 667 * 0.035 * this.scale, 375 * 0.2 * this.scale, color(50,50,55), color(45,45,50));
     this.redUp.sWeight = 667 * 0.004 * this.scale * 2;
     this.redDown.sWeight = 667 * 0.004 * this.scale * 2;
     this.blueUp.sWeight = 667 * 0.004 * this.scale * 2;
@@ -573,9 +573,9 @@ class Field {
     this.colours[0] = color(210);
     this.colours[1] = color(250, 30, 30);
     this.colours[2] = color(30, 30, 250);
-    this.auton = new Button(0, 173.42, 262.5, 667 * 0.08, 667 * 0.02, "Auton: Tied", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
-    this.reset = new Button(-70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Field\nReset", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50), color(45));
-    this.clear = new Button(70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Clear\nField", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50), color(45));
+    this.auton = new Button(0, 173.42, 262.5, 667 * 0.08, 667 * 0.02, "Auton: Tied", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50,50,55), color(45,45,50));
+    this.reset = new Button(-70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Field\nReset", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50,50,55), color(45,45,50));
+    this.clear = new Button(70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Clear\nField", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50,50,55), color(45,45,50));
   }
   update() {
     for (let i = 0; i < 9; i++) {
@@ -1187,7 +1187,7 @@ class Goal {
     fill(250, 250, 0);
     rect(xC + (this.ID % 3 * 375 * 0.06 + 375 * 0.29) * sF, yC + (floor(this.ID / 3.0) % 3 * 375 * 0.06 - 299.75) * sF, 375 * 0.06 * sF, 375 * 0.06 * sF, 375 * 0.02 * sF);
     if(labelsOn){
-      fill(40)
+      fill(40,40,45)
       noStroke();
       textFont(semibold,20*sF)
       text(labels[this.ID],xC + (this.ID % 3 * 375 * 0.06 + 375 * 0.29) * sF, yC + (floor(this.ID / 3.0) % 3 * 375 * 0.06 - 299.75+7) * sF);
@@ -1202,7 +1202,7 @@ class Goal {
     this.drawArrows();
 
     noFill();
-    stroke(25);
+    stroke(25,25,30);
     strokeWeight(30 * sF);
     ellipse(xC, yC + 150 * sF, 150 * sF, 60 * sF);
 
@@ -1483,26 +1483,26 @@ class remoteField {
         this.rFields[i] = new Field(i + 1, i);
       }
     }
-    this.autonAll = new Button(0, 667 * 0.26, 375 * 0.7, 667 * 0.08, 667 * 0.02, "Auton: Tied", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
-    this.resetAll = new Button(-70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Reset\nAll", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50), color(45));
-    this.clearAll = new Button(70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Clear\nAll", color(0, 0), color(210), -375 * 0.01, 375 * 0.06, color(50), color(45));
+    this.autonAll = new Button(0, 667 * 0.26, 375 * 0.7, 667 * 0.08, 667 * 0.02, "Auton: Tied", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50,50,55), color(45,45,50));
+    this.resetAll = new Button(-70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Reset\nAll", color(0, 0), color(210), -667 * 0.01, 375 * 0.06, color(50,50,55), color(45,45,50));
+    this.clearAll = new Button(70.3125, 266.8, 375 * 0.325, 667 * 0.15, 667 * 0.02, "Clear\nAll", color(0, 0), color(210), -375 * 0.01, 375 * 0.06, color(50,50,55), color(45,45,50));
     this.offset1 = 375 * 0.275;
     this.offset2 = 375 * 0.09125;
     this.w = 375 * 0.15;
     this.y = -667 * 0.275;
     if (this.remoteType == 1) {
       this.fieldCount = 4;
-      this.fSelect[0] = new Button(-this.offset1, this.y, this.w, 667 * 0.08, 667 * 0.02, "1", color(0, 0), color(250, 60, 60), 667 * 0.015, 667 * 0.045, color(50), color(45));
-      this.fSelect[1] = new Button(-this.offset2, this.y, this.w, 667 * 0.08, 667 * 0.02, "2", color(0, 0), color(250, 60, 60), 667 * 0.015, 667 * 0.045, color(50), color(45));
-      this.fSelect[2] = new Button(this.offset2, this.y, this.w, 667 * 0.08, 667 * 0.02, "3", color(0, 0), color(60, 60, 250), 667 * 0.015, 667 * 0.045, color(50), color(45));
-      this.fSelect[3] = new Button(this.offset1, this.y, this.w, 667 * 0.08, 667 * 0.02, "4", color(0, 0), color(60, 60, 250), 667 * 0.015, 667 * 0.045, color(50), color(45));
+      this.fSelect[0] = new Button(-this.offset1, this.y, this.w, 667 * 0.08, 667 * 0.02, "1", color(0, 0), color(250, 60, 60), 667 * 0.015, 667 * 0.045, color(50,50,55), color(45,45,50));
+      this.fSelect[1] = new Button(-this.offset2, this.y, this.w, 667 * 0.08, 667 * 0.02, "2", color(0, 0), color(250, 60, 60), 667 * 0.015, 667 * 0.045, color(50,50,55), color(45,45,50));
+      this.fSelect[2] = new Button(this.offset2, this.y, this.w, 667 * 0.08, 667 * 0.02, "3", color(0, 0), color(60, 60, 250), 667 * 0.015, 667 * 0.045, color(50,50,55), color(45,45,50));
+      this.fSelect[3] = new Button(this.offset1, this.y, this.w, 667 * 0.08, 667 * 0.02, "4", color(0, 0), color(60, 60, 250), 667 * 0.015, 667 * 0.045, color(50,50,55), color(45,45,50));
     } else if (this.remoteType == 2) {
       this.fieldCount = 2;
-      this.fSelect[0] = new Button(-70.3125, this.y, 375 * 0.325, 667 * 0.08, 667 * 0.02, "1", color(0, 0), color(250, 60, 60), 667 * 0.015, 667 * 0.045, color(50), color(45));
-      this.fSelect[1] = new Button(70.3125, this.y, 375 * 0.325, 667 * 0.08, 667 * 0.02, "2", color(0, 0), color(60, 60, 250), 667 * 0.015, 667 * 0.045, color(50), color(45));
+      this.fSelect[0] = new Button(-70.3125, this.y, 375 * 0.325, 667 * 0.08, 667 * 0.02, "1", color(0, 0), color(250, 60, 60), 667 * 0.015, 667 * 0.045, color(50,50,55), color(45,45,50));
+      this.fSelect[1] = new Button(70.3125, this.y, 375 * 0.325, 667 * 0.08, 667 * 0.02, "2", color(0, 0), color(60, 60, 250), 667 * 0.015, 667 * 0.045, color(50,50,55), color(45,45,50));
     }
     for (let i = 0; i < 9; i++) {
-      this.goalB[i] = new Button(i % 3 * 375 * 0.25 - 375 * 0.25, floor(i / 3) * 375 * 0.25 - 101.525, 375 * 0.1, 375 * 0.16, 667 * 0.02, "", color(0, 0), color(0, 0), 0, 1, color(50), color(45));
+      this.goalB[i] = new Button(i % 3 * 375 * 0.25 - 375 * 0.25, floor(i / 3) * 375 * 0.25 - 101.525, 375 * 0.1, 375 * 0.16, 667 * 0.02, "", color(0, 0), color(0, 0), 0, 1, color(50,50,55), color(45,45,50));
     }
     this.resetFields(-1, (this.remoteType+2));
     this.scoreField();
@@ -1735,7 +1735,7 @@ class remoteField {
         if (this.doubled[3] == i) {
           ellipse(xC + (this.goalB[i].x + this.xOffset) * sF, yC + (this.goalB[i].y + 20) * sF, 10 * sF, 10 * sF);
         }
-        fill(40);
+        fill(40,40,45);
         strokeWeight(667 * 0.004 * sF);
         if (this.redGoalScores[i] > this.blueGoalScores[i]) {
           this.goalB[i].s = this.tColor[1];
@@ -1823,7 +1823,7 @@ class remoteField {
       rect(xC - 375 * 0.165 * sF, this.yPos, 375 * 0.33*sF, 375 * 0.9*sF, 667 * 0.02*sF, 0, 0, 667 * 0.02*sF);
       stroke(60, 60, 250);
       rect(xC + 375 * 0.165 * sF, this.yPos, 375 * 0.33*sF, 375 * 0.9*sF, 0, 667 * 0.02*sF, 667 * 0.02*sF, 0);
-      stroke(40);
+      stroke(40,40,45);
       strokeWeight(667 * 0.06 * sF);
       line(xC, yC + (-667 * 0.175 - 375 * 0.2) * sF, xC, yC + (667 * 0.175 + 375 * 0.2) * sF);
     } else if (this.remoteType == 2) {
@@ -1833,7 +1833,7 @@ class remoteField {
       rect(xC - 375 * 0.185 * sF, yC + (375 * 0.25 - 667 * 0.175) * sF, 375 * 0.4 * sF, 375 * 0.5 * sF, 667 * 0.02 * sF, 0, 0, 667 * 0.02 * sF);
       stroke(60, 60, 250);
       rect(xC + 375 * 0.185 * sF, yC + (375 * 0.25 - 667 * 0.175) * sF, 375 * 0.4 * sF, 375 * 0.5 * sF, 0, 667 * 0.02 * sF, 667 * 0.02 * sF, 0);
-      stroke(40);
+      stroke(40,40,45);
       strokeWeight(667 * 0.06 * sF);
       line(xC, yC + (-667 * 0.175 - 375 * 0.2) * sF, xC, yC + (667 * 0.175 + 375 * 0.2) * sF);
       strokeWeight(375 * 0.3 * sF);
@@ -1845,7 +1845,7 @@ class remoteField {
 
     noFill();
     strokeWeight(667 * 0.004 * sF);
-    stroke(80);
+    stroke(80,80,85);
     line(xC - 375 * 0.01 * sF, yC - 137.55 * sF, xC - 375 * 0.01 * sF, yC + 124.95 * sF);
     line(xC + 375 * 0.01 * sF, yC - 137.55 * sF, xC + 375 * 0.01 * sF, yC + 124.95 * sF);
     line(xC - 375 * 0.7 * 0.25 * sF, yC - 137.55 * sF, xC - 375 * 0.7 * 0.25 * sF, yC + 124.95 * sF);
@@ -1871,7 +1871,7 @@ class remoteField {
           //this.rFields[i].goals[this.doubled[i]].remoteC.doubler.bText="testing";
 
 
-          this.rFields[i].goals[this.doubled[i]].remoteC.doubler.s = color(100);
+          this.rFields[i].goals[this.doubled[i]].remoteC.doubler.s = color(100,100,105);
           this.rFields[i].goals[this.doubled[i]].remoteC.doubler.bText = "Not Doubled";
           this.doubled[i] = -1;
 
