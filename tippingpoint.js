@@ -1,4 +1,4 @@
-let version="0.0.7"
+let version="0.0.8"
 
 let yellow; //Color Presets
 let purple;
@@ -98,6 +98,15 @@ function setup() {
 
   hideRings=new Button(135,-280,75,75,"Hide\nRings");
   hideRings.setExtraData(2,"Show\nRings",17);
+  
+  let counterSave = getItem('counterSave');
+  if(!(counterSave===null)){
+    settingButtons[0].toggled=counterSave;
+  }
+  let cSideSave = getItem('cSideSave');
+  if(!(cSideSave===null)){
+    settingButtons[1].toggled=cSideSave;
+  }
 }
 
 function windowResized() {
@@ -256,6 +265,8 @@ function updateSettings(){
   for(let i=0;i<settingButtons.length;i++){
     settingButtons[i].updateButton();
   }
+  if(settingButtons[0].clicked)storeItem('counterSave',settingButtons[0].toggled);
+  if(settingButtons[1].clicked)storeItem('cSideSave',settingButtons[1].toggled);
 }
 
 
