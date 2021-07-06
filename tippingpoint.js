@@ -49,8 +49,8 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  //createCanvas(375, 667);
+  //createCanvas(windowWidth, windowHeight);
+  createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
@@ -76,7 +76,7 @@ function setup() {
   menuButtons[0]=new Button(0,-100,300,130,"MATCH");
   menuButtons[1]=new Button(0,55,300,130,"SKILLS");
   menuButtons[2]=new Button(0,210,300,130,"REMOTE");
-  menuButtons[3]=new Button(-155,-300,55,55,"?");
+  menuButtons[3]=new Button(-155,-300,0,0,"?");
   menuButtons[3].tSize=25;
   menuButtons[3].setColors(color(40,40,45),0,0,0,0,0,color(150));
   menuButtons[4]=new Button(155,-300,55,55,"");
@@ -215,6 +215,10 @@ function updateMenu(){
   for(let i=0;i<5;i++){
     menuButtons[i].updateButton();
     if(menuButtons[i].clicked)appState=i+1;
+  }
+  backButton.updateButton();
+  if(backButton.clicked){
+    window.open("https://vexscoring.app/","_self");
   }
   image(gear,155,-300,40,40);
 }
