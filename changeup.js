@@ -1,4 +1,4 @@
-let version="0.0.5";
+let version="0.0.6";
 
 let fields = [] //=new Field[2];
 let rField = [] //=new remoteField[2];
@@ -85,7 +85,7 @@ menuB[0] = new Button(0, -100, 375 * 0.8, 667 * 0.2, 667 * 0.015, "Match", color
 menuB[1] = new Button(0, 66.7, 375 * 0.8, 667 * 0.2, 667 * 0.015, "Skills", color(0, 0), color(210), 667 * 0.01, 375 * 0.08, color(50), color(45));
 menuB[2] = new Button(-79.69, 233.45, 375 * 0.375, 667 * 0.2, 667 * 0.015, "Remote", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
 menuB[3] = new Button(79.69, 233.45, 375 * 0.375, 667 * 0.2, 375 * 0.015, "ORCAH", color(0, 0), color(210), 667 * 0.01, 375 * 0.06, color(50), color(45));
-back = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "«", color(0, 0), color(210), 667 * 0.02, 667 * 0.06, color(50), color(45));
+back = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "«", color(0, 0), color(210), 667 * 0.02, 667 * 0.06, color(40), color(45));
 set = new Button(154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40), color(45));
 inf = new Button(-154.15, -300.15, 667 * 0.083, 667 * 0.083, 667 * 0.015, "?", color(0, 0), color(150), 667 * 0.015, 667 * 0.04, color(40), color(45));
 labelToggle = new Button(0, -100, 375 * 0.8, 667 * 0.1, 667 * 0.015, "Goal Labels: OFF", color(0, 0), color(210), 667 * 0.012, 375 * 0.059, color(50), color(45));
@@ -185,8 +185,10 @@ function menu() {
   set.drawButton();
   if (set.clicked) appState = -1;
   image(gear,xC+154.15*sF, yC-300.15*sF,40*sF,40*sF);
-  inf.drawButton();
-  if(inf.clicked)appState=-2;
+  back.drawButton();
+  if(back.clicked)window.open("https://vexscoring.app/","_self");
+  //inf.drawButton();
+  //if(inf.clicked)appState=-2;
 }
 
 function nmatch() {
