@@ -1,4 +1,4 @@
-let version="0.0.6"
+let version="0.0.7"
 
 let yellow; //Color Presets
 let purple;
@@ -977,21 +977,22 @@ class RingCounter{
     this.minus.updateButton();
     if(this.plus.clicked){
       this.ringCount++;
-      if(this.ringCount==5&&mogoSelected>=4&&this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]<5){
+      let nPoleMax=7;
+      if(this.ringCount==nPoleMax+1&&mogoSelected>=4&&this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]<nPoleMax){
         this.ringCount--;
         //fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[2].ringCount++;
         fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]++;
       }
-      if(this.ringCount==5&&mogoSelected>=4&&this.id==2&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]<5){
+      if(this.ringCount==nPoleMax+1&&mogoSelected>=4&&this.id==2&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]<nPoleMax){
         this.ringCount--;
         fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]++;
       }
-      if(this.ringCount==5&&this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]<5){
+      if(this.ringCount==nPoleMax+1&&this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]<nPoleMax){
         this.ringCount--;
         //fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[4].ringCount++;
         fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]++;
       }
-      if(this.ringCount==5&&this.id==4&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]<5){
+      if(this.ringCount==nPoleMax+1&&this.id==4&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]<nPoleMax){
         this.ringCount--;
         fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]++;
       }
@@ -1074,6 +1075,8 @@ class Mogo {
       //if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.ringCounters[i].updateCounter(this.rings[i]);
       //this.rings[i]=this.ringCounters[i].ringCount;
       if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.rings[i]=this.ringCounters[i].updateCounter(this.rings[i]);
+      if(i>0&&mogoSelected>3&&this.rings[i]>7)this.rings[i]=7
+      if(i==1&&mogoSelected<=3&&this.rings[i]>11)this.rings[i]=11;
     }
     fill(30,30,35);
     stroke(30,30,35);
