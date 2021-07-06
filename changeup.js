@@ -435,15 +435,15 @@ class BallCounter {
     this.blueCount = 0;
 
     this.fieldNum = 0;
-    this.redUp = new Button(this.x - this.scale * 375 * 0.14, this.y - this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 375 * 0.004, "+", color(250, 60, 60), color(210), 667 * 0.038 * this.scale, 375 * 0.2 * this.scale, color(50), color(45));
-    this.redDown = new Button(this.x - this.scale * 375 * 0.14, this.y + this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "-", color(250, 60, 60), color(210), 667 * 0.038 * this.scale, 375 * 0.2 * this.scale, color(50), color(45));
-    this.blueUp = new Button(this.x + this.scale * 375 * 0.14, this.y - this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "+", color(60, 60, 250), color(210), 667 * 0.038 * this.scale, 375 * 0.2 * this.scale, color(50), color(45));
-    this.blueDown = new Button(this.x + this.scale * 375 * 0.14, this.y + this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "-", color(60, 60, 250), color(210), 667 * 0.038 * this.scale, 375 * 0.2 * this.scale, color(50), color(45));
+    this.redUp = new Button(this.x - this.scale * 375 * 0.14, this.y - this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 375 * 0.004, "+", color(250, 60, 60), color(210), 667 * 0.038 * this.scale, 375 * 0.2 * this.scale, color(50,50,55), color(45,45,50));
+    this.redDown = new Button(this.x - this.scale * 375 * 0.14, this.y + this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "-", color(250, 60, 60), color(210), 667 * 0.038 * this.scale, 375 * 0.2 * this.scale, color(50,50,55), color(45,45,50));
+    this.blueUp = new Button(this.x + this.scale * 375 * 0.14, this.y - this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "+", color(60, 60, 250), color(210), 667 * 0.038 * this.scale, 375 * 0.2 * this.scale, color(50,50,55), color(45,45,50));
+    this.blueDown = new Button(this.x + this.scale * 375 * 0.14, this.y + this.scale * 375 * 0.23, 375 * 0.15 * this.scale, 375 * 0.15 * this.scale, 667 * 0.004, "-", color(60, 60, 250), color(210), 667 * 0.038 * this.scale, 375 * 0.2 * this.scale, color(50,50,55), color(45,45,50));
     this.redUp.sWeight = 667 * 0.004 * this.scale * 2;
     this.redDown.sWeight = 667 * 0.004 * this.scale * 2;
     this.blueUp.sWeight = 667 * 0.004 * this.scale * 2;
     this.blueDown.sWeight = 667 * 0.004 * this.scale * 2;
-    this.doubler = new Button(this.x, this.y + 667 * 0.26 * this.scale, 375 * 0.6 * this.scale, 667 * 0.08 * this.scale, 667 * 0.02, "Not Doubled", color(100), color(210), 667 * 0.015 * this.scale, 375 * 0.06 * this.scale, color(50), color(45));
+    this.doubler = new Button(this.x, this.y + 667 * 0.26 * this.scale, 375 * 0.6 * this.scale, 667 * 0.08 * this.scale, 667 * 0.02, "Not Doubled", color(100,100,105), color(210), 667 * 0.015 * this.scale, 375 * 0.06 * this.scale, color(50,50,55), color(45,45,50));
     if(this.scale==extraSize){
       this.redUp.x-=80;
       this.redDown.x-=80;
@@ -597,7 +597,7 @@ class Field {
 
   drawButtons() {
     noStroke();
-    fill(50);
+    fill(50,50,55);
     //textFont(dual, width*0.08);
     textFont(regular, 375*0.12*sF);
     //textSize(375 * 0.06 * sF);
@@ -640,7 +640,7 @@ class Field {
     noFill();
     //stroke(100);
     strokeWeight(667 * 0.004 * sF);
-    stroke(80);
+    stroke(80,80,85);
     line(xC - 375 * 0.01 * sF, yC - 137.55 * sF, xC - 375 * 0.01 * sF, yC + 124.95 * sF);
     line(xC + 375 * 0.01 * sF, yC - 137.55 * sF, xC + 375 * 0.01 * sF, yC + 124.95 * sF);
     line(xC - 375 * 0.7 * 0.25 * sF, yC - 137.55 * sF, xC - 375 * 0.7 * 0.25 * sF, yC + 124.95 * sF);
@@ -1119,13 +1119,13 @@ class Goal {
     if (this.remoteC.doubler.clicked) {
       if (rField[0].doubled[fieldSelected] == goalSelected) {
         this.a = this.remoteC.doubler;
-        this.a.s = color(100);
+        this.a.s = color(100,100,105);
         this.a.bText = "Not Doubled";
         rField[0].doubled[fieldSelected] = -1;
       } else {
         if (rField[0].doubled[fieldSelected] != -1) {
           this.b = rField[0].rFields[fieldSelected].goals[rField[0].doubled[fieldSelected]].remoteC.doubler;
-          this.b.s = color(100);
+          this.b.s = color(100,100,105);
           this.b.bText = "Not Doubled";
         }
         rField[0].doubled[fieldSelected] = this.ID;
