@@ -1,4 +1,4 @@
-let version="1.0.0";
+let version="1.1.0";
 
 let fields = [] //=new Field[2];
 let rField = [] //=new remoteField[2];
@@ -173,7 +173,7 @@ function menu() {
   //textFont(dual, width*0.04);
   textFont(regular, 15 * sF);
   //textSize(7.5*sF)
-  fill(150);
+  fill(100,100,105);
   //text("By Chris Reimer", xC, yC - 200 * sF);
   text("Version: "+version, xC, yC - 200 * sF);
   fill(55);
