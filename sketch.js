@@ -27,8 +27,8 @@ function preload(){
 }
 
 function setup(){
-  //createCanvas(windowWidth, windowHeight);
-  createCanvas(375, 667);
+  createCanvas(windowWidth, windowHeight);
+  //createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
