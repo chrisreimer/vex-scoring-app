@@ -46,7 +46,7 @@ function setup(){
   backButton.tSize=40;
   backButton.fillA=color(40,40,45);
 
-  discordButton=new Button(0,100,200,65,"Join Server");
+  discordButton=new Button(0,100,200,65,"Join Discord");
   discordButton.fillA=color(88, 101, 242);
   discordButton.fillA2=color(73, 86, 222);
   discordButton.tSize=20;
