@@ -105,7 +105,7 @@ function draw(){
     text("This app is still in development,\nand may require you to manually\nclear the cache to be updated.\n\nThis site is a Progressive Web App,\nand can be downloaded to the\nhome screen using the share\nbutton on iOS, or through the\npop-up window on Android.\n\nBugs and Suggestions\ncan be submitted in\nour discord server.",0,-110);
     discordButton.updateButton();
     if(discordButton.clicked){
-      window.open("https://discord.gg/PFMRPrhdmQ","_blank");
+      window.open("https://discord.gg/PFMRPrhdmQ","_self");
     }
   }
 }
