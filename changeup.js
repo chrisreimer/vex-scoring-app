@@ -146,7 +146,7 @@ function draw() {
   held = mouseIsPressed;
   postClick2 = postClick;
   postClick = click;
-  background(40);
+  background(40,40,45);
   if (appState == 0) {
     menu();
   } else if (appState == 1) {
