@@ -1,4 +1,4 @@
-let version="0.0.6";
+let version="1.0.0";
 
 let fields = [] //=new Field[2];
 let rField = [] //=new remoteField[2];
