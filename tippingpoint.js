@@ -83,7 +83,7 @@ function setup() {
   menuButtons[4].setColors(color(40,40,45),0,0,0,0,0,color(150));
 
   backButton=new Button(-155,-300,55,55," « ");
-  backButton.textA="<<";
+  //backButton.textA="<<";
   backButton.tSize=25;
   backButton.fillA=color(40,40,45);
 
