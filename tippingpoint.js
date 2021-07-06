@@ -1,4 +1,4 @@
-let version="0.0.4"
+let version="0.0.5"
 
 let yellow; //Color Presets
 let purple;
@@ -49,8 +49,8 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  //createCanvas(375, 667);
+  //createCanvas(windowWidth, windowHeight);
+  createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
@@ -85,7 +85,6 @@ function setup() {
   backButton=new Button(-155,-300,55,55," « ");
   //backButton.textA="<<";
   backButton.tSize=40;
-  backButton.fillA=color(40,40,45);
 
   settingButtons[0]=new Button(0,-100,300,65,"Ring Counters: Fancy")
   settingButtons[0].setExtraData(2,"Ring Counters: Simple",20);
@@ -778,14 +777,14 @@ class Field{
     this.scores[2]+=this.mogos[3].ringScore();
 
     for(let i=4;i<7;i++){
-      if(this.mogos[i].zone<2)this.scores[1]+=this.mogos[i].ringScore();
-      else if(this.mogos[i].zone>2)this.scores[2]+=this.mogos[i].ringScore();
+      if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled))this.scores[1]+=this.mogos[i].ringScore();
+      else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled))this.scores[2]+=this.mogos[i].ringScore();
     }
 
     //Mogo Zone Points
     for(let i=0;i<7;i++){
-      if(this.mogos[i].zone<2&&this.mogos[i].id!=2&&this.mogos[i].id!=3)this.scores[1]+=20;
-      else if(this.mogos[i].zone>2&&this.mogos[i].id!=0&&this.mogos[i].id!=1)this.scores[2]+=20;
+      if(this.mogos[i].zone==1&&this.mogos[i].id!=2&&this.mogos[i].id!=3)this.scores[1]+=20;
+      else if(this.mogos[i].zone==3&&this.mogos[i].id!=0&&this.mogos[i].id!=1)this.scores[2]+=20;
     }
 
 
@@ -793,13 +792,13 @@ class Field{
     if(this.platButtons[0].toggled){
       this.scores[1]+=this.platButtons[2].textA*30;
       for(let j=0;j<this.zoneMogos[0].length;j++){
-        if(this.zoneMogos[0][j].id!=2&&this.zoneMogos[0][j].id!=3)this.scores[1]+=20;
+        if(this.zoneMogos[0][j].id!=2&&this.zoneMogos[0][j].id!=3)this.scores[1]+=40;
       }
     }
     if(this.platButtons[1].toggled){
       this.scores[2]+=this.platButtons[3].textA*30;
       for(let j=0;j<this.zoneMogos[4].length;j++){
-        if(this.zoneMogos[4][j].id!=0&&this.zoneMogos[4][j].id!=1)this.scores[2]+=20;
+        if(this.zoneMogos[4][j].id!=0&&this.zoneMogos[4][j].id!=1)this.scores[2]+=40;
       }
     }
     this.scores[3]=this.scores[1]+this.scores[2];
