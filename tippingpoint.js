@@ -1,4 +1,4 @@
-let version="0.0.5"
+let version="0.0.6"
 
 let yellow; //Color Presets
 let purple;
@@ -979,21 +979,34 @@ class RingCounter{
       this.ringCount++;
       if(this.ringCount==5&&mogoSelected>=4&&this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]<5){
         this.ringCount--;
-        fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[2].ringCount++;
+        //fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[2].ringCount++;
+        fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]++;
+      }
+      if(this.ringCount==5&&mogoSelected>=4&&this.id==2&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]<5){
+        this.ringCount--;
+        fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]++;
       }
       if(this.ringCount==5&&this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]<5){
         this.ringCount--;
-        fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[4].ringCount++;
+        //fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[4].ringCount++;
+        fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]++;
+      }
+      if(this.ringCount==5&&this.id==4&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]<5){
+        this.ringCount--;
+        fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]++;
       }
     }
     else if(this.minus.clicked){
       this.ringCount--;
       if(this.ringCount<0){
-        if(this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[2].ringCount--;
-        if(this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[4].ringCount--;
+        if(this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]--;
+        if(this.id==2&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]--;
+        if(this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]--;
+        if(this.id==4&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]--;
         this.ringCount=0;
       }
     }
+    return this.ringCount;
   }
 }
 
@@ -1058,8 +1071,9 @@ class Mogo {
   editMogo(){
     this.drawMogo();
     for(let i=0;i<this.ringCounters.length;i++){
-      if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.ringCounters[i].updateCounter(this.rings[i]);
-      this.rings[i]=this.ringCounters[i].ringCount;
+      //if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.ringCounters[i].updateCounter(this.rings[i]);
+      //this.rings[i]=this.ringCounters[i].ringCount;
+      if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.rings[i]=this.ringCounters[i].updateCounter(this.rings[i]);
     }
     fill(30,30,35);
     stroke(30,30,35);
