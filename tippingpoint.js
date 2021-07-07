@@ -1,4 +1,4 @@
-let version="0.0.8"
+let version="0.0.9"
 
 let yellow; //Color Presets
 let purple;
@@ -37,6 +37,7 @@ let pressX=0;
 let pressY=0;
 let translatedMouseX;
 let translatedMouseY;
+let enableHover;
 
 function preload(){
 
@@ -98,7 +99,7 @@ function setup() {
 
   hideRings=new Button(135,-280,75,75,"Hide\nRings");
   hideRings.setExtraData(2,"Show\nRings",17);
-  
+
   let counterSave = getItem('counterSave');
   if(!(counterSave===null)){
     settingButtons[0].toggled=counterSave;
@@ -107,6 +108,14 @@ function setup() {
   if(!(cSideSave===null)){
     settingButtons[1].toggled=cSideSave;
   }
+  enableHover=isTouchDevice();
+  console.log(enableHover);
+}
+
+function isTouchDevice() {
+  return (('ontouchstart' in window) ||
+     (navigator.maxTouchPoints > 0) ||
+     (navigator.msMaxTouchPoints > 0));
 }
 
 function windowResized() {
@@ -407,6 +416,7 @@ class Field{
     this.auton=new Button(-27,246,122-6,120,"Auton:\nTied");
     this.auton.sWeight=10;
     this.reset=new Button(102,246,122-6,120,"FIELD\nRESET");
+    this.skillsReset=new Button(130,246,60,120,"")
 
     this.platButtons=[];
     this.platButtons[0]=new Button(-102,246-32.5,122-6,55,"Unbalanced");
@@ -558,7 +568,7 @@ class Field{
   updateField(){
 
     if(postClick==2)this.scoreField();
-    
+
 
     if(mogoSelected==-1){ //Main Field Screen
 
@@ -627,15 +637,18 @@ class Field{
         //this.nodes[1][6][i].drawNode();
       //}
 
-      if(this.parked.toggled){
+      if(this.parked.toggled||appState==2){
         fill(30,30,35);
         stroke(30,30,35);
         strokeWeight(20);
-        rect(0,246,320,120,15);
+        if(appState==1)rect(0,246,320,120,15);
 
         strokeWeight(3);
         noFill();
-        stroke(30,30,35);
+        if(appState==2){
+          stroke(40,40,45);
+        }
+        else stroke(30,30,35);
         rect(27-32.5,246+32.5,55,55,15);
         rect(27+32.5,246+32.5,55,55,15);
 
@@ -646,8 +659,15 @@ class Field{
         }
         if(this.platButtons[2].textA<2){
           //stroke(30,30,35);
-          stroke(30,30,35);
-          fill(30,30,35);
+          if(appState==2)
+          {
+              stroke(40,40,45);
+              fill(40,40,45);
+          }
+          else{
+            stroke(30,30,35);
+            fill(30,30,35);
+          }
           rect(27-32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
         }
 
@@ -657,8 +677,15 @@ class Field{
           rect(27+32.5,246+32.5,55,55,15);
         }
         if(this.platButtons[3].textA<2){
-          stroke(30,30,35);
-          fill(30,30,35);
+          if(appState==2)
+          {
+              stroke(40,40,45);
+              fill(40,40,45);
+          }
+          else{
+            stroke(30,30,35);
+            fill(30,30,35);
+          }
           rect(27+32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
         }
 
@@ -676,9 +703,10 @@ class Field{
       else{
         //stroke(30,30,35);
         //strokeWeight(4);
-        fill(30,30,35);
+        //fill(30,30,35);
+        //fill(50,50,55);
         noStroke();
-        rect(-130,246,65,125,17.5);
+        //rect(-130,246,65,125,17.5);
         if(this.platButtons[0].toggled){
           fill(red.light1);
           rect(-130,246-31.25,65,62.5,17.5,17.5,0,0);
@@ -688,8 +716,8 @@ class Field{
           rect(-130,246+31.25,65,62.5,0,0,17.5,17.5);
         }
       }
-      this.parked.updateButton();
-      if(!this.parked.toggled){
+      if(appState!=2)this.parked.updateButton();
+      if(!this.parked.toggled&&appState!=2){
         noStroke();
         fill(red.light1);
         textFont(bold,20);
@@ -699,8 +727,12 @@ class Field{
 
         if(appState==1){
           this.auton.updateButton();
+          this.reset.updateButton();
         }
-        this.reset.updateButton();
+      }
+      if(appState==2){
+        this.skillsReset.updateButton();
+        this.resetIcon();
       }
       if(this.parked.clicked){
         this.parked.x*=-1;
@@ -708,7 +740,7 @@ class Field{
 
       hideRings.updateButton();
 
-      if(this.reset.clicked)this.resetField();
+      if(this.reset.clicked||this.skillsReset.clicked)this.resetField();
       if(appState==1){
         if(this.auton.clicked){
           this.autonWinner=(this.autonWinner+1)%3;
@@ -753,6 +785,20 @@ class Field{
       fill(yellow.light2);
       text(this.scores[3],0,-234);
     }
+  }
+
+  resetIcon(){
+    push();
+    translate(130,246);
+    scale(0.7);
+    stroke(210);
+    strokeWeight(3);
+    noFill();
+    arc(0,0,30,30,PI+QUARTER_PI-0.1,TWO_PI+PI-QUARTER_PI-0.1);
+    translate(-11.61,-9.49);
+    line(0,0,0,-7.25);
+    line(0,0,7,0.5);
+    pop();
   }
 
   drawField(){
@@ -815,26 +861,6 @@ class Field{
       }
     }
     this.scores[3]=this.scores[1]+this.scores[2];
-    /*
-    for(let i=0;i<5;i++){
-      for(let j=0;j<this.zoneMogos[i].length;j++){
-        if(i<2&&this.zoneMogos[i][j].id!=2&&this.zoneMogos[i][j].id!=3)this.scores[1]+=this.zoneMogos[i][j].ringScore()+20;
-        if(i>2&&this.zoneMogos[i][j].id!=0&&this.zoneMogos[i][j].id!=1)this.scores[2]+=this.zoneMogos[i][j].ringScore()+20;
-      }
-    }
-    if(this.platforms[0].balanced){
-      for(let i=0;i<this.zoneMogos[0].length;i++){
-        if(this.zoneMogos[0][i].id!=0&&this.zoneMogos[0][i].id!=1)this.scores[1]+=20;
-      }
-    }
-    if(this.platforms[1].balanced){
-      for(let i=0;i<this.zoneMogos[4].length;i++){
-        if(this.zoneMogos[4][i].id!=2&&this.zoneMogos[0][i].id!=3)this.scores[2]+=20;
-      }
-    }
-    this.scores[1]+=this.parkedBots[1]*30;
-    this.scores[2]+=this.parkedBots[2]*30;
-    */
   }
 
   resetField(){
