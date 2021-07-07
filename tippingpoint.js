@@ -962,6 +962,8 @@ class Field{
     this.auton=new Button(44-6-61-4,246,122-6,120,"Auton:\nTied",1);
     this.auton.sWeight=4;
     this.awp.toggled=false;
+    this.parked.toggled=false;
+    this.parked.x=-130;
     this.platButtons[0].toggled=false;
     this.platButtons[1].toggled=false;
     this.platButtons[2].textA=0;
