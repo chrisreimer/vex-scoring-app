@@ -1095,8 +1095,8 @@ class Mogo {
     this.zoneButtons[1]=new Button(-65,265,55,55,"");
     this.zoneButtons[1].setExtraData(2,"",30);
     this.zoneButtons[1].setColors(0,0,0,0,0,red.light2,red.light2);
-    this.zoneButtons[2]=new Button(0,265,55,55,"N");
-    this.zoneButtons[2].setExtraData(2,"N",30);
+    this.zoneButtons[2]=new Button(0,265,55,55,"");
+    this.zoneButtons[2].setExtraData(2,"",30);
     this.zoneButtons[2].setColors(0,0,0,0,0,yellow.light2,yellow.light2);
     this.zoneButtons[3]=new Button(65,265,55,55,"");
     this.zoneButtons[3].setExtraData(2,"",30);
@@ -1245,6 +1245,7 @@ class Mogo {
 
     push();
     translate(this.zoneButtons[2].x,this.zoneButtons[2].y);
+    this.drawNeut(yellow.light2);
     pop();
 
     push();
@@ -1256,6 +1257,16 @@ class Mogo {
     translate(this.zoneButtons[4].x,this.zoneButtons[4].y);
     this.drawPlat(blue.medium);
     pop();
+  }
+
+  drawNeut(iconColor){
+    strokeWeight(3);
+    noFill();
+    stroke(iconColor);
+    ellipse(0,0,33,33);
+    fill(iconColor);
+    noStroke();
+    rect(0,0,17,4.75);
   }
 
   drawPlat(iconColor){
