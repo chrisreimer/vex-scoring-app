@@ -198,7 +198,10 @@ function draw(){
     else mediumBack.updateButton();
     //else largeBack.updateButton();
     if(backButton.clicked||smallBack.clicked||mediumBack.clicked){//||largeBack.clicked){
-      if(mogoSelected==-1)appState=0;
+      if(remoteFieldSelected!=0&&mogoSelected==-1){
+        lrt.fieldButtons[remoteFieldSelected-1].toggled=false;
+      }
+      else if(mogoSelected==-1)appState=0;
       else mogoSelected=-1;
     }
     smallBack.clicked=false;
