@@ -991,13 +991,24 @@ class Field{
     this.mogos[5]=new Mogo(0,0,yellow,2,5);
     this.mogos[6]=new Mogo(0,100,yellow,1,6);
 
-    this.zoneMogos[1][0]=(this.mogos[0]);
-    this.zoneMogos[1][1]=(this.mogos[1]);
-    this.zoneMogos[3][0]=(this.mogos[2]);
-    this.zoneMogos[3][1]=(this.mogos[3]);
-    this.zoneMogos[2].push(this.mogos[4]);
-    this.zoneMogos[2].push(this.mogos[5]);
-    this.zoneMogos[2].push(this.mogos[6]);
+    if(this!=skillsField){
+      this.zoneMogos[1][0]=(this.mogos[0]);
+      this.zoneMogos[1][1]=(this.mogos[1]);
+      this.zoneMogos[3][0]=(this.mogos[2]);
+      this.zoneMogos[3][1]=(this.mogos[3]);
+      this.zoneMogos[2].push(this.mogos[4]);
+      this.zoneMogos[2].push(this.mogos[5]);
+      this.zoneMogos[2].push(this.mogos[6]);
+    }
+    else{
+      this.zoneMogos[3][0]=(this.mogos[0]);
+      this.zoneMogos[3][1]=(this.mogos[1]);
+      this.zoneMogos[1][0]=(this.mogos[2]);
+      this.zoneMogos[1][1]=(this.mogos[3]);
+      this.zoneMogos[2].push(this.mogos[4]);
+      this.zoneMogos[2].push(this.mogos[5]);
+      this.zoneMogos[2].push(this.mogos[6]);
+    }
 
     this.mogos[0].zoneButtons[1].toggled=true;
     this.mogos[1].zoneButtons[1].toggled=true;
@@ -1120,11 +1131,26 @@ class remoteField{
     }
     else{
       //fields[remoteFieldSelected+2].updateField();
+      if(mogoSelected==-1)this.lrtHighLights();
       this.rFields[remoteFieldSelected-1].updateField();
     }
   }
 
   drawLRTField(){
+
+    this.lrtHighLights();
+
+    stroke(180);
+    strokeWeight(3);
+    line(-53,-160,-53,160);
+    line(53,-160,53,160);
+    stroke(160);
+    strokeWeight(5);
+    noFill();
+    rect(0,0,320,320,15);
+  }
+
+  lrtHighLights(){
     noStroke();
     noFill();
     if(this.lrtScores[0][0]>this.lrtScores[1][0])fill(red.dark5,50);
@@ -1142,16 +1168,6 @@ class remoteField{
     else if(this.lrtScores[0][2]<this.lrtScores[1][2])fill(blue.dark5,50);
     rect(125.5,0,64,314,0,12,12,0);
     rect(73.25,0,40.5,314)
-
-
-    stroke(180);
-    strokeWeight(3);
-    line(-53,-160,-53,160);
-    line(53,-160,53,160);
-    stroke(160);
-    strokeWeight(5);
-    noFill();
-    rect(0,0,320,320,15);
   }
 
   drawLRTScore(){
