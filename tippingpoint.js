@@ -1,4 +1,4 @@
-let version="0.0.9"
+let version="0.0.10"
 
 let yellow; //Color Presets
 let purple;
@@ -16,11 +16,16 @@ let bold;
 let matchField; //Field Objects
 let skillsField;
 let fields=[];
+let lrt;
 
 let appState=0;
 
 let menuButtons=[]; //Menu Buttons
 let backButton;
+
+let smallBack;
+let mediumBack;
+let largeBack;
 let settingButtons=[];
 let linkButtons=[];
 
@@ -74,6 +79,12 @@ function setup() {
   fields[1]=matchField;
   fields[2]=skillsField;
 
+  lrt=new remoteField();
+  fields[4]=lrt.rFields[0];
+  fields[5]=lrt.rFields[1];
+  lrt.resetLRT();
+
+
   menuButtons[0]=new Button(0,-100,300,130,"MATCH");
   menuButtons[1]=new Button(0,55,300,130,"SKILLS");
   menuButtons[2]=new Button(0,210,300,130,"REMOTE");
@@ -84,9 +95,15 @@ function setup() {
   menuButtons[4].setColors(color(40,40,45),0,0,0,0,0,color(150));
 
   backButton=new Button(-155,-300,55,55," « ");
+  smallBack=new Button(0,-300,375,55,"");
+  mediumBack=new Button(0,-290,375,86,"");
+  largeBack=new Button(0,-247,375,173,"");
   //backButton.textA="<<";
   backButton.tSize=40;
   backButton.fillA=color(40,40,45);
+  smallBack.setColors(color(0,0),color(0,0),0,0,0,0,0);
+  mediumBack.setColors(color(0,0),color(0,0),0,0,0,0,0);
+  largeBack.setColors(color(0,0),color(0,0),0,0,0,0,0);
 
   settingButtons[0]=new Button(0,-100,300,65,"Ring Counters: Fancy")
   settingButtons[0].setExtraData(2,"Ring Counters: Simple",20);
@@ -176,10 +193,17 @@ function draw(){
 
   if(appState!=0){
     backButton.updateButton();
-    if(backButton.clicked){
+
+    if(mogoSelected==5)smallBack.updateButton();
+    else mediumBack.updateButton();
+    //else largeBack.updateButton();
+    if(backButton.clicked||smallBack.clicked||mediumBack.clicked){//||largeBack.clicked){
       if(mogoSelected==-1)appState=0;
       else mogoSelected=-1;
     }
+    smallBack.clicked=false;
+    mediumBack.clicked=false;
+    //largeBack.clicked=false;
   }
 
   pop();
@@ -251,10 +275,13 @@ function updateSkills(){
 }
 
 function updateRemote(){
+  lrt.updateLRT();
+  /*
   textFont(regular,30);
   fill(220,220,230);
   noStroke();
   text("Coming\nSoon",0,0);
+  */
 }
 
 function updateInfo(){
@@ -415,6 +442,9 @@ class Field{
     //this.parked.strokeB=color(50,50,55);
     this.auton=new Button(-27,246,122-6,120,"Auton:\nTied");
     this.auton.sWeight=10;
+    this.awp=new Button(-27,246,122-6,120,"AWP:\nNo");
+    this.awp.setExtraData(2,"AWP:\nYes",25);
+    this.awp.setColors(0,0,0,0,0,color(210),0);
     this.reset=new Button(102,246,122-6,120,"FIELD\nRESET");
     this.skillsReset=new Button(130,246,60,120,"")
 
@@ -562,6 +592,7 @@ class Field{
 
     this.autonWinner=0; //0=Tied, 1=Red, 2=Blue
     this.scores=[0,0,0,0];//1=Red, 2=Blue, 3=Skills
+    this.zonePoints=[0,0,0];
   }
 
 
@@ -641,7 +672,7 @@ class Field{
         fill(30,30,35);
         stroke(30,30,35);
         strokeWeight(20);
-        if(appState==1)rect(0,246,320,120,15);
+        if(appState!=2)rect(0,246,320,120,15);
 
         strokeWeight(3);
         noFill();
@@ -657,7 +688,7 @@ class Field{
           fill(red.light2);
           rect(27-32.5,246+32.5,55,55,15);
         }
-        if(this.platButtons[2].textA<2){
+        if(this.platButtons[2].textA<2&&appState!=3){
           //stroke(30,30,35);
           if(appState==2)
           {
@@ -676,7 +707,7 @@ class Field{
           fill(blue.light2);
           rect(27+32.5,246+32.5,55,55,15);
         }
-        if(this.platButtons[3].textA<2){
+        if(this.platButtons[3].textA<2&&appState!=3){
           if(appState==2)
           {
               stroke(40,40,45);
@@ -693,6 +724,16 @@ class Field{
           this.platButtons[i].updateButton();
           if(i>1){
             if(this.platButtons[i].clicked)this.platButtons[i].textA=(this.platButtons[i].textA+1)%3;
+          }
+        }
+        if(appState==3&&(this.platButtons[2].clicked||this.platButtons[3].clicked)){
+          if(this.platButtons[2].clicked){
+            if(this.platButtons[2].textA==2)this.platButtons[2].textA=0;
+            else if(this.platButtons[2].textA==1)this.platButtons[3].textA=0;
+          }
+          else if(this.platButtons[3].clicked){
+            if(this.platButtons[3].textA==2)this.platButtons[3].textA=0;
+            else if(this.platButtons[3].textA==1)this.platButtons[2].textA=0;
           }
         }
         fill(230,230,240);
@@ -727,8 +768,11 @@ class Field{
 
         if(appState==1){
           this.auton.updateButton();
-          this.reset.updateButton();
         }
+        else if(appState==3){
+          this.awp.updateButton();
+        }
+        this.reset.updateButton();
       }
       if(appState==2){
         this.skillsReset.updateButton();
@@ -750,13 +794,13 @@ class Field{
             this.auton.textA="Auton:\nTied";
           }
           else if(this.autonWinner==1){
-            this.auton.strokeA=red.light1;
-            this.auton.textColor=red.light1;
+            this.auton.strokeA=red.light2;
+            this.auton.textColor=red.light2;
             this.auton.textA="Auton:\nRed";
           }
           else if(this.autonWinner==2){
-            this.auton.strokeA=blue.light1;
-            this.auton.textColor=blue.light1;
+            this.auton.strokeA=blue.light2;
+            this.auton.textColor=blue.light2;
             this.auton.textA="Auton:\nBlue";
           }
         }
@@ -785,6 +829,14 @@ class Field{
       fill(yellow.light2);
       text(this.scores[3],0,-234);
     }
+    /*
+    else if(appState==3){
+      if(remoteFieldSelected==1)fill(red.light2);
+      else if(remoteFieldSelected==2)fill(blue.light2);
+      textFont(regular,30);
+      text(this.scores[3],0,-252.5);
+    }
+    */
   }
 
   resetIcon(){
@@ -818,9 +870,10 @@ class Field{
 
   scoreField(){
     this.scores=[0,0,0,0];
+    this.zonePoints=[0,0,0];
 
     //Auton Points
-    if(appState!=2){
+    if(appState==1){
       this.scores[this.autonWinner]+=20;
       if(this.autonWinner==0){
         this.scores[0]=0;
@@ -829,38 +882,77 @@ class Field{
       }
     }
 
-    //Ring Points
-    this.scores[1]+=this.mogos[0].ringScore();
-    this.scores[1]+=this.mogos[1].ringScore();
-    this.scores[2]+=this.mogos[2].ringScore();
-    this.scores[2]+=this.mogos[3].ringScore();
+    if(appState!=3){
+      //Ring Points
+      this.scores[1]+=this.mogos[0].ringScore();
+      this.scores[1]+=this.mogos[1].ringScore();
+      this.scores[2]+=this.mogos[2].ringScore();
+      this.scores[2]+=this.mogos[3].ringScore();
 
-    for(let i=4;i<7;i++){
-      if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled))this.scores[1]+=this.mogos[i].ringScore();
-      else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled))this.scores[2]+=this.mogos[i].ringScore();
+      for(let i=4;i<7;i++){
+        if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled))this.scores[1]+=this.mogos[i].ringScore();
+        else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled))this.scores[2]+=this.mogos[i].ringScore();
+      }
+    }
+    else{
+      for(let i=0;i<7;i++){
+        let rScore=this.mogos[i].ringScore();
+        if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled)){
+          this.scores[3]+=rScore;
+          this.zonePoints[0]+=rScore;
+        }
+        else if(this.mogos[i].zone==2){
+          this.scores[3]+=rScore;
+          this.zonePoints[1]+=rScore;
+        }
+        else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled)){
+          this.scores[3]+=rScore;
+          this.zonePoints[2]+=rScore;
+        }
+      }
     }
 
     //Mogo Zone Points
     for(let i=0;i<7;i++){
-      if(this.mogos[i].zone==1&&this.mogos[i].id!=2&&this.mogos[i].id!=3)this.scores[1]+=20;
-      else if(this.mogos[i].zone==3&&this.mogos[i].id!=0&&this.mogos[i].id!=1)this.scores[2]+=20;
+      if(this.mogos[i].zone==1&&((this.mogos[i].id!=2&&this.mogos[i].id!=3)||appState==3)){
+        this.scores[1]+=20;
+        this.zonePoints[0]+=20;
+      }
+      else if(this.mogos[i].zone==3&&((this.mogos[i].id!=0&&this.mogos[i].id!=1)||appState==3)){
+        this.scores[2]+=20;
+        this.zonePoints[2]+=20;
+      }
+      else if(appState==3&&this.mogos[i].zone==2){
+        this.scores[3]+=20;
+        this.zonePoints[1]+=20;
+      }
     }
 
 
     //Platform Points
     if(this.platButtons[0].toggled){
       this.scores[1]+=this.platButtons[2].textA*30;
+      this.zonePoints[0]+=this.platButtons[2].textA*30;
       for(let j=0;j<this.zoneMogos[0].length;j++){
-        if(this.zoneMogos[0][j].id!=2&&this.zoneMogos[0][j].id!=3)this.scores[1]+=40;
+        if((this.zoneMogos[0][j].id!=2&&this.zoneMogos[0][j].id!=3)||appState==3){
+          this.scores[1]+=40;
+          this.zonePoints[0]+=40;
+        }
       }
     }
     if(this.platButtons[1].toggled){
       this.scores[2]+=this.platButtons[3].textA*30;
+      this.zonePoints[2]+=this.platButtons[3].textA*30;
       for(let j=0;j<this.zoneMogos[4].length;j++){
-        if(this.zoneMogos[4][j].id!=0&&this.zoneMogos[4][j].id!=1)this.scores[2]+=40;
+        if((this.zoneMogos[4][j].id!=0&&this.zoneMogos[4][j].id!=1)||appState==3){
+          this.scores[2]+=40;
+          this.zonePoints[2]+=40;
+        }
       }
     }
     this.scores[3]=this.scores[1]+this.scores[2];
+    if(appState==3)this.scores[3]=this.zonePoints[0]+this.zonePoints[1]+this.zonePoints[2];
+    return this.zonePoints;
   }
 
   resetField(){
@@ -869,6 +961,7 @@ class Field{
     this.autonWinner=0;
     this.auton=new Button(44-6-61-4,246,122-6,120,"Auton:\nTied",1);
     this.auton.sWeight=4;
+    this.awp.toggled=false;
     this.platButtons[0].toggled=false;
     this.platButtons[1].toggled=false;
     this.platButtons[2].textA=0;
@@ -947,6 +1040,248 @@ class Field{
 
 
 
+class remoteField{
+  constructor(){
+    this.rFields=[];
+    this.rFields[0]=new Field();
+    this.rFields[1]=new Field();
+
+    //this.lrtScores=[[33,50],[20,10],[60,103]];
+    this.lrtScores=[[0,0,0],[0,0,0]];
+    this.lrtWP=[0,0];
+
+
+    this.fieldButtons=[];
+    this.fieldButtons[0]=new Button(-80-5,-205,150,50,"Red");
+    this.fieldButtons[0].setColors(0,0,0,0,0,color(red.light2),color(red.light2));
+    this.fieldButtons[0].setExtraData(2,"Red",25);
+    this.fieldButtons[1]=new Button(80+5,-205,150,50,"Blue");
+    this.fieldButtons[1].setColors(0,0,0,0,0,color(blue.light2),color(blue.light2));
+    this.fieldButtons[1].setExtraData(2,"Blue",25);
+    this.lrtAuton=new Button(-85,246,150,120,"Auton:\nTie");
+    this.lrtReset=new Button(85,246,150,120,"Reset\nFields");
+    this.autonWinner=0; //0: Tied, 1:Red, 2:Blue
+  }
+
+  updateLRT(){
+
+    if(postClick==2)this.scoreLRT();
+
+    if(mogoSelected==-1){
+      for(let i=0;i<2;i++){
+        this.fieldButtons[i].updateButton();
+      }
+    }
+    if(this.fieldButtons[0].clicked){
+      this.fieldButtons[1].toggled=false;
+    }
+    else if(this.fieldButtons[1].clicked){
+      this.fieldButtons[0].toggled=false;
+    }
+    if(this.fieldButtons[0].toggled){
+      remoteFieldSelected=1;
+    }
+    else if(this.fieldButtons[1].toggled){
+      remoteFieldSelected=2;
+    }
+    else if(!this.fieldButtons[0].toggled&&!this.fieldButtons[1].toggled){
+      remoteFieldSelected=0;
+    }
+
+    if(remoteFieldSelected==0){
+      this.drawLRTField();
+      this.drawLRTScore();
+      this.lrtAuton.updateButton();
+      if(this.lrtAuton.clicked){
+        this.autonWinner=(this.autonWinner+1)%3;
+        if(this.autonWinner==0){
+          this.lrtAuton.strokeA=color(0,0);
+          this.lrtAuton.textColor=color(230,230,240);
+          this.lrtAuton.textA="Auton:\nTied";
+        }
+        else if(this.autonWinner==1){
+          this.lrtAuton.strokeA=red.light2;
+          this.lrtAuton.textColor=red.light2;
+          this.lrtAuton.textA="Auton:\nRed";
+        }
+        else if(this.autonWinner==2){
+          this.lrtAuton.strokeA=blue.light2;
+          this.lrtAuton.textColor=blue.light2;
+          this.lrtAuton.textA="Auton:\nBlue";
+        }
+      }
+      this.lrtReset.updateButton();
+      if(this.lrtReset.clicked)this.resetLRT();
+    }
+    else{
+      //fields[remoteFieldSelected+2].updateField();
+      this.rFields[remoteFieldSelected-1].updateField();
+    }
+  }
+
+  drawLRTField(){
+    noStroke();
+    noFill();
+    if(this.lrtScores[0][0]>this.lrtScores[1][0])fill(red.dark5,50);
+    else if(this.lrtScores[0][0]<this.lrtScores[1][0])fill(blue.dark5,50);
+    rect(-125.5,0,64,314,12,0,0,12);
+    rect(-73.25,0,40.5,314)
+
+    noFill();
+    if(this.lrtScores[0][1]>this.lrtScores[1][1])fill(red.dark5,50)
+    else if(this.lrtScores[0][1]<this.lrtScores[1][1])fill(blue.dark5,50);
+    rect(0,0,106,314)
+
+    noFill();
+    if(this.lrtScores[0][2]>this.lrtScores[1][2])fill(red.dark5,50)
+    else if(this.lrtScores[0][2]<this.lrtScores[1][2])fill(blue.dark5,50);
+    rect(125.5,0,64,314,0,12,12,0);
+    rect(73.25,0,40.5,314)
+
+
+    stroke(180);
+    strokeWeight(3);
+    line(-53,-160,-53,160);
+    line(53,-160,53,160);
+    stroke(160);
+    strokeWeight(5);
+    noFill();
+    rect(0,0,320,320,15);
+  }
+
+  drawLRTScore(){
+    textFont(bold,30);
+    strokeWeight(2);
+    noStroke();
+    fill(red.light2);
+    if(this.lrtScores[0][0]>this.lrtScores[1][0]){
+      stroke(240);
+      fill(red.dark1);
+    }
+    text(this.lrtScores[0][0],-107,-134);
+
+    noStroke();
+    fill(blue.light2);
+    if(this.lrtScores[0][0]<this.lrtScores[1][0]){
+      stroke(240);
+      fill(blue.dark1);
+    }
+    text(this.lrtScores[1][0],-107,-100);
+
+    fill(red.light2);
+    noStroke();
+    if(this.lrtScores[0][1]>this.lrtScores[1][1]){
+      stroke(240);
+      fill(red.dark1);
+    }
+    text(this.lrtScores[0][1],0,-134);
+
+    fill(blue.light2);
+    noStroke();
+    if(this.lrtScores[0][1]<this.lrtScores[1][1]){
+      stroke(240);
+      fill(blue.dark1);
+    }
+    text(this.lrtScores[1][1],0,-100);
+
+    fill(red.light2);
+    noStroke();
+    if(this.lrtScores[0][2]>this.lrtScores[1][2]){
+      stroke(240);
+      fill(red.dark1);
+    }
+    text(this.lrtScores[0][2],107,-134);
+
+    fill(blue.light2);
+    noStroke();
+    if(this.lrtScores[0][2]<this.lrtScores[1][2]){
+      stroke(240);
+      fill(blue.dark1);
+    }
+    text(this.lrtScores[1][2],107,-100);
+
+    fill(45,45,50);
+    strokeWeight(2);
+    stroke(100,100,105);
+    //noStroke();
+    rect(0,35,200,210,15);
+    fill(210);
+    noStroke();
+    textFont(regular,20);
+    text("Match Points:",0,-50);
+    text("Auton WP:",0,15);
+    text("Total WP:",0,80);
+
+    textFont(bold,30);
+    if(this.rFields[0].scores[3]>this.rFields[1].scores[3]){
+      stroke(240);
+      fill(red.dark1);
+    }
+    else {
+      noStroke();
+      fill(red.light2);
+    }
+    text(this.rFields[0].scores[3],-40,-20);
+
+    if(this.rFields[0].scores[3]<this.rFields[1].scores[3]){
+      stroke(240);
+      fill(blue.dark1);
+    }
+    else {
+      fill(blue.light2);
+      noStroke();
+    }
+    text(this.rFields[1].scores[3],40,-20);
+
+    noStroke();
+    fill(red.light2);
+    text(int(this.rFields[0].awp.toggled),-40,45);
+    fill(blue.light2);
+    text(int(this.rFields[1].awp.toggled),40,45);
+
+    fill(red.light2);
+    text(this.lrtWP[0],-40,110);
+    fill(blue.light2);
+    text(this.lrtWP[1],40,110);
+  }
+
+  scoreLRT(){
+    this.lrtWP=[0,0];
+    this.lrtScores[0]=this.rFields[0].scoreField();
+    this.lrtScores[1]=this.rFields[1].scoreField();
+    if(this.autonWinner!=0)this.rFields[this.autonWinner-1].scores[3]+=20;
+    else{
+      this.rFields[0].scores[3]+=10;
+      this.rFields[1].scores[3]+=10;
+    }
+    for(let i=0;i<3;i++){
+      if(this.lrtScores[0][i]>this.lrtScores[1][i])this.lrtWP[0]++;
+      else if(this.lrtScores[0][i]<this.lrtScores[1][i])this.lrtWP[1]++;
+    }
+    if(this.rFields[0].awp.toggled)this.lrtWP[0]++;
+    if(this.rFields[1].awp.toggled)this.lrtWP[1]++;
+    if(this.rFields[0].scores[3]>this.rFields[1].scores[3])this.lrtWP[0]+=2;
+    else if(this.rFields[0].scores[3]<this.rFields[1].scores[3])this.lrtWP[1]+=2;
+    else{
+      this.lrtWP[0]++;
+      this.lrtWP[1]++;
+    }
+  }
+  resetLRT(){
+    this.autonWinner=0;
+    this.lrtAuton.textA="Auton:\nTied";
+    this.lrtAuton.textColor=color(230,230,240);
+    this.lrtAuton.strokeA=color(0,0);
+    this.lrtScores=[[0,0,0],[0,0,0]];
+    this.lrtWP=[0,0];
+    this.rFields[0].resetField();
+    this.rFields[1].resetField();
+    this.scoreLRT();
+  }
+}
+
+
+
 
 
 
@@ -963,6 +1298,7 @@ class ColorBase{
   this.dark2=color(this.r-20,this.g-20,this.b-20);
   this.dark3=color(this.r-30,this.g-30,this.b-30);
   this.dark4=color(this.r-40,this.g-40,this.b-40);
+  this.dark5=color(this.r,this.g,this.b,90);
   }
 }
 
@@ -1220,7 +1556,7 @@ class Mogo {
 
   ringScore(){
     this.sum=0;
-    this.sum+=this.rings[0];
+    if(appState!=3)this.sum+=this.rings[0];
     this.sum+=(this.rings[1]+this.rings[2])*3;
     this.sum+=(this.rings[3]+this.rings[4])*10;
     //if((this.zone<2&&(this.id==2||this.id==3))||(this.zone>2&&(this.id==0||this.id==1)))this.sum=0;
