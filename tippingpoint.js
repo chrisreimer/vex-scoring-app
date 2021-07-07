@@ -37,7 +37,7 @@ let pressX=0;
 let pressY=0;
 let translatedMouseX;
 let translatedMouseY;
-let enableHover;
+let disableHover;
 
 function preload(){
 
@@ -108,8 +108,8 @@ function setup() {
   if(!(cSideSave===null)){
     settingButtons[1].toggled=cSideSave;
   }
-  enableHover=isTouchDevice();
-  console.log(enableHover);
+  disableHover=isTouchDevice();
+  //console.log(disableHover);
 }
 
 function isTouchDevice() {
@@ -343,7 +343,7 @@ class Button{
     textFont(regular,this.tSize);
     strokeWeight(this.sWeight);
     if(this.toggled&&this.type==2){
-      if(this.hover){
+      if(this.hover&&(!disableHover||mouseIsPressed)){
         fill(this.fillB2);
         if(this.fillB2==color(0,0))noFill();
       }
@@ -359,7 +359,7 @@ class Button{
       text(this.textB,this.x,this.y-4);
     }
     else{
-      if(this.hover){
+      if(this.hover&&(!disableHover||mouseIsPressed)){
         fill(this.fillA2);
         if(this.fillA2==color(0,0))noFill();
       }
