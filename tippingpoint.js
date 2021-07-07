@@ -702,12 +702,14 @@ class Field{
             stroke(30,30,35);
             fill(30,30,35);
           }
+          strokeWeight(5);
           rect(27-32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
         }
 
         if(this.platButtons[3].textA>0){
           stroke(blue.light2);
           fill(blue.light2);
+          strokeWeight(3);
           rect(27+32.5,246+32.5,55,55,15);
         }
         if(this.platButtons[3].textA<2&&appState!=3){
@@ -720,6 +722,7 @@ class Field{
             stroke(30,30,35);
             fill(30,30,35);
           }
+          strokeWeight(5);
           rect(27+32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
         }
 
@@ -983,13 +986,15 @@ class Field{
     }
     */
     this.zoneMogos=[[],[],[],[],[]];
-    this.mogos[2]=new Mogo(80,-133-5,blue,0,2);
-    this.mogos[3]=new Mogo(125,100-10,blue,0,3);
-    this.mogos[0]=new Mogo(-80,133,red,0,0);
-    this.mogos[1]=new Mogo(-125,-100+5,red,0,1);
-    this.mogos[4]=new Mogo(0,-100,yellow,1,4);
-    this.mogos[5]=new Mogo(0,0,yellow,2,5);
-    this.mogos[6]=new Mogo(0,100,yellow,1,6);
+
+    this.mogos[2]=new Mogo(80,-133-5,blue,0,2,3);
+    this.mogos[3]=new Mogo(125,100-10,blue,0,3,3);
+    this.mogos[0]=new Mogo(-80,133,red,0,0,1);
+    this.mogos[1]=new Mogo(-125,-100+5,red,0,1,1);
+    this.mogos[4]=new Mogo(0,-100,yellow,1,4,2);
+    this.mogos[5]=new Mogo(0,0,yellow,2,5,2);
+    this.mogos[6]=new Mogo(0,100,yellow,1,6,2);
+
 
     if(this!=skillsField){
       this.zoneMogos[1][0]=(this.mogos[0]);
@@ -1001,6 +1006,10 @@ class Field{
       this.zoneMogos[2].push(this.mogos[6]);
     }
     else{
+      this.mogos[0].zone=3;
+      this.mogos[1].zone=3;
+      this.mogos[2].zone=1;
+      this.mogos[3].zone=1;
       this.zoneMogos[3][0]=(this.mogos[0]);
       this.zoneMogos[3][1]=(this.mogos[1]);
       this.zoneMogos[1][0]=(this.mogos[2]);
@@ -1412,16 +1421,16 @@ class RingCounter{
 
 
 class Mogo {
-  constructor(x_,y_,c_,type_,id_){
+  constructor(x_,y_,c_,type_,id_,zone_){
     this.x=x_;
     this.y=y_;
     this.c=c_;
     this.type=type_;//0=Alliance, 1=Low Neutral, 2=High Neutral
     this.id=id_;
     this.rings=[0,0,0,0,0]; //[0]=Base, [1]=Left Low Pole, [2]=Right Low Pole, [3]=Left High Pole, [4]=Right High Pole
-    this.zone=2;  //0=Red Platform, 1=Red Home Zone, 2=Neutral Zone, 3=Blue Home Zone, 4=Blue Platform
-    if(this.id==0||this.id==1)this.zone=1;
-    if(this.id==2||this.id==3)this.zone=3;
+    this.zone=zone_;  //0=Red Platform, 1=Red Home Zone, 2=Neutral Zone, 3=Blue Home Zone, 4=Blue Platform
+    //if(this.id==0||this.id==1)this.zone=1;
+    //if(this.id==2||this.id==3)this.zone=3;
 
     this.dragged=false;
 
