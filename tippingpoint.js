@@ -1,9 +1,10 @@
-let version="0.0.10"
+let version="0.0.11"
 
 let yellow; //Color Presets
 let purple;
 let red;
 let blue;
+let green;
 
 let screenScale=1;
 
@@ -68,6 +69,7 @@ function setup() {
   purple=new ColorBase(130, 60, 180);
   red=new ColorBase(200, 20, 20);
   blue=new ColorBase(25, 95, 200);
+  green=new ColorBase(20,200,20);
 
 
   matchField=new Field();
@@ -835,14 +837,20 @@ class Field{
       fill(yellow.light2);
       text(this.scores[3],0,-234);
     }
-    /*
+
     else if(appState==3){
-      if(remoteFieldSelected==1)fill(red.light2);
-      else if(remoteFieldSelected==2)fill(blue.light2);
+      //if(remoteFieldSelected==1)fill(red.light2);
+      //else if(remoteFieldSelected==2)fill(blue.light2);
       textFont(regular,30);
-      text(this.scores[3],0,-252.5);
+      //text(this.scores[3],0,-252.5);
+      fill(red.medium);
+      text(this.zonePoints[0],-60,-255);
+      fill(yellow.medium);
+      text(this.zonePoints[1],0,-255);
+      fill(blue.medium);
+      text(this.zonePoints[2],60,-255);
     }
-    */
+
   }
 
   resetIcon(){
@@ -876,8 +884,10 @@ class Field{
 
   scoreField(){
     this.scores=[0,0,0,0];
-    this.zonePoints=[0,0,0];
+    this.zonePoints=[0,0,0,0];
 
+
+    if(appState==1||appState==2){
     //Auton Points
     if(appState==1){
       this.scores[this.autonWinner]+=20;
@@ -896,41 +906,18 @@ class Field{
       this.scores[2]+=this.mogos[3].ringScore();
 
       for(let i=4;i<7;i++){
-        if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled))this.scores[1]+=this.mogos[i].ringScore();
-        else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled))this.scores[2]+=this.mogos[i].ringScore();
-      }
-    }
-    else{
-      for(let i=0;i<7;i++){
-        let rScore=this.mogos[i].ringScore();
-        if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled)){
-          this.scores[3]+=rScore;
-          this.zonePoints[0]+=rScore;
-        }
-        else if(this.mogos[i].zone==2){
-          this.scores[3]+=rScore;
-          this.zonePoints[1]+=rScore;
-        }
-        else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled)){
-          this.scores[3]+=rScore;
-          this.zonePoints[2]+=rScore;
-        }
+        if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled)))this.scores[1]+=this.mogos[i].ringScore();
+        else if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled)))this.scores[2]+=this.mogos[i].ringScore();
       }
     }
 
     //Mogo Zone Points
     for(let i=0;i<7;i++){
-      if(this.mogos[i].zone==1&&((this.mogos[i].id!=2&&this.mogos[i].id!=3)||appState==3)){
+      if(this.mogos[i].zone==1&&this.mogos[i].id!=2&&this.mogos[i].id!=3&&!this.mogos[i].scored.toggled){
         this.scores[1]+=20;
-        this.zonePoints[0]+=20;
       }
-      else if(this.mogos[i].zone==3&&((this.mogos[i].id!=0&&this.mogos[i].id!=1)||appState==3)){
+      else if(this.mogos[i].zone==3&&this.mogos[i].id!=0&&this.mogos[i].id!=1&&!this.mogos[i].scored.toggled){
         this.scores[2]+=20;
-        this.zonePoints[2]+=20;
-      }
-      else if(appState==3&&this.mogos[i].zone==2){
-        this.scores[3]+=20;
-        this.zonePoints[1]+=20;
       }
     }
 
@@ -938,24 +925,71 @@ class Field{
     //Platform Points
     if(this.platButtons[0].toggled){
       this.scores[1]+=this.platButtons[2].textA*30;
-      this.zonePoints[0]+=this.platButtons[2].textA*30;
       for(let j=0;j<this.zoneMogos[0].length;j++){
-        if((this.zoneMogos[0][j].id!=2&&this.zoneMogos[0][j].id!=3)||appState==3){
+        if(this.zoneMogos[0][j].id!=2&&this.zoneMogos[0][j].id!=3&&!this.zoneMogos[0][j].scored.toggled){
           this.scores[1]+=40;
-          this.zonePoints[0]+=40;
         }
       }
     }
     if(this.platButtons[1].toggled){
       this.scores[2]+=this.platButtons[3].textA*30;
-      this.zonePoints[2]+=this.platButtons[3].textA*30;
       for(let j=0;j<this.zoneMogos[4].length;j++){
-        if((this.zoneMogos[4][j].id!=0&&this.zoneMogos[4][j].id!=1)||appState==3){
+        if(this.zoneMogos[4][j].id!=0&&this.zoneMogos[4][j].id!=1&&!this.zoneMogos[4][j].scored.toggled){
           this.scores[2]+=40;
-          this.zonePoints[2]+=40;
         }
       }
     }
+    }
+    else if(appState==3){
+
+        for(let i=0;i<7;i++){
+          let rScore=this.mogos[i].ringScoreLRT();
+          if(!this.mogos[i].scored.toggled){
+          if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled)){
+            this.zonePoints[0]+=rScore;
+          }
+          else if(this.mogos[i].zone==2){
+            this.zonePoints[1]+=rScore;
+          }
+          else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled)){
+            this.zonePoints[2]+=rScore;
+          }
+        }
+        }
+
+
+      //Mogo Zone Points
+      for(let i=0;i<7;i++){
+        if(!this.mogos[i].scored.toggled){
+        if(this.mogos[i].zone==1){
+          this.zonePoints[0]+=30;
+        }
+        else if(this.mogos[i].zone==3){
+          this.zonePoints[2]+=30;
+        }
+        else if(appState==3&&this.mogos[i].zone==2){
+          this.zonePoints[1]+=10;
+        }
+        }
+      }
+
+
+      //Platform Points
+      if(this.platButtons[0].toggled){
+        this.zonePoints[0]+=this.platButtons[2].textA*30;
+        for(let j=0;j<this.zoneMogos[0].length;j++){
+          if(!this.zoneMogos[0][j].scored.toggled)this.zonePoints[0]+=40;
+        }
+      }
+      if(this.platButtons[1].toggled){
+        this.zonePoints[2]+=this.platButtons[3].textA*30;
+        for(let j=0;j<this.zoneMogos[4].length;j++){
+          if(!this.zoneMogos[4][j].scored.toggled)this.zonePoints[2]+=40;
+        }
+      }
+    }
+
+
     this.scores[3]=this.scores[1]+this.scores[2];
     if(appState==3)this.scores[3]=this.zonePoints[0]+this.zonePoints[1]+this.zonePoints[2];
     return this.zonePoints;
@@ -1177,6 +1211,7 @@ class remoteField{
     else if(this.lrtScores[0][2]<this.lrtScores[1][2])fill(blue.dark5,50);
     rect(125.5,0,64,314,0,12,12,0);
     rect(73.25,0,40.5,314)
+
   }
 
   drawLRTScore(){
@@ -1470,6 +1505,10 @@ class Mogo {
     this.zoneButtons[4]=new Button(130,265,55,55,"");
     this.zoneButtons[4].setExtraData(2,"",30);
     this.zoneButtons[4].setColors(0,0,0,0,0,blue.medium,blue.medium);
+
+    this.scored=new Button(130,200,55,55,"");
+    this.scored.setExtraData(2,"",30);
+    this.scored.setColors(0,0,0,0,green.light2,red.light2,0);
   }
 
 
@@ -1485,7 +1524,11 @@ class Mogo {
     fill(30,30,35);
     stroke(30,30,35);
     strokeWeight(20);
-    rect(0,265,55*5+40,55,15);
+    rect(0,265,55*5+40,55,15,0,15,15);
+
+    if(settingButtons[1].toggled)this.scored.x=-130;
+    else this.scored.x=130;
+    rect(this.scored.x,this.scored.y,55,55,15,15,0,0);
     for(let i=0;i<5;i++){
       this.zoneButtons[i].updateButton();
       if(this.zoneButtons[i].clicked){
@@ -1496,6 +1539,7 @@ class Mogo {
         this.moveMogo(i);
       }
     }
+    this.scored.updateButton();
     this.drawIcons();
   }
 
@@ -1586,10 +1630,19 @@ class Mogo {
 
   ringScore(){
     this.sum=0;
-    if(appState!=3)this.sum+=this.rings[0];
+    this.sum+=this.rings[0];
     this.sum+=(this.rings[1]+this.rings[2])*3;
     this.sum+=(this.rings[3]+this.rings[4])*10;
     //if((this.zone<2&&(this.id==2||this.id==3))||(this.zone>2&&(this.id==0||this.id==1)))this.sum=0;
+    return this.sum;
+  }
+
+  ringScoreLRT(){
+    this.sum=0;
+    for(let i=1;i<5;i++){
+      if(this.rings[i]>=4)this.sum+=4*((floor((i+1)*0.5)-1)*7+3);
+      else if(this.rings[i]>=1)this.sum+=1*((floor((i+1)*0.5)-1)*7+3);
+    }
     return this.sum;
   }
 
@@ -1623,6 +1676,39 @@ class Mogo {
     translate(this.zoneButtons[4].x,this.zoneButtons[4].y);
     this.drawPlat(blue.medium);
     pop();
+
+    push();
+    translate(this.scored.x,this.scored.y);
+    this.drawScored();
+    pop();
+  }
+
+  drawScored(){
+    stroke(green.light2);
+    if(this.scored.toggled){
+      translate(0,2);
+      stroke(red.light2);
+    }
+    line(-17,17,17,17);
+    strokeWeight(3);
+    noFill();
+    if(this.scored.toggled)translate(0,-7);
+    beginShape();
+    vertex(-9,15);
+    vertex(-9,10);
+    vertex(-11,10);
+    vertex(-11,7);
+    vertex(-8,3);
+    vertex(8,3);
+    vertex(11,7);
+    vertex(11,10);
+    vertex(9,10);
+    vertex(9,15);
+    vertex(-9,15);
+    endShape();
+    line(0,3,0,-10);
+    line(0,-10,6,-14);
+    line(0,-10,-6,-14);
   }
 
   drawNeut(iconColor){
@@ -1717,6 +1803,22 @@ class Mogo {
     translate(0, -50);
     push();
     scale(1.4);
+
+/*
+    if(this.scored.toggled){
+      push();
+      fill(180);
+      noStroke();
+      translate(0,50);
+      rotate(QUARTER_PI*0.5);
+      rect(0,0,100,10);
+      rotate(-QUARTER_PI);
+      rect(0,0,100,10);
+      pop();
+    }
+    */
+
+
     translate(0, -14);
     fill(10);
     stroke(10);
@@ -1785,12 +1887,14 @@ class Mogo {
 
     pop();
 
+
     if(hideRings.toggled&&mogoSelected==-1){
       fill(230,230,240);
       stroke(purple.dark2);
       strokeWeight(10);
       textFont(regular,45);
-      text(this.ringScore(),0,25);
+      if(appState!=3)text(this.ringScore(),0,25);
+      else text(this.ringScoreLRT(),0,25);
       //text((this.rings[0]+this.rings[1]+this.rings[2]+this.rings[3]+this.rings[4]),0,25)
     }
     else {
@@ -1925,6 +2029,22 @@ class Mogo {
     }
 
     this.drawRingsB();
+    }
+    if(this.scored.toggled&&mogoSelected==-1){
+      push();
+      translate(0,50);
+      strokeWeight(15);
+      noFill();
+      stroke(10,10,15);
+      ellipse(0,0,110,90);
+
+      fill(10,10,15);
+      noStroke();
+      rotate(QUARTER_PI*0.75);
+      //rect(0,0,110,15,2);
+      rotate(-QUARTER_PI*1.5);
+      rect(0,0,110,15,2);
+      pop();
     }
     pop();
   }
