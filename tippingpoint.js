@@ -1,4 +1,4 @@
-let version="0.0.11"
+let version="0.1.0"
 
 let yellow; //Color Presets
 let purple;
@@ -29,6 +29,10 @@ let mediumBack;
 let largeBack;
 let settingButtons=[];
 let linkButtons=[];
+
+let warningButton;
+let warningExit;
+let warned=false;
 
 let remoteFieldSelected=0;  //0=Red, 1=Blue
 let mogoSelected=-1; //-1 = Main Field, >=0 = Mogo Editor
@@ -119,6 +123,16 @@ function setup() {
   hideRings=new Button(135,-280,75,75,"Hide\nRings");
   hideRings.setExtraData(2,"Show\nRings",17);
 
+  warningButton=new Button(0,43-7.5-5,340,667-86-15-10,"This scoring app is still\nin development, and\nmay not always be in\nagreement with the\nofficial game manual.\n\nUse at your own risk.\n\n");
+  warningButton.setColors(red.dark4,red.dark4,0,0,0,0,color(230,230,240));
+  warningButton.tSize=20;
+
+  warningExit=new Button(0,210,200,80,"Proceed");
+  warningExit.setColors(red.dark1,red.dark2,0,0,0,0,color(230,230,240));
+  warningExit.setExtraData(2,"Proceed",25);
+
+
+
   let counterSave = getItem('counterSave');
   if(!(counterSave===null)){
     settingButtons[0].toggled=counterSave;
@@ -151,6 +165,12 @@ function draw(){
   push();
   translate(width*0.5,height*0.5);
   scale(screenScale);
+  if(appState!=0&&!warningExit.toggled){
+    warningExit.updateButton();
+    warningButton.updateButton();
+    initialDragging=false;
+    dragging=false;
+  }
   if(appState==0){  //Main Menu
     updateMenu();
   }
@@ -191,6 +211,17 @@ function draw(){
     noStroke();
     text("Settings", 0,-290);
     updateSettings();
+  }
+  if(appState!=0&&!warningExit.toggled){
+    //fill(red.dark5);
+    //noStroke();
+    //rect(0,43-7.5,340,667-86-15);
+    warningButton.drawButton();
+    warningExit.drawButton();
+    textFont(bold,30);
+    fill(230,230,240);
+    noStroke();
+    text("WARNING!",0,-170);
   }
 
   if(appState!=0){
@@ -790,7 +821,7 @@ class Field{
         this.parked.x*=-1;
       }
 
-      hideRings.updateButton();
+      if(warningExit.toggled)hideRings.updateButton();
 
       if(this.reset.clicked||this.skillsReset.clicked)this.resetField();
       if(appState==1){
@@ -1376,6 +1407,7 @@ class ColorBase{
   this.dark3=color(this.r-30,this.g-30,this.b-30);
   this.dark4=color(this.r-40,this.g-40,this.b-40);
   this.dark5=color(this.r,this.g,this.b,45);
+  this.mediumFade=color(this.r-20,this.g-20,this.b-20);
   }
 }
 
