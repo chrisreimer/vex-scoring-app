@@ -288,8 +288,8 @@ function updateMenu(){
   //textFont(regular,15);
   //fill(150);
   //text("By Chris Reimer",0,-200);
-  textFont(regular,25);
-  fill(red.light3);
+  textFont(regular,20);
+  fill(red.dark1);
   text("BETA "+version,0,-200);
   for(let i=0;i<5;i++){
     menuButtons[i].updateButton();
