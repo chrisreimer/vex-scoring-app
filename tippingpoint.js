@@ -1498,7 +1498,7 @@ class Mogo {
     this.zoneButtons[1].setColors(0,0,0,0,0,red.light2,red.light2);
     this.zoneButtons[2]=new Button(0,265,55,55,"");
     this.zoneButtons[2].setExtraData(2,"",30);
-    this.zoneButtons[2].setColors(0,0,0,0,0,yellow.light2,yellow.light2);
+    this.zoneButtons[2].setColors(0,0,0,0,0,yellow.light1,yellow.light1);
     this.zoneButtons[3]=new Button(65,265,55,55,"");
     this.zoneButtons[3].setExtraData(2,"",30);
     this.zoneButtons[3].setColors(0,0,0,0,0,blue.light2,blue.light2);
@@ -1508,7 +1508,7 @@ class Mogo {
 
     this.scored=new Button(130,200,55,55,"");
     this.scored.setExtraData(2,"",30);
-    this.scored.setColors(0,0,0,0,green.light2,red.light2,0);
+    this.scored.setColors(0,0,0,0,green.light1,red.light2,0);
   }
 
 
