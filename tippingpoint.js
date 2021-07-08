@@ -992,15 +992,15 @@ class Field{
       //Mogo Zone Points
       for(let i=0;i<7;i++){
         if(!this.mogos[i].scored.toggled){
-        if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&!this.platButtons[0].toggled)){
-          this.zonePoints[0]+=30;
-        }
-        else if(this.mogos[i].zone==3){
-          this.zonePoints[2]+=30;
-        }
-        else if(appState==3&&this.mogos[i].zone==2||(this.mogos[i].zone==4&&!this.platButtons[1].toggled)){
-          this.zonePoints[1]+=10;
-        }
+          if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&!this.platButtons[0].toggled)){
+            this.zonePoints[0]+=30;
+          }
+          else if(this.mogos[i].zone==2){
+            this.zonePoints[1]+=10;
+          }
+          else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&!this.platButtons[1].toggled)){
+            this.zonePoints[2]+=30;
+          }
         }
       }
 
