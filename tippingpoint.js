@@ -906,17 +906,17 @@ class Field{
       this.scores[2]+=this.mogos[3].ringScore();
 
       for(let i=4;i<7;i++){
-        if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled)))this.scores[1]+=this.mogos[i].ringScore();
-        else if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled)))this.scores[2]+=this.mogos[i].ringScore();
+        if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==1||(this.mogos[i].zone==0)))this.scores[1]+=this.mogos[i].ringScore();
+        else if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==3||(this.mogos[i].zone==4)))this.scores[2]+=this.mogos[i].ringScore();
       }
     }
 
     //Mogo Zone Points
     for(let i=0;i<7;i++){
-      if(this.mogos[i].zone==1&&this.mogos[i].id!=2&&this.mogos[i].id!=3&&!this.mogos[i].scored.toggled){
+      if((this.mogos[i].zone==1||(this.mogos[i].zone==0&&!this.platButtons[0].toggled))&&this.mogos[i].id!=2&&this.mogos[i].id!=3&&!this.mogos[i].scored.toggled){
         this.scores[1]+=20;
       }
-      else if(this.mogos[i].zone==3&&this.mogos[i].id!=0&&this.mogos[i].id!=1&&!this.mogos[i].scored.toggled){
+      else if((this.mogos[i].zone==3||(this.mogos[i].zone==4&&!this.platButtons[1].toggled))&&this.mogos[i].id!=0&&this.mogos[i].id!=1&&!this.mogos[i].scored.toggled){
         this.scores[2]+=20;
       }
     }
@@ -945,29 +945,29 @@ class Field{
         for(let i=0;i<7;i++){
           let rScore=this.mogos[i].ringScoreLRT();
           if(!this.mogos[i].scored.toggled){
-          if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&this.platButtons[0].toggled)){
-            this.zonePoints[0]+=rScore;
+            if(this.mogos[i].zone==1||(this.mogos[i].zone==0)){
+              this.zonePoints[0]+=rScore;
+            }
+            else if(this.mogos[i].zone==2){
+              this.zonePoints[1]+=rScore;
+            }
+            else if(this.mogos[i].zone==3||(this.mogos[i].zone==4)){
+              this.zonePoints[2]+=rScore;
+            }
           }
-          else if(this.mogos[i].zone==2){
-            this.zonePoints[1]+=rScore;
-          }
-          else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&this.platButtons[1].toggled)){
-            this.zonePoints[2]+=rScore;
-          }
-        }
         }
 
 
       //Mogo Zone Points
       for(let i=0;i<7;i++){
         if(!this.mogos[i].scored.toggled){
-        if(this.mogos[i].zone==1){
+        if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&!this.platButtons[0].toggled)){
           this.zonePoints[0]+=30;
         }
         else if(this.mogos[i].zone==3){
           this.zonePoints[2]+=30;
         }
-        else if(appState==3&&this.mogos[i].zone==2){
+        else if(appState==3&&this.mogos[i].zone==2||(this.mogos[i].zone==4&&!this.platButtons[1].toggled)){
           this.zonePoints[1]+=10;
         }
         }
