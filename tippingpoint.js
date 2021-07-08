@@ -1196,21 +1196,33 @@ class remoteField{
   lrtHighLights(){
     noStroke();
     noFill();
+    strokeWeight(10);
     if(this.lrtScores[0][0]>this.lrtScores[1][0])fill(red.dark5,50);
     else if(this.lrtScores[0][0]<this.lrtScores[1][0])fill(blue.dark5,50);
     rect(-125.5,0,64,314,12,0,0,12);
     rect(-73.25,0,40.5,314)
+    if(remoteFieldSelected==0){
+      rect(-125.5,0,64,314,12,0,0,12);
+      rect(-73.25,0,40.5,314)
+    }
 
     noFill();
     if(this.lrtScores[0][1]>this.lrtScores[1][1])fill(red.dark5,50)
     else if(this.lrtScores[0][1]<this.lrtScores[1][1])fill(blue.dark5,50);
     rect(0,0,106,314)
+    if(remoteFieldSelected==0){
+      rect(0,0,106,314)
+    }
 
     noFill();
     if(this.lrtScores[0][2]>this.lrtScores[1][2])fill(red.dark5,50)
     else if(this.lrtScores[0][2]<this.lrtScores[1][2])fill(blue.dark5,50);
     rect(125.5,0,64,314,0,12,12,0);
     rect(73.25,0,40.5,314)
+    if(remoteFieldSelected==0){
+      rect(125.5,0,64,314,0,12,12,0);
+      rect(73.25,0,40.5,314)
+    }
 
   }
 
@@ -1363,7 +1375,7 @@ class ColorBase{
   this.dark2=color(this.r-20,this.g-20,this.b-20);
   this.dark3=color(this.r-30,this.g-30,this.b-30);
   this.dark4=color(this.r-40,this.g-40,this.b-40);
-  this.dark5=color(this.r,this.g,this.b,90);
+  this.dark5=color(this.r,this.g,this.b,45);
   }
 }
 
