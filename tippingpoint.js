@@ -914,7 +914,9 @@ class Field{
       pop();
     }
     else{
-      fill(yellow.light1);
+      if(this==lrt.rFields[0])fill(red.light2);
+      else if(this==lrt.rFields[1])fill(blue.light2);
+      else fill(yellow.light1);
       text(this.scoredRings[1][2],-21,-32);
       text(this.scoredRings[1][1],-21,-16);
       text(this.scoredRings[1][0],-21,0)
