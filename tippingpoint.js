@@ -1,4 +1,4 @@
-let version="0.1.0"
+let version="0.1.1"
 
 let yellow; //Color Presets
 let purple;
@@ -111,19 +111,24 @@ function setup() {
   mediumBack.setColors(color(0,0),color(0,0),0,0,0,0,0);
   largeBack.setColors(color(0,0),color(0,0),0,0,0,0,0);
 
-  settingButtons[0]=new Button(0,-100,300,65,"Ring Counters: Fancy")
-  settingButtons[0].setExtraData(2,"Ring Counters: Simple",20);
-  settingButtons[1]=new Button(0,0,300,65,"Ring Counters: Left");
-  settingButtons[1].setExtraData(2,"Ring Counters: Right",20);
+  settingButtons[0]=new Button(0,-135,300,65,"Ring Editor: Fancy")
+  settingButtons[0].setExtraData(2,"Ring Editor: Simple",20);
+  settingButtons[1]=new Button(0,-45,300,65,"Ring Editors: Left");
+  settingButtons[1].setExtraData(2,"Ring Editors: Right",20);
+  settingButtons[2]=new Button(0,45,300,65,"Rings: Visible");
+  settingButtons[2].setExtraData(2,"Rings: Hidden",20);
+  settingButtons[3]=new Button(0,135,300,65,"Ring Counter: Off");
+  settingButtons[3].setExtraData(2,"Ring Counter: On",20);
 
   linkButtons[0]=new Button(0,100,200,65,"Join Server");
   linkButtons[0].setColors(color(88, 101, 242),color(73, 86, 222),0,0,0,0,0)
   linkButtons[0].tSize=20;
 
-  hideRings=new Button(135,-280,75,75,"Hide\nRings");
-  hideRings.setExtraData(2,"Show\nRings",17);
+  //hideRings=new Button(135,-280,75,75,"Hide\nRings");
+  //hideRings.setExtraData(2,"Show\nRings",17);
 
-  warningButton=new Button(0,43-7.5-5,340,667-86-15-10,"This scoring app is still\nin development, and\nmay not always be in\nagreement with the\nofficial game manual.\n\nUse at your own risk.\n\n");
+  warningButton=new Button(0,43-7.5-5,340,667-86-15-10,"This scoring app is\nstill in development,\nand until more scenarios\npertaining to mobile\ngoal scoring are\ncleared up, this app\nmay not always be\ncorrect.\n\nUse at your own risk.\n\n");
+
   warningButton.setColors(red.dark4,red.dark4,0,0,0,0,color(230,230,240));
   warningButton.tSize=20;
 
@@ -140,6 +145,19 @@ function setup() {
   let cSideSave = getItem('cSideSave');
   if(!(cSideSave===null)){
     settingButtons[1].toggled=cSideSave;
+  }
+  let ringSave = getItem('ringSave');
+  if(!(ringSave===null)){
+    settingButtons[2].toggled=ringSave;
+  }
+  let rCSave = getItem('rCSave');
+  if(!(rCSave===null)){
+    settingButtons[3].toggled=rCSave;
+  }
+
+  let warnedSave = getItem('warnedSave');
+  if(!(warnedSave===null)){
+    warningExit.toggled=warnedSave;
   }
   disableHover=isTouchDevice();
   //console.log(disableHover);
@@ -167,6 +185,7 @@ function draw(){
   scale(screenScale);
   if(appState!=0&&!warningExit.toggled){
     warningExit.updateButton();
+    if(warningExit.clicked)storeItem('warnedSave',true);
     warningButton.updateButton();
     initialDragging=false;
     dragging=false;
@@ -312,12 +331,6 @@ function updateSkills(){
 
 function updateRemote(){
   lrt.updateLRT();
-  /*
-  textFont(regular,30);
-  fill(220,220,230);
-  noStroke();
-  text("Coming\nSoon",0,0);
-  */
 }
 
 function updateInfo(){
@@ -328,9 +341,6 @@ function updateInfo(){
   if(linkButtons[0].clicked){
     window.open("https://discord.gg/PFMRPrhdmQ");
   }
-  //textFont(17);
-  //text("https://discord.gg/PFMRPrhdmQ",0,40);
-  //text("This website is setup as a\nProgressive Web App (PWA).\nThis means that it can be\ninstalled as an application\non mobile devices, and\nwill run while offline.\n\nOn Android devices there\nwill be an automatic pop-up\nasking if you want to add\nit to the Home Screen.\n\nTo download on iOS,\ntap the share button,\n(A square with an arrow\npointing up) and then\ntap 'Add to Home Screen'.",xC,yC-190*sF)
 }
 
 function updateSettings(){
@@ -339,6 +349,8 @@ function updateSettings(){
   }
   if(settingButtons[0].clicked)storeItem('counterSave',settingButtons[0].toggled);
   if(settingButtons[1].clicked)storeItem('cSideSave',settingButtons[1].toggled);
+  if(settingButtons[2].clicked)storeItem('ringsSave',settingButtons[2].toggled);
+  if(settingButtons[3].clicked)storeItem('rCSave',settingButtons[3].toggled);
 }
 
 
@@ -469,6 +481,7 @@ class Field{
     this.draggedMogo=-1;
     this.mogoDrawList=[];
     this.parkedBots; //1=Red Bots Parked, 2=Blue Bots Parked
+    this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]//[0=lrt,1=red,2=blue][0=base,1=low pole,2=high pole]
     this.platforms=[];
     this.parked=new Button(-130,246,58,118,">");
     this.parked.type=2;
@@ -545,6 +558,7 @@ class Field{
     this.nodes[0][6][5]=new mogoNode(-153,45*0.5,5);
     this.nodes[0][6][6]=new mogoNode(-153,45*1.5,6);
 
+/*
     this.nodes[1][0][0]=new mogoNode(-125,-95,0);
 
     this.nodes[1][1][0]=new mogoNode(-125,-95,0);
@@ -571,6 +585,7 @@ class Field{
     this.nodes[1][5][3]=new mogoNode(-130,95,3);
     this.nodes[1][5][4]=new mogoNode(-60,-85*0.5,4);
     this.nodes[1][5][5]=new mogoNode(-60,85*0.5,5);
+    */
 
     this.nodes[1][6][0]=new mogoNode(-125,-95,0);
     this.nodes[1][6][1]=new mogoNode(-80,133,1);
@@ -615,10 +630,12 @@ class Field{
     this.nodes[2][6][5]=new mogoNode(-25,90,5);
     this.nodes[2][6][6]=new mogoNode(25,135,6);
 
+    for(let j=0;j<=6;j++){
+      this.nodes[3][6][j]=new mogoNode(this.nodes[1][6][j].x*-1,this.nodes[1][6][j].y*-1,j);
+      if(j==0||j==1)this.nodes[3][6][j].y-=5;
+    }
     for(let i=0;i<7;i++){
       for(let j=0;j<=i;j++){
-        this.nodes[3][i][j]=new mogoNode(this.nodes[1][i][j].x*-1,this.nodes[1][i][j].y*-1,j);
-        if(j==0||j==1)this.nodes[3][i][j].y-=5;
         this.nodes[4][i][j]=new mogoNode(this.nodes[0][i][j].x*-1,this.nodes[0][i][j].y*-1,j);
       }
     }
@@ -821,7 +838,7 @@ class Field{
         this.parked.x*=-1;
       }
 
-      if(warningExit.toggled)hideRings.updateButton();
+      //if(warningExit.toggled)hideRings.updateButton();
 
       if(this.reset.clicked||this.skillsReset.clicked)this.resetField();
       if(appState==1){
@@ -848,12 +865,68 @@ class Field{
     else if(mogoSelected>=0){
       this.mogos[mogoSelected].editMogo();
     }
-    if(mogoSelected!=5)this.displayScores();
+    if(mogoSelected!=5){
+      this.displayScores();
+      if(settingButtons[3].toggled)this.drawRingCounter();
+    }
   }
+
+
+  drawRingCounter(){
+    push();
+    //stroke(yellow.light2);
+    //stroke(yellow.medium);
+    stroke(210,210,220);
+    if(appState==1)translate(135,-280);
+    else translate(140,-280);
+    strokeWeight(2);
+    noFill();
+    beginShape();
+    vertex(-8,15);
+    vertex(-8,10);
+    vertex(-10,10);
+    vertex(-10,7);
+    vertex(-7,3);
+    vertex(7,3);
+    vertex(10,7);
+    vertex(10,10);
+    vertex(8,10);
+    vertex(8,15);
+    vertex(-8,15);
+    endShape();
+    line(0,3,0,-10);
+    line(0,-10,7,-14);
+    line(0,-10,-7,-14);
+    line(0,-10,0,-26);
+    line(0,-26,6,-30);
+    line(0,-26,-6,-30);
+    textFont(bold,14);
+    noStroke();
+    if(appState==1){
+      fill(red.light2);
+      text(this.scoredRings[1][2],-21,-32);
+      text(this.scoredRings[1][1],-21,-16);
+      text(this.scoredRings[1][0],-21,0)
+      fill(blue.light2);
+      text(this.scoredRings[2][2],21,-32);
+      text(this.scoredRings[2][1],21,-16);
+      text(this.scoredRings[2][0],21,0);
+      pop();
+    }
+    else{
+      fill(yellow.light1);
+      text(this.scoredRings[1][2],-21,-32);
+      text(this.scoredRings[1][1],-21,-16);
+      text(this.scoredRings[1][0],-21,0)
+      pop();
+    }
+  }
+
 
   displayScoresFull(){
     this.displayScores();
   }
+
 
   displayScores(){
     textFont(regular,50);
@@ -916,6 +989,7 @@ class Field{
   scoreField(){
     this.scores=[0,0,0,0];
     this.zonePoints=[0,0,0,0];
+    this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]
 
 
     if(appState==1||appState==2){
@@ -936,9 +1010,26 @@ class Field{
       this.scores[2]+=this.mogos[2].ringScore();
       this.scores[2]+=this.mogos[3].ringScore();
 
+      //Ring Counter
+      for(let i=0;i<2;i++){
+        for(let j=0;j<2;j++){
+          this.scoredRings[i+1][j]=this.mogos[i*2].rings[j]+this.mogos[i*2+1].rings[j];
+        }
+      }
+
       for(let i=4;i<7;i++){
-        if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==1||(this.mogos[i].zone==0)))this.scores[1]+=this.mogos[i].ringScore();
-        else if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==3||(this.mogos[i].zone==4)))this.scores[2]+=this.mogos[i].ringScore();
+        if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==1||(this.mogos[i].zone==0))){
+          this.scores[1]+=this.mogos[i].ringScore();
+          this.scoredRings[1][0]+=this.mogos[i].rings[0];
+          this.scoredRings[1][1]+=this.mogos[i].rings[1]+this.mogos[i].rings[2];
+          this.scoredRings[1][2]+=this.mogos[i].rings[3]+this.mogos[i].rings[3];
+        }
+        else if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==3||(this.mogos[i].zone==4))){
+          this.scores[2]+=this.mogos[i].ringScore();
+          this.scoredRings[2][0]+=this.mogos[i].rings[0];
+          this.scoredRings[2][1]+=this.mogos[i].rings[1]+this.mogos[i].rings[2];
+          this.scoredRings[2][2]+=this.mogos[i].rings[3]+this.mogos[i].rings[3];
+        }
       }
     }
 
@@ -976,6 +1067,9 @@ class Field{
         for(let i=0;i<7;i++){
           let rScore=this.mogos[i].ringScoreLRT();
           if(!this.mogos[i].scored.toggled){
+            this.scoredRings[0][0]+=this.mogos[i].rings[0];
+            this.scoredRings[0][1]+=this.mogos[i].rings[1]+this.mogos[i].rings[2];
+            this.scoredRings[0][2]+=this.mogos[i].rings[3]+this.mogos[i].rings[4];
             if(this.mogos[i].zone==1||(this.mogos[i].zone==0)){
               this.zonePoints[0]+=rScore;
             }
@@ -1029,6 +1123,7 @@ class Field{
   resetField(){
     this.parkedBots=[0,0,0];
     this.scores=[0,0,0,0];
+    this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]
     this.autonWinner=0;
     this.auton=new Button(44-6-61-4,246,122-6,120,"Auton:\nTied",1);
     this.auton.sWeight=4;
@@ -1932,7 +2027,7 @@ class Mogo {
     pop();
 
 
-    if(hideRings.toggled&&mogoSelected==-1){
+    if(settingButtons[2].toggled&&mogoSelected==-1){
       fill(230,230,240);
       stroke(purple.dark2);
       strokeWeight(10);
