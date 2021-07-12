@@ -64,8 +64,8 @@ function preload(){
 }
 
 function setup() {
-  //createCanvas(windowWidth, windowHeight);
-  createCanvas(375, 667);
+  createCanvas(windowWidth, windowHeight);
+  //createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
@@ -1748,7 +1748,7 @@ class RingCounter{
     this.plus.x=this.xOriginal;
     this.minus.x=this.xOriginal;
 
-    if(settingButtons[1].toggled&&(settingButtons[0].toggled||this.id==0||mogoSelected<4)){
+    if(settingButtons[1].toggled&&((settingButtons[0].toggled&&appState!=3)||this.id==0||mogoSelected<4)){
       this.x=this.xOriginal*-1;
       this.plus.x=this.xOriginal*-1;
       this.minus.x=this.xOriginal*-1;
@@ -1760,12 +1760,12 @@ class RingCounter{
     textFont(regular,25);
     stroke(purple.medium);
     fill(230,230,240);
-    if(settingButtons[0].toggled&&(this.id==1||this.id==3)){
+    if(settingButtons[0].toggled&&appState!=3&&(this.id==1||this.id==3)){
       if(this.id==1){
-        text((this.ringCount+fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]),this.x,this.y-3);
+        text((this.ringCount+fields[appState].mogos[mogoSelected].rings[2]),this.x,this.y-3);
       }
       else if(this.id==3){
-        text((this.ringCount+fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]),this.x,this.y-3);
+        text((this.ringCount+fields[appState].mogos[mogoSelected].rings[4]),this.x,this.y-3);
       }
     }
     else text(this.ringCount,this.x,this.y-3);
