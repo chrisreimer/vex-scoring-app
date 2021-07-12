@@ -1,4 +1,4 @@
-let version="0.1.2"
+let version="0.1.2b"
 
 let yellow; //Color Presets
 let purple;
@@ -308,7 +308,7 @@ function checkClicked(){
 
   initialDragging=false;
   finalDragging=false;
-  if(!click&&held&&(abs(pressX-translatedMouseX)>3||abs(pressY-translatedMouseY)>3)){
+  if(!click&&held&&(abs(pressX-translatedMouseX)>3||abs(pressY-translatedMouseY)>2)){
     if(!dragging){
       initialDragging=true;
     }
