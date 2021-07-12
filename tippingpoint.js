@@ -1868,7 +1868,7 @@ class Mogo {
     for(let i=0;i<this.ringCounters.length;i++){
       //if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.ringCounters[i].updateCounter(this.rings[i]);
       //this.rings[i]=this.ringCounters[i].ringCount;
-      if((settingButtons[0].toggled&&i!=2&&i!=4&&appState!=3)||settingButtons[0].toggled==false)this.rings[i]=this.ringCounters[i].updateCounter(this.rings[i]);
+      if((settingButtons[0].toggled&&((i!=2&&i!=4)||appState==3))||settingButtons[0].toggled==false)this.rings[i]=this.ringCounters[i].updateCounter(this.rings[i]);
       if(i>0&&mogoSelected>3&&this.rings[i]>7)this.rings[i]=7
       if(i==1&&mogoSelected<=3&&this.rings[i]>11)this.rings[i]=11;
     }
