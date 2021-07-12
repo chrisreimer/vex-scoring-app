@@ -813,6 +813,9 @@ class Field{
           this.platButtons[i].updateButton();
           if(i>1){
             if(this.platButtons[i].clicked)this.platButtons[i].textA=(this.platButtons[i].textA+1)%3;
+            if(appState==2&&this.platButtons[2].textA+this.platButtons[3].textA>=3){
+              this.platButtons[i+1-2*floor(i/3.0)].textA--;
+            }
           }
         }
         if(appState==3&&(this.platButtons[2].clicked||this.platButtons[3].clicked)){
