@@ -1,4 +1,4 @@
-let version="0.1.1"
+let version="0.1.2"
 
 let yellow; //Color Presets
 let purple;
@@ -16,6 +16,7 @@ let bold;
 
 let matchField; //Field Objects
 let skillsField;
+let skillsSave=[];
 let fields=[];
 let lrt;
 
@@ -33,6 +34,9 @@ let linkButtons=[];
 let warningButton;
 let warningExit;
 let warned=false;
+
+let tmScreen;
+let tmSave;
 
 let remoteFieldSelected=0;  //0=Red, 1=Blue
 let mogoSelected=-1; //-1 = Main Field, >=0 = Mogo Editor
@@ -96,9 +100,9 @@ function setup() {
   menuButtons[2]=new Button(0,210,300,130,"REMOTE");
   menuButtons[3]=new Button(-155,-300,0,0,"?");
   menuButtons[3].tSize=25;
-  menuButtons[3].setColors(color(40,40,45),0,0,0,0,0,color(150));
+  menuButtons[3].setColors(color(40,40,45),0,0,0,0,0,color(150,150,160));
   menuButtons[4]=new Button(155,-300,55,55,"");
-  menuButtons[4].setColors(color(40,40,45),0,0,0,0,0,color(150));
+  menuButtons[4].setColors(color(40,40,45),0,0,0,0,0,color(150,150,160));
 
   backButton=new Button(-155,-300,55,55," « ");
   smallBack=new Button(0,-300,375,55,"");
@@ -111,14 +115,15 @@ function setup() {
   mediumBack.setColors(color(0,0),color(0,0),0,0,0,0,0);
   largeBack.setColors(color(0,0),color(0,0),0,0,0,0,0);
 
-  settingButtons[0]=new Button(0,-135,300,65,"Ring Editor: Fancy")
-  settingButtons[0].setExtraData(2,"Ring Editor: Simple",20);
+  settingButtons[0]=new Button(0,-135,300,65,"Ring Editor: Fancy\n")
+  settingButtons[0].setExtraData(2,"Ring Editor: Simple\n",20);
   settingButtons[1]=new Button(0,-45,300,65,"Ring Editors: Left");
   settingButtons[1].setExtraData(2,"Ring Editors: Right",20);
-  settingButtons[2]=new Button(0,45,300,65,"Rings: Visible");
-  settingButtons[2].setExtraData(2,"Rings: Hidden",20);
-  settingButtons[3]=new Button(0,135,300,65,"Ring Counter: Off");
-  settingButtons[3].setExtraData(2,"Ring Counter: On",20);
+  settingButtons[2]=new Button(0,45,300,65,"Rings: Visible\n");
+  settingButtons[2].setExtraData(2,"Rings: Hidden\n",20);
+  settingButtons[3]=new Button(0,135,300,65,"Tournament Mode: Off");
+  settingButtons[3].setExtraData(2,"Tournament Mode: On",20);
+  settingButtons[3].toggled=true;
 
   linkButtons[0]=new Button(0,100,200,65,"Join Server");
   linkButtons[0].setColors(color(88, 101, 242),color(73, 86, 222),0,0,0,0,0)
@@ -127,7 +132,7 @@ function setup() {
   //hideRings=new Button(135,-280,75,75,"Hide\nRings");
   //hideRings.setExtraData(2,"Show\nRings",17);
 
-  warningButton=new Button(0,43-7.5-5,340,667-86-15-10,"This scoring app is\nstill in development,\nand until more scenarios\npertaining to mobile\ngoal scoring are\ncleared up, this app\nmay not always be\ncorrect.\n\nUse at your own risk.\n\n");
+  warningButton=new Button(0,43-7.5-5,340,667-86-15-10,"This scoring app is\nstill in development,\nand until more scenarios\npertaining to mobile\ngoal and ring scoring are\ncleared up in the Official\nQnA, this app may not\nalways be correct.\n\nUse at your own risk.\n\n");
 
   warningButton.setColors(red.dark4,red.dark4,0,0,0,0,color(230,230,240));
   warningButton.tSize=20;
@@ -136,6 +141,14 @@ function setup() {
   warningExit.setColors(red.dark1,red.dark2,0,0,0,0,color(230,230,240));
   warningExit.setExtraData(2,"Proceed",25);
 
+
+  tmScreen=new Button(135,-290,75,75,"");
+  tmScreen.setExtraData(2,"",20);
+  //tmScreen.strokeA=color(100,100,110);
+  tmScreen.fillA=color(40,40,45);
+  tmSave=new Button(135,-290,75,75,"Save\nScore");
+  tmSave.tSize=17;
+  //tmScreen.fillA2=color(50,50,55);
 
 
   let counterSave = getItem('counterSave');
@@ -146,18 +159,26 @@ function setup() {
   if(!(cSideSave===null)){
     settingButtons[1].toggled=cSideSave;
   }
-  let ringSave = getItem('ringSave');
+  let ringSave=getItem('ringSave');
   if(!(ringSave===null)){
     settingButtons[2].toggled=ringSave;
   }
   let rCSave = getItem('rCSave');
   if(!(rCSave===null)){
-    settingButtons[3].toggled=rCSave;
+    //settingButtons[3].toggled=rCSave;
   }
 
   let warnedSave = getItem('warnedSave');
   if(!(warnedSave===null)){
     warningExit.toggled=warnedSave;
+  }
+
+  let skillsSaveB = getItem('skillsSave');
+  if(!(skillsSaveB===null)){
+    skillsSave=skillsSaveB;
+  }
+  else{
+    skillsSave=[0,0,0,0,0,0];
   }
   disableHover=isTouchDevice();
   //console.log(disableHover);
@@ -190,6 +211,9 @@ function draw(){
     initialDragging=false;
     dragging=false;
   }
+  if(mogoSelected!=5&&!tmScreen.toggled&&(appState==1||appState==2)&&warningExit.toggled&&settingButtons[3].toggled){
+    tmScreen.updateButton();
+  }
   if(appState==0){  //Main Menu
     updateMenu();
   }
@@ -219,7 +243,7 @@ function draw(){
     fill(200);
     noStroke();
     text("Info", 0,-290);
-    fill(100);
+    fill(100,100,110);
     textSize(15);
     text("Version "+version,0,290);
     updateInfo();
@@ -250,9 +274,8 @@ function draw(){
     else mediumBack.updateButton();
     //else largeBack.updateButton();
     if(backButton.clicked||smallBack.clicked||mediumBack.clicked){//||largeBack.clicked){
-      if(remoteFieldSelected!=0&&mogoSelected==-1){
-        lrt.fieldButtons[remoteFieldSelected-1].toggled=false;
-      }
+      if(tmScreen.toggled)tmScreen.toggled=false;
+      else if(remoteFieldSelected!=0&&mogoSelected==-1)lrt.fieldButtons[remoteFieldSelected-1].toggled=false;
       else if(mogoSelected==-1)appState=0;
       else mogoSelected=-1;
     }
@@ -334,7 +357,7 @@ function updateRemote(){
 }
 
 function updateInfo(){
-  fill(210);
+  fill(180,180,190);
   textSize(17);
   text("This app is still in development,\nand may require you to manually\nclear the cache to be updated.\n\nThis site is a Progressive Web App,\nand can be downloaded to the\nhome screen using the share\nbutton on iOS, or through the\npop-up window on Android.\n\nBugs and Suggestions\ncan be submitted in\nour discord server.",0,-110);
   linkButtons[0].updateButton();
@@ -345,12 +368,18 @@ function updateInfo(){
 
 function updateSettings(){
   for(let i=0;i<settingButtons.length;i++){
-    settingButtons[i].updateButton();
+    if(i!=3)settingButtons[i].updateButton();
   }
+  fill(210,210,220);
+  textFont(regular,13);
+  text("One ring counter per branch,\nor one per level",0,-135+12);
+  //text("Side that the counters are one",0,-45+15);
+  text("Show rings and poles, or\njust sum of ring points",0,45+12);
+
   if(settingButtons[0].clicked)storeItem('counterSave',settingButtons[0].toggled);
   if(settingButtons[1].clicked)storeItem('cSideSave',settingButtons[1].toggled);
-  if(settingButtons[2].clicked)storeItem('ringsSave',settingButtons[2].toggled);
-  if(settingButtons[3].clicked)storeItem('rCSave',settingButtons[3].toggled);
+  if(settingButtons[2].clicked)storeItem('ringSave',settingButtons[2].toggled);
+  //if(settingButtons[3].clicked)storeItem('rCSave',settingButtons[3].toggled);
 }
 
 
@@ -482,6 +511,8 @@ class Field{
     this.mogoDrawList=[];
     this.parkedBots; //1=Red Bots Parked, 2=Blue Bots Parked
     this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]//[0=lrt,1=red,2=blue][0=base,1=low pole,2=high pole]
+    this.scoredHomeZone=[0,0,0];//0=lrt,1=red,2=blue
+    this.scoredPlatform=[0,0,0];
     this.platforms=[];
     this.parked=new Button(-130,246,58,118,">");
     this.parked.type=2;
@@ -493,7 +524,7 @@ class Field{
     this.auton.sWeight=10;
     this.awp=new Button(-27,246,122-6,120,"AWP:\nNo");
     this.awp.setExtraData(2,"AWP:\nYes",25);
-    this.awp.setColors(0,0,0,0,0,color(210),0);
+    this.awp.setColors(0,0,0,0,0,color(210,210,220),0);
     this.reset=new Button(102,246,122-6,120,"FIELD\nRESET");
     this.skillsReset=new Button(130,246,60,120,"")
 
@@ -644,7 +675,7 @@ class Field{
 
 
     this.autonWinner=0; //0=Tied, 1=Red, 2=Blue
-    this.scores=[0,0,0,0];//1=Red, 2=Blue, 3=Skills
+    this.scores=[0,0,0,0];//1=Red, 2=Blue, 3=Skills,0=Saved skills
     this.zonePoints=[0,0,0];
   }
 
@@ -652,9 +683,11 @@ class Field{
   updateField(){
 
     if(postClick==2)this.scoreField();
+    if(tmScreen.toggled){
+      this.drawTMScreen();
+    }
 
-
-    if(mogoSelected==-1){ //Main Field Screen
+    if(mogoSelected==-1&&!tmScreen.toggled){ //Main Field Screen
 
       this.drawField();
 
@@ -862,13 +895,164 @@ class Field{
         }
       }
     }
-    else if(mogoSelected>=0){
+    else if(mogoSelected>=0&&!tmScreen.toggled){
       this.mogos[mogoSelected].editMogo();
     }
     if(mogoSelected!=5){
       this.displayScores();
-      if(settingButtons[3].toggled)this.drawRingCounter();
+      if(settingButtons[3].toggled&&!tmScreen.toggled&&appState!=3)this.drawRingCounter();
     }
+  }
+
+  drawTMScreen(){
+    noFill();
+    stroke(100,100,110);
+    strokeWeight(5);
+    /*
+    line(-95-60,-22,-95+60,-22);
+    line(95-60,-22,95+60,-22);
+    line(-95-60,-20*5,-95+60,-20*5);
+    line(95-60,-20*5,95+60,-20*5);
+    */
+    line(-95-60,-22,95+60,-22);
+    line(-95-60,-20*5,95+60,-20*5);
+    push();
+    scale(5);
+    strokeWeight(1);
+    stroke(210,210,220);
+    beginShape();
+    //vertex(-8,14);
+    //vertex(-8,10);
+    vertex(-10,10);
+    vertex(-10,7);
+    vertex(-7,3);
+    vertex(7,3);
+    vertex(10,7);
+    vertex(10,10);
+    vertex(-10,10);
+    //vertex(8,10);
+    //vertex(8,14);
+    //vertex(-8,14);
+    endShape();
+
+    line(-8,12,-7.3,14);
+    line(-7.3,14,7.3,14);
+    line(7.3,14,8,12);
+
+    line(-10,10,10,10);
+
+    line(0,3,0,-10);
+    line(0,-10,6,-14);
+    line(0,-10,-6,-14);
+    line(0,-13,0,-26);
+    line(0,-26,6,-30);
+    line(0,-26,-6,-30);
+
+    textFont(semibold,7);
+    noStroke();
+    if(appState==1){
+      fill(red.light2);
+      text(this.scoredRings[1][2],-19,-32+3);
+      text(this.scoredRings[1][1],-19,-16+3);
+      text(this.scoredRings[1][0],-19,0+3)
+      fill(blue.light2);
+      text(this.scoredRings[2][2],19,-32+3);
+      text(this.scoredRings[2][1],19,-16+3);
+      text(this.scoredRings[2][0],19,0+3);
+      pop();
+    }
+    else{
+      if(this==lrt.rFields[0])fill(red.light2);
+      else if(this==lrt.rFields[1])fill(blue.light2);
+      else fill(yellow.light1);
+      text(this.scoredRings[1][2]+this.scoredRings[2][2],-19,-32+3);
+      text(this.scoredRings[1][1]+this.scoredRings[2][1],-19,-16+3);
+      text(this.scoredRings[1][0]+this.scoredRings[2][0],-19,0+3)
+
+      if(appState==2){
+        fill(purple.light2);
+        text(skillsSave[0],19,-32+3);
+        text(skillsSave[1],19,-16+3);
+        text(skillsSave[2],19,0+3)
+      }
+      pop();
+    }
+    strokeWeight(3);
+    noFill();
+    push();
+    translate(0,120+3);
+    this.mogos[1].drawHouse(color(210,210,220));
+    pop();
+
+    noStroke();
+    textFont(semibold,35);
+    if(appState==1){
+    fill(red.light2);
+    text(this.scoredHomeZone[1],-95,120);
+    text(this.scoredPlatform[1],-95,190);
+    text((this.platButtons[2].textA*this.platButtons[0].toggled),-95,260);
+    fill(blue.light2);
+    text(this.scoredHomeZone[2],95,120);
+    text(this.scoredPlatform[2],95,190);
+    text((this.platButtons[3].textA*this.platButtons[1].toggled),95,260);
+    }
+    else if(appState==2){
+      fill(yellow.light1);
+      text((this.scoredHomeZone[1]+this.scoredHomeZone[2]),-95,120);
+      text((this.scoredPlatform[1]+this.scoredPlatform[2]),-95,190);
+      text((this.platButtons[2].textA*this.platButtons[0].toggled+this.platButtons[3].textA*this.platButtons[1].toggled),-95,260);
+
+      fill(purple.light2);
+      text(skillsSave[3],95,120);
+      text(skillsSave[4],95,190);
+      text(skillsSave[5],95,260);
+
+
+
+      tmSave.updateButton();
+      if(tmSave.clicked){
+        skillsSave=[this.scoredRings[1][2]+this.scoredRings[2][2],this.scoredRings[1][1]+this.scoredRings[2][1],this.scoredRings[1][0]+this.scoredRings[2][0],this.scoredHomeZone[1]+this.scoredHomeZone[2],this.scoredPlatform[1]+this.scoredPlatform[2],this.platButtons[2].textA*this.platButtons[0].toggled+this.platButtons[3].textA*this.platButtons[1].toggled];
+        storeItem('skillsSave',skillsSave)
+        }
+    }
+    push();
+    translate(0,190+3);
+    this.mogos[1].drawPlat(color(210,210,220));
+    pop();
+
+    push();
+    translate(0,10);
+    strokeWeight(10);
+    stroke(210,210,220);
+    line(-20,260,20,260);
+    strokeWeight(5);
+    stroke(40,40,45);
+    line(-20,260,20,260);
+    strokeWeight(5);
+    line(-7,265,7,265);
+    strokeWeight(3);
+    stroke(210,210,220);
+    line(-5,258,-5,270);
+    line(5,258,5,270);
+    line(-5,270,-8,273);
+    line(5,270,8,273);
+    //noFill();
+    //fill(210,210,220);
+    //stroke(red.light2);
+    //rect(-12,246,16,16,5);
+    //stroke(blue.light2);
+    //rect(12,246,16,16,5);
+
+    fill(210,210,220);
+    ellipse(-10,250,5,5)
+    ellipse(10,250,5,5);
+    line(-4,250,4,250);
+    line(-2,250,-2,242);
+    line(-2,242,4,238);
+    stroke(210,210,220);
+    noFill();
+    arc(10,236,6,6,QUARTER_PI+0.3,TWO_PI-QUARTER_PI-0.75);
+    pop();
   }
 
 
@@ -882,7 +1066,7 @@ class Field{
     strokeWeight(2);
     noFill();
     beginShape();
-    vertex(-8,15);
+    vertex(-8,14);
     vertex(-8,10);
     vertex(-10,10);
     vertex(-10,7);
@@ -891,8 +1075,8 @@ class Field{
     vertex(10,7);
     vertex(10,10);
     vertex(8,10);
-    vertex(8,15);
-    vertex(-8,15);
+    vertex(8,14);
+    vertex(-8,14);
     endShape();
     line(0,3,0,-10);
     line(0,-10,7,-14);
@@ -913,10 +1097,16 @@ class Field{
       text(this.scoredRings[2][0],21,0);
       pop();
     }
+    else if(appState==2){
+      fill(yellow.light1);
+      text(this.scoredRings[1][2]+this.scoredRings[2][2],-21,-32);
+      text(this.scoredRings[1][1]+this.scoredRings[2][1],-21,-16);
+      text(this.scoredRings[1][0]+this.scoredRings[2][0],-21,0)
+      pop();
+    }
     else{
       if(this==lrt.rFields[0])fill(red.light2);
       else if(this==lrt.rFields[1])fill(blue.light2);
-      else fill(yellow.light1);
       text(this.scoredRings[1][2],-21,-32);
       text(this.scoredRings[1][1],-21,-16);
       text(this.scoredRings[1][0],-21,0)
@@ -940,8 +1130,16 @@ class Field{
       text(this.scores[2],55,-234);
     }
     else if(appState==2){
-      fill(yellow.light2);
-      text(this.scores[3],0,-234);
+      if(!tmScreen.toggled){
+        fill(yellow.light1);
+        text(this.scores[3],0,-234);
+      }
+      else{
+        fill(yellow.light1);
+        text(this.scores[3],-55,-234);
+        fill(purple.light2);
+        text(this.scores[0],55,-234);
+      }
     }
 
     else if(appState==3){
@@ -963,7 +1161,7 @@ class Field{
     push();
     translate(130,246);
     scale(0.7);
-    stroke(210);
+    stroke(210,210,220);
     strokeWeight(3);
     noFill();
     arc(0,0,30,30,PI+QUARTER_PI-0.1,TWO_PI+PI-QUARTER_PI-0.1);
@@ -974,7 +1172,7 @@ class Field{
   }
 
   drawField(){
-    stroke(180);
+    stroke(180,180,190);
     strokeWeight(3);
     line(-53,-160,-53,160);
     line(53,-160,53,160);
@@ -982,7 +1180,7 @@ class Field{
     line(3,-160,3,160);
     line(53,-107,106,-160);
     line(-53,107,-106,160);
-    stroke(160);
+    stroke(160,160,170);
     strokeWeight(5);
     noFill();
     rect(0,0,320,320,15);
@@ -992,6 +1190,9 @@ class Field{
     this.scores=[0,0,0,0];
     this.zonePoints=[0,0,0,0];
     this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]
+    this.scoredHomeZone=[0,0,0]
+    this.scoredPlatform=[0,0,0]
+    this.scores[0]=skillsSave[0]*10+skillsSave[1]*3+skillsSave[2]+skillsSave[3]*20+skillsSave[4]*40+skillsSave[5]*30;
 
 
     if(appState==1||appState==2){
@@ -1024,13 +1225,13 @@ class Field{
           this.scores[1]+=this.mogos[i].ringScore();
           this.scoredRings[1][0]+=this.mogos[i].rings[0];
           this.scoredRings[1][1]+=this.mogos[i].rings[1]+this.mogos[i].rings[2];
-          this.scoredRings[1][2]+=this.mogos[i].rings[3]+this.mogos[i].rings[3];
+          this.scoredRings[1][2]+=this.mogos[i].rings[3]+this.mogos[i].rings[4];
         }
         else if(!this.mogos[i].scored.toggled&&(this.mogos[i].zone==3||(this.mogos[i].zone==4))){
           this.scores[2]+=this.mogos[i].ringScore();
           this.scoredRings[2][0]+=this.mogos[i].rings[0];
           this.scoredRings[2][1]+=this.mogos[i].rings[1]+this.mogos[i].rings[2];
-          this.scoredRings[2][2]+=this.mogos[i].rings[3]+this.mogos[i].rings[3];
+          this.scoredRings[2][2]+=this.mogos[i].rings[3]+this.mogos[i].rings[4];
         }
       }
     }
@@ -1039,9 +1240,11 @@ class Field{
     for(let i=0;i<7;i++){
       if((this.mogos[i].zone==1||(this.mogos[i].zone==0&&!this.platButtons[0].toggled))&&this.mogos[i].id!=2&&this.mogos[i].id!=3&&!this.mogos[i].scored.toggled){
         this.scores[1]+=20;
+        this.scoredHomeZone[1]++;
       }
       else if((this.mogos[i].zone==3||(this.mogos[i].zone==4&&!this.platButtons[1].toggled))&&this.mogos[i].id!=0&&this.mogos[i].id!=1&&!this.mogos[i].scored.toggled){
         this.scores[2]+=20;
+        this.scoredHomeZone[2]++;
       }
     }
 
@@ -1052,6 +1255,7 @@ class Field{
       for(let j=0;j<this.zoneMogos[0].length;j++){
         if(this.zoneMogos[0][j].id!=2&&this.zoneMogos[0][j].id!=3&&!this.zoneMogos[0][j].scored.toggled){
           this.scores[1]+=40;
+          this.scoredPlatform[1]++;
         }
       }
     }
@@ -1060,6 +1264,7 @@ class Field{
       for(let j=0;j<this.zoneMogos[4].length;j++){
         if(this.zoneMogos[4][j].id!=0&&this.zoneMogos[4][j].id!=1&&!this.zoneMogos[4][j].scored.toggled){
           this.scores[2]+=40;
+          this.scoredPlatform[2]++;
         }
       }
     }
@@ -1126,6 +1331,8 @@ class Field{
     this.parkedBots=[0,0,0];
     this.scores=[0,0,0,0];
     this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]
+    this.scoredHomeZone=[0,0,0];//0=lrt,1=red,2=blue
+    this.scoredPlatform=[0,0,0];
     this.autonWinner=0;
     this.auton=new Button(44-6-61-4,246,122-6,120,"Auton:\nTied",1);
     this.auton.sWeight=4;
@@ -1311,7 +1518,7 @@ class remoteField{
 
     this.lrtHighLights();
 
-    stroke(180);
+    stroke(180,180,190);
     strokeWeight(3);
     line(-53,-160,-53,160);
     line(53,-160,53,160);
@@ -1407,10 +1614,10 @@ class remoteField{
 
     fill(45,45,50);
     strokeWeight(2);
-    stroke(100,100,105);
+    stroke(100,100,110);
     //noStroke();
     rect(0,35,200,210,15);
-    fill(210);
+    fill(210,210,220);
     noStroke();
     textFont(regular,20);
     text("Match Points:",0,-50);
@@ -1658,7 +1865,7 @@ class Mogo {
     for(let i=0;i<this.ringCounters.length;i++){
       //if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.ringCounters[i].updateCounter(this.rings[i]);
       //this.rings[i]=this.ringCounters[i].ringCount;
-      if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.rings[i]=this.ringCounters[i].updateCounter(this.rings[i]);
+      if((settingButtons[0].toggled&&i!=2&&i!=4&&appState!=3)||settingButtons[0].toggled==false)this.rings[i]=this.ringCounters[i].updateCounter(this.rings[i]);
       if(i>0&&mogoSelected>3&&this.rings[i]>7)this.rings[i]=7
       if(i==1&&mogoSelected<=3&&this.rings[i]>11)this.rings[i]=11;
     }
