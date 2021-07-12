@@ -64,8 +64,8 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  //createCanvas(375, 667);
+  //createCanvas(windowWidth, windowHeight);
+  createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
@@ -1128,9 +1128,9 @@ class Field{
     noStroke();
     if(appState==1){
       fill(red.light2);
-      text(this.scores[1],-55,-234);
+      text(this.scores[1],-65,-234);
       fill(blue.light2);
-      text(this.scores[2],55,-234);
+      text(this.scores[2],65,-234);
     }
     else if(appState==2){
       if(!tmScreen.toggled){
@@ -1139,9 +1139,9 @@ class Field{
       }
       else{
         fill(yellow.light1);
-        text(this.scores[3],-55,-234);
+        text(this.scores[3],-65,-234);
         fill(purple.light2);
-        text(this.scores[0],55,-234);
+        text(this.scores[0],65,-234);
       }
     }
 
@@ -1376,6 +1376,11 @@ class Field{
       this.zoneMogos[2].push(this.mogos[4]);
       this.zoneMogos[2].push(this.mogos[5]);
       this.zoneMogos[2].push(this.mogos[6]);
+
+      this.mogos[0].zoneButtons[1].toggled=true;
+      this.mogos[1].zoneButtons[1].toggled=true;
+      this.mogos[2].zoneButtons[3].toggled=true;
+      this.mogos[3].zoneButtons[3].toggled=true;
     }
     else{
       this.mogos[0].zone=3;
@@ -1389,12 +1394,13 @@ class Field{
       this.zoneMogos[2].push(this.mogos[4]);
       this.zoneMogos[2].push(this.mogos[5]);
       this.zoneMogos[2].push(this.mogos[6]);
+
+      this.mogos[0].zoneButtons[3].toggled=true;
+      this.mogos[1].zoneButtons[3].toggled=true;
+      this.mogos[2].zoneButtons[1].toggled=true;
+      this.mogos[3].zoneButtons[1].toggled=true;
     }
 
-    this.mogos[0].zoneButtons[1].toggled=true;
-    this.mogos[1].zoneButtons[1].toggled=true;
-    this.mogos[2].zoneButtons[3].toggled=true;
-    this.mogos[3].zoneButtons[3].toggled=true;
     this.mogos[4].zoneButtons[2].toggled=true;
     this.mogos[5].zoneButtons[2].toggled=true;
     this.mogos[6].zoneButtons[2].toggled=true;
