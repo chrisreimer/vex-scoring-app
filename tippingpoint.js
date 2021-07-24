@@ -238,7 +238,7 @@ function draw(){
     text("Remote", 0,-290);
     updateRemote();
   }
-  else if(appState==4){
+  else if(appState==4){ //Info Screen
     textFont(regular, 30);
     fill(200);
     noStroke();
@@ -248,14 +248,14 @@ function draw(){
     text("Version "+version,0,290);
     updateInfo();
   }
-  else if(appState==5){
+  else if(appState==5){ //Settings Screen
     textFont(regular, 30);
     fill(200);
     noStroke();
     text("Settings", 0,-290);
     updateSettings();
   }
-  if(appState!=0&&!warningExit.toggled){
+  if(appState!=0&&!warningExit.toggled){  //Warning screen, only displays once
     //fill(red.dark5);
     //noStroke();
     //rect(0,43-7.5,340,667-86-15);
@@ -267,7 +267,7 @@ function draw(){
     text("WARNING!",0,-170);
   }
 
-  if(appState!=0){
+  if(appState!=0){  //Back button. Clicking the top of the screen also returns user to previous page
     backButton.updateButton();
 
     if(mogoSelected==5)smallBack.updateButton();
@@ -384,7 +384,7 @@ function updateSettings(){
 
 
 class Button{
-  constructor(x_,y_,w_,h_,textA_){
+  constructor(x_,y_,w_,h_,textA_){  //X, Y, Width, Height, Text. To change the colours of the button, the text when the button is toggled, or other data use setColors() and setExtraData()
   this.x=x_;
   this.y=y_;
   this.w=w_;
@@ -402,7 +402,7 @@ class Button{
   this.hover=false;
   this.toggled=false; //Stays true when button is set on
   this.clicked=false; //Only true for initial click of button
-  this.fillA=color(50,50,55);
+  this.fillA=color(50,50,55); //A=normal, B=toggled, 2=hovering
   this.fillA2=color(45,45,50);
   this.fillB=color(50,50,55);
   this.fillB2=color(45,45,50);
@@ -483,7 +483,7 @@ class Button{
 }
 
 
-class mogoNode{
+class mogoNode{ //Positions that the mobile goals snap to when dragged
   constructor(x_,y_,id_){
     this.x=x_;
     this.y=y_;
@@ -508,11 +508,14 @@ class Field{
     this.mogos=[];
     this.zoneMogos=[[],[],[],[],[]] //0=Red Platform, 1=Red Home Zone, 2=Neutral Zone, 3=Blue Home Zone, 4=Blue Platform
     this.draggedMogo=-1;
-    this.mogoDrawList=[];
+    this.mogoDrawList=[];   //Ordered list of all the mobile goals, in back to front order
     this.parkedBots; //1=Red Bots Parked, 2=Blue Bots Parked
+    
+    //These are used for the scoring summary/tournament manager page
     this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]//[0=lrt,1=red,2=blue][0=base,1=low pole,2=high pole]
     this.scoredHomeZone=[0,0,0];//0=lrt,1=red,2=blue
     this.scoredPlatform=[0,0,0];
+    
     this.platforms=[];
     this.parked=new Button(-130,246,58,118,">");
     this.parked.type=2;
@@ -551,6 +554,7 @@ class Field{
     this.platButtons[4].tSize=30;
 
     //Nodes set the position of the mogos depending on which zone they are in, and how many mogos are in that zone.
+    //Zones 1 and 3 (the red and blue home zones) don't relocate the goals depending on how many are in the zone, so only need node map for having all goals at once
 
     this.nodes=[[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]]];
 
@@ -661,11 +665,11 @@ class Field{
     this.nodes[2][6][5]=new mogoNode(-25,90,5);
     this.nodes[2][6][6]=new mogoNode(25,135,6);
 
-    for(let j=0;j<=6;j++){
+    for(let j=0;j<=6;j++){  //Flip zone 1 node map to zone 3
       this.nodes[3][6][j]=new mogoNode(this.nodes[1][6][j].x*-1,this.nodes[1][6][j].y*-1,j);
       if(j==0||j==1)this.nodes[3][6][j].y-=5;
     }
-    for(let i=0;i<7;i++){
+    for(let i=0;i<7;i++){ //Flip zone 0 node map to zone 4
       for(let j=0;j<=i;j++){
         this.nodes[4][i][j]=new mogoNode(this.nodes[0][i][j].x*-1,this.nodes[0][i][j].y*-1,j);
       }
@@ -676,7 +680,7 @@ class Field{
 
     this.autonWinner=0; //0=Tied, 1=Red, 2=Blue
     this.scores=[0,0,0,0];//1=Red, 2=Blue, 3=Skills,0=Saved skills
-    this.zonePoints=[0,0,0];
+    this.zonePoints=[0,0,0];//Lrt zones
   }
 
 
@@ -754,7 +758,7 @@ class Field{
         //this.nodes[1][6][i].drawNode();
       //}
 
-      if(this.parked.toggled||appState==2){
+      if(this.parked.toggled||appState==2){ //Platform editor tab. Is always open on skills screen
         fill(30,30,35);
         stroke(30,30,35);
         strokeWeight(20);
@@ -849,8 +853,10 @@ class Field{
           rect(-130,246+31.25,65,62.5,0,0,17.5,17.5);
         }
       }
+      
       if(appState!=2)this.parked.updateButton();
-      if(!this.parked.toggled&&appState!=2){
+      
+      if(!this.parked.toggled&&appState!=2){  //Buttons when platform editor tab not open
         noStroke();
         fill(red.light1);
         textFont(bold,20);
@@ -877,6 +883,7 @@ class Field{
       //if(warningExit.toggled)hideRings.updateButton();
 
       if(this.reset.clicked||this.skillsReset.clicked)this.resetField();
+      
       if(appState==1){
         if(this.auton.clicked){
           this.autonWinner=(this.autonWinner+1)%3;
@@ -1274,6 +1281,7 @@ class Field{
     }
     else if(appState==3){
 
+        //Ring Points
         for(let i=0;i<7;i++){
           let rScore=this.mogos[i].ringScoreLRT();
           if(!this.mogos[i].scored.toggled){
@@ -1416,12 +1424,15 @@ class Field{
       //if(!this.mogos[i].dragged)this.zoneMogos[this.mogos[i].zone].push(this.mogos[i]);
     //}
 
+    //Add the mobile goals in zones 0, 2, and 4 to the draw list
     for(let i=0;i<5;i+=2){
       for(let j=0;j<this.zoneMogos[i].length;j++){
         this.zoneMogos[i][j].setAtNode(this.nodes[i][this.zoneMogos[i].length-1][j]);
         this.mogoDrawList.push(this.zoneMogos[i][j]);
       }
     }
+    
+    //Add goals in zones 1 and 3
     for(let i=1;i<4;i+=2){
       for(let j=0;j<7;j++){
         if(this.zoneMogos[i][j]!=null){
@@ -1430,6 +1441,8 @@ class Field{
         }
       }
     }
+    
+    //Sort draw list based on height
     this.mogoDrawList.sort(this.compareY);
   }
 
@@ -1468,20 +1481,20 @@ class remoteField{
 
   updateLRT(){
 
-    if(postClick==2)this.scoreLRT();
+    if(postClick==2)this.scoreLRT(); //Update score after screen clicked
 
     if(mogoSelected==-1){
       for(let i=0;i<2;i++){
         this.fieldButtons[i].updateButton();
       }
     }
-    if(this.fieldButtons[0].clicked){
+    if(this.fieldButtons[0].clicked){ //Untoggle field tab button if the other one is pressed
       this.fieldButtons[1].toggled=false;
     }
     else if(this.fieldButtons[1].clicked){
       this.fieldButtons[0].toggled=false;
     }
-    if(this.fieldButtons[0].toggled){
+    if(this.fieldButtons[0].toggled){ //set remoteFieldSelected
       remoteFieldSelected=1;
     }
     else if(this.fieldButtons[1].toggled){
@@ -1720,7 +1733,7 @@ class ColorBase{
   this.dark3=color(this.r-30,this.g-30,this.b-30);
   this.dark4=color(this.r-40,this.g-40,this.b-40);
   this.dark5=color(this.r,this.g,this.b,45);
-  this.mediumFade=color(this.r-20,this.g-20,this.b-20);
+  this.mediumFade=color(this.r-20,this.g-20,this.b-20);//Was being used to test warning page, disregard
   }
 }
 
@@ -1883,7 +1896,7 @@ class Mogo {
     strokeWeight(20);
     rect(0,265,55*5+40,55,15,0,15,15);
 
-    if(settingButtons[1].toggled)this.scored.x=-130;
+    if(settingButtons[1].toggled)this.scored.x=-130;  //Move scored/not scored button to the left side if the ring buttons are on the right
     else this.scored.x=130;
     rect(this.scored.x,this.scored.y,55,55,15,15,0,0);
     for(let i=0;i<5;i++){
