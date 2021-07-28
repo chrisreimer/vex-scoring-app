@@ -1,4 +1,4 @@
-let version="0.1.2"
+let version="0.1.3"
 
 let yellow; //Color Presets
 let purple;
@@ -218,27 +218,28 @@ function draw(){
     updateMenu();
   }
   else if(appState==1){ //Match
+    updateMatch();
     textFont(regular, 30);
     fill(200);
     noStroke();
     text("Match", 0,-290);
-    updateMatch();
+
   }
   else if(appState==2){ //Skills
+    updateSkills();
     textFont(regular, 30);
     fill(200);
     noStroke();
     text("Skills", 0,-290);
-    updateSkills();
   }
   else if(appState==3){ //Remote
+    updateRemote();
     textFont(regular, 30);
     fill(200);
     noStroke();
     text("Remote", 0,-290);
-    updateRemote();
   }
-  else if(appState==4){ //Info Screen
+  else if(appState==4){
     textFont(regular, 30);
     fill(200);
     noStroke();
@@ -248,14 +249,14 @@ function draw(){
     text("Version "+version,0,290);
     updateInfo();
   }
-  else if(appState==5){ //Settings Screen
+  else if(appState==5){
     textFont(regular, 30);
     fill(200);
     noStroke();
     text("Settings", 0,-290);
     updateSettings();
   }
-  if(appState!=0&&!warningExit.toggled){  //Warning screen, only displays once
+  if(appState!=0&&!warningExit.toggled){
     //fill(red.dark5);
     //noStroke();
     //rect(0,43-7.5,340,667-86-15);
@@ -267,7 +268,7 @@ function draw(){
     text("WARNING!",0,-170);
   }
 
-  if(appState!=0){  //Back button. Clicking the top of the screen also returns user to previous page
+  if(appState!=0){
     backButton.updateButton();
 
     if(mogoSelected==5)smallBack.updateButton();
@@ -384,7 +385,7 @@ function updateSettings(){
 
 
 class Button{
-  constructor(x_,y_,w_,h_,textA_){  //X, Y, Width, Height, Text. To change the colours of the button, the text when the button is toggled, or other data use setColors() and setExtraData()
+  constructor(x_,y_,w_,h_,textA_){
   this.x=x_;
   this.y=y_;
   this.w=w_;
@@ -402,10 +403,13 @@ class Button{
   this.hover=false;
   this.toggled=false; //Stays true when button is set on
   this.clicked=false; //Only true for initial click of button
-  this.fillA=color(50,50,55); //A=normal, B=toggled, 2=hovering
+  this.fillA=color(50,50,55);
   this.fillA2=color(45,45,50);
   this.fillB=color(50,50,55);
   this.fillB2=color(45,45,50);
+
+  this.corners=[15,15,15,15]
+  this.yOffset=4;
   }
 
   updateButton(){
@@ -457,10 +461,10 @@ class Button{
       }
       if(this.strokeB==color(0,0))noStroke();
       else stroke(this.strokeB);
-      rect(this.x,this.y,this.w,this.h,15);
+      rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       fill(this.textColor);
       noStroke();
-      text(this.textB,this.x,this.y-4);
+      text(this.textB,this.x,this.y-this.yOffset);
     }
     else{
       if(this.hover&&(!disableHover||mouseIsPressed)){
@@ -473,17 +477,17 @@ class Button{
       }
       if(this.strokeA==color(0,0))noStroke();
       else stroke(this.strokeA);
-      rect(this.x,this.y,this.w,this.h,15);
+      rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       fill(this.textColor);
       noStroke();
-      text(this.textA,this.x,this.y-4);
+      text(this.textA,this.x,this.y-this.yOffset);
     }
   }
 
 }
 
 
-class mogoNode{ //Positions that the mobile goals snap to when dragged
+class mogoNode{
   constructor(x_,y_,id_){
     this.x=x_;
     this.y=y_;
@@ -506,16 +510,13 @@ class mogoNode{ //Positions that the mobile goals snap to when dragged
 class Field{
   constructor(){
     this.mogos=[];
-    this.zoneMogos=[[],[],[],[],[]] //0=Red Platform, 1=Red Home Zone, 2=Neutral Zone, 3=Blue Home Zone, 4=Blue Platform
+    this.zoneMogos=[[],[],[],[],[],[]] //0=Red Platform, 1=Red Home Zone, 2=Neutral Zone, 3=Blue Home Zone, 4=Blue Platform, 5=Out of Field
     this.draggedMogo=-1;
-    this.mogoDrawList=[];   //Ordered list of all the mobile goals, in back to front order
+    this.mogoDrawList=[];
     this.parkedBots; //1=Red Bots Parked, 2=Blue Bots Parked
-    
-    //These are used for the scoring summary/tournament manager page
     this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]//[0=lrt,1=red,2=blue][0=base,1=low pole,2=high pole]
     this.scoredHomeZone=[0,0,0];//0=lrt,1=red,2=blue
     this.scoredPlatform=[0,0,0];
-    
     this.platforms=[];
     this.parked=new Button(-130,246,58,118,">");
     this.parked.type=2;
@@ -535,8 +536,10 @@ class Field{
     this.platButtons[0]=new Button(-102,246-32.5,122-6,55,"Unbalanced");
     this.platButtons[0].setExtraData(2,"Balanced",15);
     this.platButtons[0].setColors(0,0,0,0,0,red.light2,red.light2);
+    this.platButtons[0].yOffset=2;
     this.platButtons[1]=new Button(-102,246+32.5,122-6,55,"Unbalanced");
     this.platButtons[1].setExtraData(2,"Balanced",15);
+    this.platButtons[1].yOffset=2;
     this.platButtons[1].setColors(0,0,0,0,0,blue.light2,blue.light2);
     this.platButtons[2]=new Button(27-32.5,246+32.5,52.5,52.5,0);
     this.platButtons[2].tSize=30;
@@ -554,9 +557,8 @@ class Field{
     this.platButtons[4].tSize=30;
 
     //Nodes set the position of the mogos depending on which zone they are in, and how many mogos are in that zone.
-    //Zones 1 and 3 (the red and blue home zones) don't relocate the goals depending on how many are in the zone, so only need node map for having all goals at once
 
-    this.nodes=[[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]]];
+    this.nodes=[[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]],[[],[],[],[],[],[],[]]];
 
     this.nodes[0][0][0]=new mogoNode(-125,0,0);
 
@@ -665,22 +667,37 @@ class Field{
     this.nodes[2][6][5]=new mogoNode(-25,90,5);
     this.nodes[2][6][6]=new mogoNode(25,135,6);
 
-    for(let j=0;j<=6;j++){  //Flip zone 1 node map to zone 3
+    for(let j=0;j<=6;j++){
       this.nodes[3][6][j]=new mogoNode(this.nodes[1][6][j].x*-1,this.nodes[1][6][j].y*-1,j);
       if(j==0||j==1)this.nodes[3][6][j].y-=5;
     }
-    for(let i=0;i<7;i++){ //Flip zone 0 node map to zone 4
+    for(let i=0;i<7;i++){
       for(let j=0;j<=i;j++){
         this.nodes[4][i][j]=new mogoNode(this.nodes[0][i][j].x*-1,this.nodes[0][i][j].y*-1,j);
+      }
+    }
+
+    this.nodes[5][6][0]=new mogoNode(-150,-188,0);
+    this.nodes[5][6][1]=new mogoNode(-100,-188,1);
+    this.nodes[5][6][2]=new mogoNode(-50,-188,2);
+    this.nodes[5][6][3]=new mogoNode(0,-188,3);
+    this.nodes[5][6][4]=new mogoNode(50,-188,4);
+    this.nodes[5][6][5]=new mogoNode(100,-188,5);
+    this.nodes[5][6][6]=new mogoNode(150,-188,6);
+
+    for(let i=0;i<6;i++){
+      for(let j=0;j<=i;j++){
+        this.nodes[5][i][j]=new mogoNode(this.nodes[5][6][j].x,this.nodes[5][6][j].y,j);
       }
     }
 
 
 
 
+
     this.autonWinner=0; //0=Tied, 1=Red, 2=Blue
     this.scores=[0,0,0,0];//1=Red, 2=Blue, 3=Skills,0=Saved skills
-    this.zonePoints=[0,0,0];//Lrt zones
+    this.zonePoints=[0,0,0];
   }
 
 
@@ -705,6 +722,13 @@ class Field{
         }
         else if(highlight==3){
           rect(125.5,0,64,138);
+        }
+        else if(highlight==5){
+          strokeWeight(1);
+          for(let y=0;y<100;y++){
+            stroke(30,240,30,40-y/80.0*40);
+            line(-145,-162.5-y,145,-162.5-y);
+          }
         }
       }
 
@@ -754,11 +778,11 @@ class Field{
       }
 
       if(this.draggedMogo!=-1)this.mogos[this.draggedMogo].drawMogo();
-      //for(let i=0;i<this.nodes[0][6].length;i++){
-        //this.nodes[1][6][i].drawNode();
-      //}
+      for(let i=0;i<this.nodes[5][6].length;i++){
+        //this.nodes[5][6][i].drawNode();
+      }
 
-      if(this.parked.toggled||appState==2){ //Platform editor tab. Is always open on skills screen
+      if(this.parked.toggled||appState==2){
         fill(30,30,35);
         stroke(30,30,35);
         strokeWeight(20);
@@ -853,10 +877,8 @@ class Field{
           rect(-130,246+31.25,65,62.5,0,0,17.5,17.5);
         }
       }
-      
       if(appState!=2)this.parked.updateButton();
-      
-      if(!this.parked.toggled&&appState!=2){  //Buttons when platform editor tab not open
+      if(!this.parked.toggled&&appState!=2){
         noStroke();
         fill(red.light1);
         textFont(bold,20);
@@ -883,7 +905,6 @@ class Field{
       //if(warningExit.toggled)hideRings.updateButton();
 
       if(this.reset.clicked||this.skillsReset.clicked)this.resetField();
-      
       if(appState==1){
         if(this.auton.clicked){
           this.autonWinner=(this.autonWinner+1)%3;
@@ -979,7 +1000,7 @@ class Field{
       text(this.scoredRings[1][1]+this.scoredRings[2][1],-19,-16+3);
       text(this.scoredRings[1][0]+this.scoredRings[2][0],-19,0+3)
 
-      if(appState==2){
+      if(appState==2&&this.scores[0]>0){
         fill(purple.light2);
         text(skillsSave[0],19,-32+3);
         text(skillsSave[1],19,-16+3);
@@ -1012,10 +1033,12 @@ class Field{
       text((this.scoredPlatform[1]+this.scoredPlatform[2]),-95,190);
       text((this.platButtons[2].textA*this.platButtons[0].toggled+this.platButtons[3].textA*this.platButtons[1].toggled),-95,260);
 
-      fill(purple.light2);
-      text(skillsSave[3],95,120);
-      text(skillsSave[4],95,190);
-      text(skillsSave[5],95,260);
+      if(this.scores[0]>0){
+        fill(purple.light2);
+        text(skillsSave[3],95,120);
+        text(skillsSave[4],95,190);
+        text(skillsSave[5],95,260);
+      }
 
 
 
@@ -1132,7 +1155,8 @@ class Field{
 
   displayScores(){
     textFont(regular,50);
-    noStroke();
+    stroke(40,40,45);
+    strokeWeight(15);
     if(appState==1){
       fill(red.light2);
       text(this.scores[1],-65,-234);
@@ -1148,21 +1172,22 @@ class Field{
         fill(yellow.light1);
         text(this.scores[3],-65,-234);
         fill(purple.light2);
-        text(this.scores[0],65,-234);
+        if(this.scores[0]>0)text(this.scores[0],65,-234);
       }
     }
 
-    else if(appState==3){
+    else if(appState==3){//}&&this.zoneMogos[5].length==0){
       //if(remoteFieldSelected==1)fill(red.light2);
       //else if(remoteFieldSelected==2)fill(blue.light2);
+      strokeWeight(10);
       textFont(regular,30);
       //text(this.scores[3],0,-252.5);
       fill(red.medium);
-      text(this.zonePoints[0],-60,-255);
+      text(this.zonePoints[0],-60,-193);//-255);
       fill(yellow.medium);
-      text(this.zonePoints[1],0,-255);
+      text(this.zonePoints[1],0,-193);//-255);
       fill(blue.medium);
-      text(this.zonePoints[2],60,-255);
+      text(this.zonePoints[2],60,-193);//-255);
     }
 
   }
@@ -1281,7 +1306,6 @@ class Field{
     }
     else if(appState==3){
 
-        //Ring Points
         for(let i=0;i<7;i++){
           let rScore=this.mogos[i].ringScoreLRT();
           if(!this.mogos[i].scored.toggled){
@@ -1365,7 +1389,7 @@ class Field{
       }
     }
     */
-    this.zoneMogos=[[],[],[],[],[]];
+    this.zoneMogos=[[],[],[],[],[],[]];
 
     this.mogos[2]=new Mogo(80,-133-5,blue,0,2,3);
     this.mogos[3]=new Mogo(125,100-10,blue,0,3,3);
@@ -1424,15 +1448,14 @@ class Field{
       //if(!this.mogos[i].dragged)this.zoneMogos[this.mogos[i].zone].push(this.mogos[i]);
     //}
 
-    //Add the mobile goals in zones 0, 2, and 4 to the draw list
-    for(let i=0;i<5;i+=2){
-      for(let j=0;j<this.zoneMogos[i].length;j++){
-        this.zoneMogos[i][j].setAtNode(this.nodes[i][this.zoneMogos[i].length-1][j]);
-        this.mogoDrawList.push(this.zoneMogos[i][j]);
+    for(let i=0;i<6;i++){
+      if(i!=1&&i!=3){
+        for(let j=0;j<this.zoneMogos[i].length;j++){
+          this.zoneMogos[i][j].setAtNode(this.nodes[i][this.zoneMogos[i].length-1][j]);
+          this.mogoDrawList.push(this.zoneMogos[i][j]);
+        }
       }
     }
-    
-    //Add goals in zones 1 and 3
     for(let i=1;i<4;i+=2){
       for(let j=0;j<7;j++){
         if(this.zoneMogos[i][j]!=null){
@@ -1441,8 +1464,6 @@ class Field{
         }
       }
     }
-    
-    //Sort draw list based on height
     this.mogoDrawList.sort(this.compareY);
   }
 
@@ -1468,10 +1489,10 @@ class remoteField{
 
 
     this.fieldButtons=[];
-    this.fieldButtons[0]=new Button(-80-5,-205,150,50,"Red");
+    this.fieldButtons[0]=new Button(-80-5,-240,150,50,"Red");
     this.fieldButtons[0].setColors(0,0,0,0,0,color(red.light2),color(red.light2));
     this.fieldButtons[0].setExtraData(2,"Red",25);
-    this.fieldButtons[1]=new Button(80+5,-205,150,50,"Blue");
+    this.fieldButtons[1]=new Button(80+5,-240,150,50,"Blue");
     this.fieldButtons[1].setColors(0,0,0,0,0,color(blue.light2),color(blue.light2));
     this.fieldButtons[1].setExtraData(2,"Blue",25);
     this.lrtAuton=new Button(-85,246,150,120,"Auton:\nTie");
@@ -1481,29 +1502,11 @@ class remoteField{
 
   updateLRT(){
 
-    if(postClick==2)this.scoreLRT(); //Update score after screen clicked
+    if(postClick==2)this.scoreLRT();
 
-    if(mogoSelected==-1){
-      for(let i=0;i<2;i++){
-        this.fieldButtons[i].updateButton();
-      }
-    }
-    if(this.fieldButtons[0].clicked){ //Untoggle field tab button if the other one is pressed
-      this.fieldButtons[1].toggled=false;
-    }
-    else if(this.fieldButtons[1].clicked){
-      this.fieldButtons[0].toggled=false;
-    }
-    if(this.fieldButtons[0].toggled){ //set remoteFieldSelected
-      remoteFieldSelected=1;
-    }
-    else if(this.fieldButtons[1].toggled){
-      remoteFieldSelected=2;
-    }
-    else if(!this.fieldButtons[0].toggled&&!this.fieldButtons[1].toggled){
-      remoteFieldSelected=0;
-    }
 
+    //this.fieldButtons[0].y=-205;
+    //this.fieldButtons[1].y=-205;
     if(remoteFieldSelected==0){
       this.drawLRTField();
       this.drawLRTScore();
@@ -1533,6 +1536,32 @@ class remoteField{
       //fields[remoteFieldSelected+2].updateField();
       if(mogoSelected==-1)this.lrtHighLights();
       this.rFields[remoteFieldSelected-1].updateField();
+      /*
+      if(this.rFields[remoteFieldSelected-1].zoneMogos[5].length>0){
+        this.fieldButtons[0].y=-240;
+        this.fieldButtons[1].y=-240;
+      }
+      */
+    }
+    if(mogoSelected==-1){
+      for(let i=0;i<2;i++){
+        this.fieldButtons[i].updateButton();
+      }
+    }
+    if(this.fieldButtons[0].clicked){
+      this.fieldButtons[1].toggled=false;
+    }
+    else if(this.fieldButtons[1].clicked){
+      this.fieldButtons[0].toggled=false;
+    }
+    if(this.fieldButtons[0].toggled){
+      remoteFieldSelected=1;
+    }
+    else if(this.fieldButtons[1].toggled){
+      remoteFieldSelected=2;
+    }
+    else if(!this.fieldButtons[0].toggled&&!this.fieldButtons[1].toggled){
+      remoteFieldSelected=0;
     }
   }
 
@@ -1733,7 +1762,7 @@ class ColorBase{
   this.dark3=color(this.r-30,this.g-30,this.b-30);
   this.dark4=color(this.r-40,this.g-40,this.b-40);
   this.dark5=color(this.r,this.g,this.b,45);
-  this.mediumFade=color(this.r-20,this.g-20,this.b-20);//Was being used to test warning page, disregard
+  this.mediumFade=color(this.r-20,this.g-20,this.b-20);
   }
 }
 
@@ -1860,21 +1889,26 @@ class Mogo {
       this.ringCounters[4]=new RingCounter(-190,4);
     }
     this.zoneButtons=[];
-    this.zoneButtons[0]=new Button(-130,265,55,55,"");
+    this.zoneButtons[0]=new Button(-130,255,55,55,"");
     this.zoneButtons[0].setExtraData(2,"",30);
     this.zoneButtons[0].setColors(0,0,0,0,0,red.medium,red.medium);
-    this.zoneButtons[1]=new Button(-65,265,55,55,"");
+    this.zoneButtons[1]=new Button(-65,255,55,55,"");
     this.zoneButtons[1].setExtraData(2,"",30);
     this.zoneButtons[1].setColors(0,0,0,0,0,red.light2,red.light2);
-    this.zoneButtons[2]=new Button(0,265,55,55,"");
+    this.zoneButtons[2]=new Button(0,255,55,55,"");
     this.zoneButtons[2].setExtraData(2,"",30);
     this.zoneButtons[2].setColors(0,0,0,0,0,yellow.light1,yellow.light1);
-    this.zoneButtons[3]=new Button(65,265,55,55,"");
+    this.zoneButtons[3]=new Button(65,255,55,55,"");
     this.zoneButtons[3].setExtraData(2,"",30);
     this.zoneButtons[3].setColors(0,0,0,0,0,blue.light2,blue.light2);
-    this.zoneButtons[4]=new Button(130,265,55,55,"");
+    this.zoneButtons[4]=new Button(130,255,55,55,"");
     this.zoneButtons[4].setExtraData(2,"",30);
     this.zoneButtons[4].setColors(0,0,0,0,0,blue.medium,blue.medium);
+    this.zoneButtons[5]=new Button(0,310,150,35,"Out of Field");
+    this.zoneButtons[5].setExtraData(2,"Out of Field",13);
+    this.zoneButtons[5].setColors(0,0,0,0,0,red.dark4,red.medium)
+    this.zoneButtons[5].corners=[10,10,10,10];
+    this.zoneButtons[5].yOffset=2;
 
     this.scored=new Button(130,200,55,55,"");
     this.scored.setExtraData(2,"",30);
@@ -1894,22 +1928,25 @@ class Mogo {
     fill(30,30,35);
     stroke(30,30,35);
     strokeWeight(20);
-    rect(0,265,55*5+40,55,15,0,15,15);
+    rect(0,255,55*5+40,55,15,15,15,15);
+    if(appState==3)rect(0,315,150,45,0,0,15,15);
 
-    if(settingButtons[1].toggled)this.scored.x=-130;  //Move scored/not scored button to the left side if the ring buttons are on the right
+    if(settingButtons[1].toggled)this.scored.x=-130;
     else this.scored.x=130;
-    rect(this.scored.x,this.scored.y,55,55,15,15,0,0);
-    for(let i=0;i<5;i++){
+    //rect(this.scored.x,this.scored.y,55,55,15,15,0,0);
+    let limit=5;
+    if(appState==3)limit=6;
+    for(let i=0;i<limit;i++){
       this.zoneButtons[i].updateButton();
       if(this.zoneButtons[i].clicked){
-        for(let j=0;j<5;j++){
+        for(let j=0;j<limit;j++){
           this.zoneButtons[j].toggled=false;
         }
         this.zoneButtons[i].toggled=true;
         this.moveMogo(i);
       }
     }
-    this.scored.updateButton();
+    //this.scored.updateButton();
     this.drawIcons();
   }
 
@@ -1927,7 +1964,10 @@ class Mogo {
   }
 
   findZone(){
-    if(translatedMouseX<-125+31.2&&translatedMouseY<69&&translatedMouseY>-69){
+    if(translatedMouseY<-160&&appState==3){
+      return 5;
+    }
+    else if(translatedMouseX<-125+31.2&&translatedMouseY<69&&translatedMouseY>-69){
       return 0;
     }
     else if(translatedMouseX>125-31.2&&translatedMouseY<69&&translatedMouseY>-69){
@@ -2049,7 +2089,7 @@ class Mogo {
 
     push();
     translate(this.scored.x,this.scored.y);
-    this.drawScored();
+    //this.drawScored();
     pop();
   }
 
@@ -2271,20 +2311,35 @@ class Mogo {
 
     this.drawRingsA();
 
-    fill(80);
-    stroke(50);
-    stroke(80);
-    ellipse(0, 50, 10, 5);
-    stroke(80);
-    rect(0, 0, 10, 100);
-    stroke(50);
-    line(-5, 50, -5, -50);
-    stroke(110);
-    line(5, 50, 5, -50);
-    fill(50);
-    ellipse(0, -50, 10, 5);
+    if(this.type==0){
+      fill(80);
+      stroke(50);
+      stroke(80);
+      ellipse(0, 50, 10, 5);
+      stroke(80);
+      rect(0, 12.5, 10, 75);
+      stroke(50);
+      line(-5, 50, -5, -25);
+      stroke(110);
+      line(5, 50, 5, -25);
+      fill(50);
+      ellipse(0, -25, 10, 5);
+    }
 
     if (this.type!=0) {
+      fill(80);
+      stroke(50);
+      stroke(80);
+      ellipse(0, 50, 10, 5);
+      stroke(80);
+      rect(0, 0, 10, 100);
+      stroke(50);
+      line(-5, 50, -5, -50);
+      stroke(110);
+      line(5, 50, 5, -50);
+      fill(50);
+      ellipse(0, -50, 10, 5);
+
 
       if (this.type==2) {
         push();
