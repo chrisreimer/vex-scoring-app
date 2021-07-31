@@ -1374,8 +1374,8 @@ class Field{
     this.awp.toggled=false;
     this.parked.toggled=false;
     this.parked.x=-130;
-    this.platButtons[0].toggled=false;
-    this.platButtons[1].toggled=false;
+    this.platButtons[0].toggled=true;
+    this.platButtons[1].toggled=true;
     this.platButtons[2].textA=0;
     this.platButtons[3].textA=0;
     this.platButtons[4].textA=0;
