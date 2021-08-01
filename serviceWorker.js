@@ -43,6 +43,7 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', event => {
+  alert("method: " + event.request.method);
   if (event.request.method !== 'GET') { return; }
   if (networkFirstFiles.indexOf(event.request.url) !== -1) {
     event.respondWith(networkElseCache(event));
