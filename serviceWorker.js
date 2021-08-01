@@ -16,7 +16,8 @@ var cacheFirstFiles = [
   "/gear.png",
   "/NEXT%20ART_Regular.otf",
   "/NEXT%20ART_SemiBold.otf",
-  "/NEXT%20ART_Bold.otf"
+  "/NEXT%20ART_Bold.otf",
+  "https://vexscoring.app/tip.html"
 ];
 
 var networkFirstFiles = [
