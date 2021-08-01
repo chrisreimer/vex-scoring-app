@@ -30,13 +30,13 @@ var networkFirstFiles = [
 
 var cacheFiles = cacheFirstFiles.concat(networkFirstFiles);
 
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(VERSION).then(cache => {
-      return cache.addAll(cacheFiles);
-    })
-  );
-});
+// self.addEventListener('install', event => {
+//   event.waitUntil(
+//     caches.open(VERSION).then(cache => {
+//       return cache.addAll(cacheFiles);
+//     })
+//   );
+// });
 
 self.addEventListener('activate', function(event) {
   event.waitUntil(self.clients.claim());
