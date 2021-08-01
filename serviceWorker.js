@@ -65,8 +65,8 @@ self.addEventListener('fetch', event => {
     console.log("cache first : ", event);
     event.respondWith(cacheElseNetwork(event));
   } else {
-    console.log("neither first .. ", event.request);
-    event.respondWith(fetch(event.request.url));
+    console.log("neither first ... ", event.request.url);
+    event.respondWith(fetch(event.request));
   }
 });
 
