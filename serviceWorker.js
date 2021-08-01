@@ -1,4 +1,4 @@
-console.log("0.0.7");
+console.log("0.0.8");
 
 var VERSION = 'v3';
 
