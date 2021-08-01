@@ -81,10 +81,10 @@ function draw(){
       menuButtons[i].updateButton();
     }
     if(menuButtons[0].clicked){
-      window.open("https://vexscoring.app/cu","_self");
+      window.open("/cu.html","_self");
     }
     else if(menuButtons[1].clicked){
-      window.open("https://vexscoring.app/tip","_self");
+      window.open("/tip.html","_self");
     }
     infoButton.updateButton();
     if(infoButton.clicked){
