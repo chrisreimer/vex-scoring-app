@@ -5,18 +5,18 @@ var VERSION = 'v3';
 var cacheFirstFiles = [
   // ADDME: Add paths and URLs to pull from cache first if it has been loaded before. Else fetch from network.
   // If loading from cache, fetch from network in the background to update the resource. Examples:
-  "https://vexscoring.app//index.html",
-  "https://vexscoring.app//sketch.js",
-  "https://vexscoring.app//tip.html",
-  "https://vexscoring.app//cu.html",
-  "https://vexscoring.app//tippingpoint.js",
-  "https://vexscoring.app//changeup.js",
-  "https://vexscoring.app//p5.js",
-  "https://vexscoring.app//manifest.json",
-  "https://vexscoring.app//gear.png",
-  "https://vexscoring.app//NEXT%20ART_Regular.otf",
-  "https://vexscoring.app//NEXT%20ART_SemiBold.otf",
-  "https://vexscoring.app//NEXT%20ART_Bold.otf",
+  "https://vexscoring.app/index.html",
+  "https://vexscoring.app/sketch.js",
+  "https://vexscoring.app/tip.html",
+  "https://vexscoring.app/cu.html",
+  "https://vexscoring.app/tippingpoint.js",
+  "https://vexscoring.app/changeup.js",
+  "https://vexscoring.app/p5.js",
+  "https://vexscoring.app/manifest.json",
+  "https://vexscoring.app/gear.png",
+  "https://vexscoring.app/NEXT%20ART_Regular.otf",
+  "https://vexscoring.app/NEXT%20ART_SemiBold.otf",
+  "https://vexscoring.app/NEXT%20ART_Bold.otf",
   "https://vexscoring.app/tip.html"
 ];
 
