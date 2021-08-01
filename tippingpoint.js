@@ -1,4 +1,4 @@
-let version="0.1.4"
+let version="0.1.5"
 
 let yellow; //Color Presets
 let purple;
@@ -340,7 +340,7 @@ function updateMenu(){
   }
   backButton.updateButton();
   if(backButton.clicked){
-    window.open("/","_self");
+    window.open("/index.html","_self");
   }
   image(gear,155,-300,40,40);
 }
