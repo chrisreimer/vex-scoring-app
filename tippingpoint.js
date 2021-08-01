@@ -1,4 +1,4 @@
-let version="0.1.5"
+let version="0.1.6"
 
 let yellow; //Color Presets
 let purple;
