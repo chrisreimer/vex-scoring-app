@@ -16,8 +16,7 @@ var cacheFirstFiles = [
   "https://vexscoring.app/gear.png",
   "https://vexscoring.app/NEXT%20ART_Regular.otf",
   "https://vexscoring.app/NEXT%20ART_SemiBold.otf",
-  "https://vexscoring.app/NEXT%20ART_Bold.otf",
-  "https://vexscoring.app/tip.html"
+  "https://vexscoring.app/NEXT%20ART_Bold.otf"
 ];
 
 var networkFirstFiles = [
@@ -56,14 +55,14 @@ self.addEventListener('activate', function(event) {
 
 self.addEventListener('fetch', event => {
 
-  console.log("event : ", event);
+  console.log("fetching : ", event.request.url);
   
   if (event.request.method !== 'GET') { return; }
   if (networkFirstFiles.indexOf(event.request.url) !== -1) {
     console.log("network first : ", event);
     event.respondWith(networkElseCache(event));
   } else if (cacheFirstFiles.indexOf(event.request.url) !== -1) {
-    console.log("cache first : ", event);
+    console.log("cache first : ", event.request.url);
     event.respondWith(cacheElseNetwork(event));
   } else {
     console.log("neither first : ", event.request.url);
