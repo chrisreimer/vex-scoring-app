@@ -54,7 +54,9 @@ self.addEventListener('activate', function(event) {
 // });
 
 self.addEventListener('fetch', event => {
- 
+
+  console.log("event : ", event);
+  
   if (event.request.method !== 'GET') { return; }
   if (networkFirstFiles.indexOf(event.request.url) !== -1) {
     console.log("network first : ", event);
@@ -63,7 +65,7 @@ self.addEventListener('fetch', event => {
     console.log("cache first : ", event);
     event.respondWith(cacheElseNetwork(event));
   } else {
-    console.log("neither first - ");
+    console.log("neither first - ", event.request);
     event.respondWith(fetch(event.request));
   }
 });
