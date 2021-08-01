@@ -1,4 +1,4 @@
-console.log("0.0.95");
+console.log("0.0.96");
 
 var VERSION = 'v3';
 
@@ -42,31 +42,31 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener("fetch", function (event) {
-  event.respondWith(
-    caches.match(event.request).then(function (response) {
-      if (response) {
-        return response;
-      }
-      return fetch(event.request);
-    })
-  );
-});
-
-// self.addEventListener('fetch', event => {
- 
-//   if (event.request.method !== 'GET') { return; }
-//   if (networkFirstFiles.indexOf(event.request.url) !== -1) {
-//     console.log("network first : ", event);
-//     event.respondWith(networkElseCache(event));
-//   } else if (cacheFirstFiles.indexOf(event.request.url) !== -1) {
-//     console.log("cache first : ", event);
-//     event.respondWith(cacheElseNetwork(event));
-//   } else {
-//     console.log("neither first - ");
-//     event.respondWith(fetch(event.request));
-//   }
+// self.addEventListener("fetch", function (event) {
+//   event.respondWith(
+//     caches.match(event.request).then(function (response) {
+//       if (response) {
+//         return response;
+//       }
+//       return fetch(event.request);
+//     })
+//   );
 // });
+
+self.addEventListener('fetch', event => {
+ 
+  if (event.request.method !== 'GET') { return; }
+  if (networkFirstFiles.indexOf(event.request.url) !== -1) {
+    console.log("network first : ", event);
+    event.respondWith(networkElseCache(event));
+  } else if (cacheFirstFiles.indexOf(event.request.url) !== -1) {
+    console.log("cache first : ", event);
+    event.respondWith(cacheElseNetwork(event));
+  } else {
+    console.log("neither first - ");
+    event.respondWith(fetch(event.request));
+  }
+});
 
 
 
