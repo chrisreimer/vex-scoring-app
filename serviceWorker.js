@@ -46,10 +46,13 @@ self.addEventListener('fetch', event => {
   console.log("method: " + event.request.method);
   if (event.request.method !== 'GET') { return; }
   if (networkFirstFiles.indexOf(event.request.url) !== -1) {
+    console.log("network first : ", event);
     event.respondWith(networkElseCache(event));
   } else if (cacheFirstFiles.indexOf(event.request.url) !== -1) {
+    console.log("cache first : ", event);
     event.respondWith(cacheElseNetwork(event));
   } else {
+    console.log("neither first : ", event);
     event.respondWith(fetch(event.request));
   }
 });
