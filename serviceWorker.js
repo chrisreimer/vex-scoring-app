@@ -38,6 +38,10 @@ self.addEventListener('install', event => {
   );
 });
 
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim());
+});
+
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') { return; }
   if (networkFirstFiles.indexOf(event.request.url) !== -1) {
