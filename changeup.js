@@ -187,7 +187,7 @@ function menu() {
   if (set.clicked) appState = -1;
   image(gear,xC+154.15*sF, yC-300.15*sF,40*sF,40*sF);
   back.drawButton();
-  if(back.clicked)window.open("https://vexscoring.app/","_self");
+  if(back.clicked)window.open("https://vexscoring.app/index.html","_self");
   //inf.drawButton();
   //if(inf.clicked)appState=-2;
 }
