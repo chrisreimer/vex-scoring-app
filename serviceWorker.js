@@ -1,4 +1,4 @@
-console.log("0.0.5");
+console.log("0.0.6");
 
 var VERSION = 'v3';
 
@@ -16,7 +16,8 @@ var cacheFirstFiles = [
   "/gear.png",
   "/NEXT%20ART_Regular.otf",
   "/NEXT%20ART_SemiBold.otf",
-  "/NEXT%20ART_Bold.otf"
+  "/NEXT%20ART_Bold.otf",
+  "/serviceWorker.js"
 ];
 
 var networkFirstFiles = [
