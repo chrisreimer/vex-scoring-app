@@ -42,6 +42,17 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(self.clients.claim());
 });
 
+self.addEventListener("fetch", function (event) {
+  event.respondWith(
+    caches.match(event.request).then(function (response) {
+      if (response) {
+        return response;
+      }
+      return fetch(event.request);
+    })
+  );
+});
+
 // self.addEventListener('fetch', event => {
  
 //   if (event.request.method !== 'GET') { return; }
@@ -90,6 +101,7 @@ function networkElseCache (event) {
     if (!match) { return fetch(event.request); }
     return fetch(event.request).then(response => {
       // Update cache.
+      console.log("fetch");
       caches.open(VERSION).then(cache => cache.put(event.request, response.clone()));
       return response;
     }) || response;
