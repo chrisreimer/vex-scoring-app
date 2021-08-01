@@ -1,4 +1,4 @@
-console.log("0.0.96");
+console.log("0.0.97");
 
 var VERSION = 'v3';
 
@@ -66,7 +66,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(cacheElseNetwork(event));
   } else {
     console.log("neither first - ", event.request);
-    event.respondWith(fetch(event.request));
+    event.respondWith(fetch(event.request.url));
   }
 });
 
