@@ -340,7 +340,7 @@ function updateMenu(){
   }
   backButton.updateButton();
   if(backButton.clicked){
-    window.open("https://vexscoring.app/","_self");
+    window.open("/","_self");
   }
   image(gear,155,-300,40,40);
 }
