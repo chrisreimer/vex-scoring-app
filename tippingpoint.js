@@ -303,7 +303,7 @@ function draw(){
     else if(xPos>width-70)xPos-=70;
     if(yPos>height-50)yPos-=20;
     else yPos+=30;
-    text(translatedMouseX+", "+translatedMouseY,xPos,yPos);
+    text(int(translatedMouseX*10)/10+", "+int(translatedMouseY*10)/10,xPos,yPos);
   }
 }
 else console.log("no draw");
