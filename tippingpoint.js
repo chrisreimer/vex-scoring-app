@@ -296,6 +296,7 @@ function draw(){
   fill(green.medium);
   ellipse(mouseX,mouseY,30,30);
   }
+  }
   //else console.log("no draw");
   pMouseX=mouseX;
   pMouseY=mouseY;
