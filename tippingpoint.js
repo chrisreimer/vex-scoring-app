@@ -1645,7 +1645,7 @@ class remoteField{
     scaledRect(-73.25,0,40.5,314,0,0,0,0,10)
     if(remoteFieldSelected==0){
       scaledRect(-125.5,0,64,314,12,0,0,12,10);
-      scaledRect(-73.25,0,40.5,314,10)
+      simpleRect(-73.25,0,40.5,314)
     }
 
     noFill();
