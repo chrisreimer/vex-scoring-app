@@ -290,14 +290,23 @@ function draw(){
   }
 
   pop();
-    
   if(settingButtons[3].toggled){
-  noStroke();
-  fill(green.medium);
-  ellipse(mouseX,mouseY,30,30);
+    //noStroke();
+    stroke(40,40,45);
+    strokeWeight(3);
+    fill(green.medium);
+    //ellipse(mouseX,mouseY,30,30);
+    textFont(regular,18);
+    let xPos=mouseX;
+    let yPos=mouseY;
+    if(xPos<70)xPos+=70;
+    else if(xPos>width-70)xPos-=70;
+    if(yPos>height-50)yPos-=20;
+    else yPos+=30;
+    text(translatedMouseX+", "+translatedMouseY,xPos,yPos);
   }
-  }
-  //else console.log("no draw");
+}
+else console.log("no draw");
   pMouseX=mouseX;
   pMouseY=mouseY;
 }
@@ -509,6 +518,7 @@ class Button{
       }
       if(this.strokeB==color(0,0))noStroke();
       else stroke(this.strokeB);
+      if(this.hover&&settingButtons[3].toggled)stroke(purple.dark2);
       scaledRect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3],this.sWeight)
       //rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       fill(this.textColor);
@@ -527,6 +537,7 @@ class Button{
       }
       if(this.strokeA==color(0,0))noStroke();
       else stroke(this.strokeA);
+      if(this.hover&&settingButtons[3].toggled)stroke(green.dark2);
       //rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       scaledRect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3],this.sWeight)
       fill(this.textColor);
@@ -2228,10 +2239,7 @@ class Mogo {
 
     if(mogoSelected==-1){
       if(this.dragged){
-        if(settingButtons[3].toggled){
-          translate((mouseX-width*0.5),mouseY-height*0.5);
-        }
-        else  translate(translatedMouseX*screenScale,translatedMouseY*screenScale);
+        translate(translatedMouseX*screenScale,translatedMouseY*screenScale);
       }
       else translate(this.x*screenScale, this.y*screenScale);
       //scale(0.5);
