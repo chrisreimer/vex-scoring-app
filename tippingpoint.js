@@ -290,8 +290,13 @@ function draw(){
   }
 
   pop();
-}
-else console.log("no draw");
+    
+  if(settingButtons[3].toggled){
+  noStroke();
+  fill(green.medium);
+  ellipse(mouseX,mouseY,30,30);
+  }
+  //else console.log("no draw");
   pMouseX=mouseX;
   pMouseY=mouseY;
 }
