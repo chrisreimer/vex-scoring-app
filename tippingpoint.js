@@ -127,9 +127,9 @@ function setup() {
   settingButtons[1].setExtraData(2,"Ring Editors: Right",20);
   settingButtons[2]=new Button(0,45,300,65,"Rings: Visible\n");
   settingButtons[2].setExtraData(2,"Rings: Hidden\n",20);
-  settingButtons[3]=new Button(0,135,300,65,"Tournament Mode: Off");
-  settingButtons[3].setExtraData(2,"Tournament Mode: On",20);
-  settingButtons[3].toggled=true;
+  settingButtons[3]=new Button(0,225,300,65,"");//debug button
+  settingButtons[3].setExtraData(2,"Debug Mode: On",20);
+  settingButtons[3].setColors(color(0,0),color(0,0),0,0,0,0,0);
 
   linkButtons[0]=new Button(0,100,200,65,"Join Server");
   linkButtons[0].setColors(color(88, 101, 242),color(73, 86, 222),0,0,0,0,0)
@@ -168,10 +168,6 @@ function setup() {
   let ringSave=getItem('ringSave');
   if(!(ringSave===null)){
     settingButtons[2].toggled=ringSave;
-  }
-  let rCSave = getItem('rCSave');
-  if(!(rCSave===null)){
-    //settingButtons[3].toggled=rCSave;
   }
 
   let warnedSave = getItem('warnedSave');
@@ -219,7 +215,7 @@ function draw(){
     initialDragging=false;
     dragging=false;
   }
-  if(mogoSelected!=5&&!tmScreen.toggled&&(appState==1||appState==2)&&warningExit.toggled&&settingButtons[3].toggled){
+  if(mogoSelected!=5&&!tmScreen.toggled&&(appState==1||appState==2)&&warningExit.toggled){
     tmScreen.updateButton();
   }
   if(appState==0){  //Main Menu
@@ -416,7 +412,7 @@ function updateInfo(){
 
 function updateSettings(){
   for(let i=0;i<settingButtons.length;i++){
-    if(i!=3)settingButtons[i].updateButton();
+    settingButtons[i].updateButton();
   }
   fill(210,210,220);
   //textFont(regular,13);
@@ -427,7 +423,6 @@ function updateSettings(){
   if(settingButtons[0].clicked)storeItem('counterSave',settingButtons[0].toggled);
   if(settingButtons[1].clicked)storeItem('cSideSave',settingButtons[1].toggled);
   if(settingButtons[2].clicked)storeItem('ringSave',settingButtons[2].toggled);
-  //if(settingButtons[3].clicked)storeItem('rCSave',settingButtons[3].toggled);
 }
 
 
@@ -982,7 +977,7 @@ class Field{
     }
     if(mogoSelected!=5){
       this.displayScores();
-      if(settingButtons[3].toggled&&!tmScreen.toggled&&appState!=3)this.drawRingCounter();
+      if(!tmScreen.toggled&&appState!=3)this.drawRingCounter();
     }
   }
 
@@ -2227,7 +2222,10 @@ class Mogo {
 
     if(mogoSelected==-1){
       if(this.dragged){
-        translate(translatedMouseX*screenScale,translatedMouseY*screenScale);
+        if(settingButtons[3].toggled){
+          translate((mouseX-width*0.5),mouseY-height*0.5);
+        }
+        else  translate(translatedMouseX*screenScale,translatedMouseY*screenScale);
       }
       else translate(this.x*screenScale, this.y*screenScale);
       //scale(0.5);
