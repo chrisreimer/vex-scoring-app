@@ -1,4 +1,4 @@
-let version="0.1.6"
+let version="0.1.7"
 
 let yellow; //Color Presets
 let purple;
@@ -7,6 +7,8 @@ let blue;
 let green;
 
 let screenScale=1;
+let mogoScale=1;
+let comboScale=1;
 
 let gear; //Gear Icon image
 
@@ -53,6 +55,10 @@ let translatedMouseX;
 let translatedMouseY;
 let disableHover;
 
+let pMouseX;
+let pMouseY;
+let hovered;
+
 function preload(){
 
   gear=loadImage('https://vexscoring.app/gear.png');
@@ -64,8 +70,8 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-  //createCanvas(375, 667);
+  //createCanvas(windowWidth, windowHeight);
+  createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
@@ -182,6 +188,7 @@ function setup() {
   }
   disableHover=isTouchDevice();
   //console.log(disableHover);
+  windowResized();
 }
 
 function isTouchDevice() {
@@ -200,10 +207,11 @@ function draw(){
 
   checkClicked();
 
+  if(pMouseX!=mouseX||pMouseY!=mouseY||mouseIsPressed||postClick!=0){
   background(40,40,45);
   push();
   translate(width*0.5,height*0.5);
-  scale(screenScale);
+  //scale(screenScale);
   if(appState!=0&&!warningExit.toggled){
     warningExit.updateButton();
     if(warningExit.clicked)storeItem('warnedSave',true);
@@ -219,41 +227,41 @@ function draw(){
   }
   else if(appState==1){ //Match
     updateMatch();
-    textFont(regular, 30);
+    //textFont(regular, 30);
     fill(200);
     noStroke();
-    text("Match", 0,-290);
+    scaledText("Match", 0,-290,regular,30);
 
   }
   else if(appState==2){ //Skills
     updateSkills();
-    textFont(regular, 30);
+    //textFont(regular, 30);
     fill(200);
     noStroke();
-    text("Skills", 0,-290);
+    scaledText("Skills", 0,-290,regular,30);
   }
   else if(appState==3){ //Remote
     updateRemote();
-    textFont(regular, 30);
+    //textFont(regular, 30);
     fill(200);
     noStroke();
-    text("Remote", 0,-290);
+    scaledText("Remote", 0,-290,regular,30);
   }
   else if(appState==4){
-    textFont(regular, 30);
+    //textFont(regular, 30);
     fill(200);
     noStroke();
-    text("Info", 0,-290);
+    scaledText("Info", 0,-290,regular,30);
     fill(100,100,110);
-    textSize(15);
-    text("Version "+version,0,290);
+    //textSize(15);
+    scaledText("Version "+version,0,290,regular,15);
     updateInfo();
   }
   else if(appState==5){
-    textFont(regular, 30);
+    //textFont(regular, 30);
     fill(200);
     noStroke();
-    text("Settings", 0,-290);
+    scaledText("Settings", 0,-290,regular,30);
     updateSettings();
   }
   if(appState!=0&&!warningExit.toggled){
@@ -262,10 +270,10 @@ function draw(){
     //rect(0,43-7.5,340,667-86-15);
     warningButton.drawButton();
     warningExit.drawButton();
-    textFont(bold,30);
+    //textFont(bold,30);
     fill(230,230,240);
     noStroke();
-    text("WARNING!",0,-170);
+    scaledText("WARNING!",0,-170,bold,30);
   }
 
   if(appState!=0){
@@ -286,7 +294,10 @@ function draw(){
   }
 
   pop();
-
+}
+else console.log("no draw");
+  pMouseX=mouseX;
+  pMouseY=mouseY;
 }
 
 function checkClicked(){
@@ -302,7 +313,7 @@ function checkClicked(){
   }
 
   click = false;
-  postClick=(postClick+1)%3;
+  if(postClick!=0)postClick=(postClick+1)%3;
   if (!mouseIsPressed && held &&!dragging) click = true;
   held = mouseIsPressed;
   if(click)postClick=1;
@@ -318,22 +329,58 @@ function checkClicked(){
   else {
     if(dragging){
       finalDragging=true;
+      postClick=1;
     }
     dragging=false;
   }
 }
 
+
+function scaledRect(x,y,w,h,a,b,c,d,s){
+  strokeWeight(s*screenScale);
+  rect(x*screenScale,y*screenScale,w*screenScale,h*screenScale,a*screenScale,b*screenScale,c*screenScale,d*screenScale);
+}
+
+function simpleRect(x,y,w,h){
+  rect(x*screenScale,y*screenScale,w*screenScale,h*screenScale);
+}
+
+function scaledText(t,x,y,font,size){
+  try{
+    textFont(font,size*screenScale);
+  }
+  catch{
+    textFont(bold,size*screenScale);
+    stroke(green.medium);
+  }
+  text(t,x*screenScale,y*screenScale);
+}
+
+function scaledEllipse(x,y,w,h,s){
+  strokeWeight(s*screenScale);
+  ellipse(x*screenScale,y*screenScale,w*screenScale,h*screenScale);
+}
+
+function scaledLine(x1,y1,x2,y2){
+  line(x1*screenScale,y1*screenScale,x2*screenScale,y2*screenScale)
+}
+
+function scaledArc(x,y,w,h,a,b,s){
+  strokeWeight(s*screenScale);
+  arc(x*screenScale,y*screenScale,w*screenScale,h*screenScale,a,b);
+}
+
 function updateMenu(){
-  textFont(regular,30);
+  //textFont(regular,30);
   fill(200);
   noStroke();
-  text("Tipping Point\nScoring App",0,-265);
+  scaledText("Tipping Point\nScoring App",0,-265,regular,30);
   //textFont(regular,15);
   //fill(150);
   //text("By Chris Reimer",0,-200);
-  textFont(regular,20);
+  //textFont(regular,20);
   fill(red.dark1);
-  text("BETA "+version,0,-200);
+  scaledText("BETA "+version,0,-200,regular,20);
   for(let i=0;i<5;i++){
     menuButtons[i].updateButton();
     if(menuButtons[i].clicked)appState=i+1;
@@ -342,7 +389,7 @@ function updateMenu(){
   if(backButton.clicked){
     window.open("/index.html","_self");
   }
-  image(gear,155,-300,40,40);
+  image(gear,155*screenScale,-300*screenScale,40*screenScale,40*screenScale);
 }
 
 function updateMatch(){
@@ -359,8 +406,8 @@ function updateRemote(){
 
 function updateInfo(){
   fill(180,180,190);
-  textSize(17);
-  text("This app is still in development,\nand may require you to manually\nclear the cache to be updated.\n\nThis site is a Progressive Web App,\nand can be downloaded to the\nhome screen using the share\nbutton on iOS, or through the\npop-up window on Android.\n\nBugs and Suggestions\ncan be submitted in\nour discord server.",0,-110);
+  //textSize(17);
+  scaledText("This app is still in development,\nand may require you to manually\nclear the cache to be updated.\n\nThis site is a Progressive Web App,\nand can be downloaded to the\nhome screen using the share\nbutton on iOS, or through the\npop-up window on Android.\n\nBugs and Suggestions\ncan be submitted in\nour discord server.",0,-110,regular,17);
   linkButtons[0].updateButton();
   if(linkButtons[0].clicked){
     window.open("https://discord.gg/PFMRPrhdmQ");
@@ -372,10 +419,10 @@ function updateSettings(){
     if(i!=3)settingButtons[i].updateButton();
   }
   fill(210,210,220);
-  textFont(regular,13);
-  text("One ring counter per branch,\nor one per level",0,-135+12);
+  //textFont(regular,13);
+  scaledText("One ring counter per branch,\nor one per level",0,-135+12,regular,13);
   //text("Side that the counters are one",0,-45+15);
-  text("Show rings and poles, or\njust sum of ring points",0,45+12);
+  scaledText("Show rings and poles, or\njust sum of ring points",0,45+12,regular,13);
 
   if(settingButtons[0].clicked)storeItem('counterSave',settingButtons[0].toggled);
   if(settingButtons[1].clicked)storeItem('cSideSave',settingButtons[1].toggled);
@@ -448,8 +495,8 @@ class Button{
   }
 
   drawButton(){
-    textFont(regular,this.tSize);
-    strokeWeight(this.sWeight);
+    //textFont(regular,this.tSize);
+    //strokeWeight(this.sWeight);
     if(this.toggled&&this.type==2){
       if(this.hover&&(!disableHover||mouseIsPressed)){
         fill(this.fillB2);
@@ -461,10 +508,12 @@ class Button{
       }
       if(this.strokeB==color(0,0))noStroke();
       else stroke(this.strokeB);
-      rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
+      scaledRect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3],this.sWeight)
+      //rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       fill(this.textColor);
       noStroke();
-      text(this.textB,this.x,this.y-this.yOffset);
+      scaledText(this.textB,this.x,this.y-this.yOffset,regular,this.tSize)
+      //text(this.textB,this.x,this.y-this.yOffset);
     }
     else{
       if(this.hover&&(!disableHover||mouseIsPressed)){
@@ -477,10 +526,12 @@ class Button{
       }
       if(this.strokeA==color(0,0))noStroke();
       else stroke(this.strokeA);
-      rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
+      //rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
+      scaledRect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3],this.sWeight)
       fill(this.textColor);
       noStroke();
-      text(this.textA,this.x,this.y-this.yOffset);
+      //text(this.textA,this.x,this.y-this.yOffset);
+      scaledText(this.textA,this.x,this.y-this.yOffset,regular,this.tSize)
     }
   }
 
@@ -718,16 +769,16 @@ class Field{
         noStroke();
         fill(30,240,30,30);
         if(highlight==1){
-          rect(-125.5,0,64,138);
+          scaledRect(-125.5,0,64,138,0,0,0,0,0);
         }
         else if(highlight==3){
-          rect(125.5,0,64,138);
+          scaledRect(125.5,0,64,138,0,0,0,0,0);
         }
         else if(highlight==5){
-          strokeWeight(1);
+          strokeWeight(1*screenScale);
           for(let y=0;y<100;y++){
             stroke(30,240,30,40-y/80.0*40);
-            line(-145,-162.5-y,145,-162.5-y);
+            scaledLine(-145,-162.5-y,145,-162.5-y);
           }
         }
       }
@@ -746,24 +797,24 @@ class Field{
         fill(30,240,30,60);
         noStroke();
         if(highlight==0){
-          rect(-125.5,0,64,138);
+          scaledRect(-125.5,0,64,138,0,0,0,0,0);
         }
         else if(highlight==1){
-          rect(-125.5,-113,64,88,12,0,0,0)
-          rect(-125.5,113,64,88,0,0,0,12)
+          scaledRect(-125.5,-113,64,88,12,0,0,0,0)
+          scaledRect(-125.5,113,64,88,0,0,0,12,0)
           //rect(-125.5,0,64,314,12,0,0,12);
-          rect(-73.25,0,40.5,314)
+          scaledRect(-73.25,0,40.5,314,0,0,0,0,0)
         }
         else if(highlight==2){
-          rect(0,0,106,314)
+          scaledRect(0,0,106,314,0,0,0,0,0)
         }
         else if(highlight==3){
-          rect(125.5,-113,64,88,0,12,0,0)
-          rect(125.5,113,64,88,0,0,12,0)
-          rect(73.25,0,40.5,314)
+          scaledRect(125.5,-113,64,88,0,12,0,0,0)
+          scaledRect(125.5,113,64,88,0,0,12,0,0)
+          scaledRect(73.25,0,40.5,314,0,0,0,0,0)
         }
         else if(highlight==4){
-          rect(125.5,0,64,138);
+          scaledRect(125.5,0,64,138,0,0,0,0,0);
         }
 
       }
@@ -785,22 +836,22 @@ class Field{
       if(this.parked.toggled||appState==2){
         fill(30,30,35);
         stroke(30,30,35);
-        strokeWeight(20);
-        if(appState!=2)rect(0,246,320,120,15);
+        //strokeWeight(20);
+        if(appState!=2)scaledRect(0,246,320,120,15,15,15,15,20);
 
-        strokeWeight(3);
+        //strokeWeight(3);
         noFill();
         if(appState==2){
           stroke(40,40,45);
         }
         else stroke(30,30,35);
-        rect(27-32.5,246+32.5,55,55,15);
-        rect(27+32.5,246+32.5,55,55,15);
+        scaledRect(27-32.5,246+32.5,55,55,15,15,15,15,3);
+        scaledRect(27+32.5,246+32.5,55,55,15,15,15,15,3);
 
         if(this.platButtons[2].textA>0){
           stroke(red.light2);
           fill(red.light2);
-          rect(27-32.5,246+32.5,55,55,15);
+          scaledRect(27-32.5,246+32.5,55,55,15,15,15,15,3);
         }
         if(this.platButtons[2].textA<2&&appState!=3){
           //stroke(30,30,35);
@@ -813,15 +864,15 @@ class Field{
             stroke(30,30,35);
             fill(30,30,35);
           }
-          strokeWeight(5);
-          rect(27-32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
+          //strokeWeight(5);
+          scaledRect(27-32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
         }
 
         if(this.platButtons[3].textA>0){
           stroke(blue.light2);
           fill(blue.light2);
-          strokeWeight(3);
-          rect(27+32.5,246+32.5,55,55,15);
+          //strokeWeight(3);
+          scaledRect(27+32.5,246+32.5,55,55,15,15,15,15,3);
         }
         if(this.platButtons[3].textA<2&&appState!=3){
           if(appState==2)
@@ -833,8 +884,8 @@ class Field{
             stroke(30,30,35);
             fill(30,30,35);
           }
-          strokeWeight(5);
-          rect(27+32.5+13.75+0.75,246+32.5,26,55,0,15,15,0)
+          //strokeWeight(5);
+          scaledRect(27+32.5+13.75+0.75,246+32.5,26,55,0,15,15,0,5)
         }
 
         for(let i=0;i<4;i++){
@@ -857,9 +908,9 @@ class Field{
           }
         }
         fill(230,230,240);
-        textFont(regular,20);
+        //textFont(regular,20);
         noStroke();
-        text("Robots:",27,246-32.5);
+        scaledText("Robots:",27,246-32.5,regular,20);
       }
       else{
         //stroke(30,30,35);
@@ -870,21 +921,21 @@ class Field{
         //rect(-130,246,65,125,17.5);
         if(this.platButtons[0].toggled){
           fill(red.light1);
-          rect(-130,246-31.25,65,62.5,17.5,17.5,0,0);
+          scaledRect(-130,246-31.25,65,62.5,17.5,17.5,0,0,0);
         }
         if(this.platButtons[1].toggled){
           fill(blue.light1);
-          rect(-130,246+31.25,65,62.5,0,0,17.5,17.5);
+          scaledRect(-130,246+31.25,65,62.5,0,0,17.5,17.5,0);
         }
       }
       if(appState!=2)this.parked.updateButton();
       if(!this.parked.toggled&&appState!=2){
         noStroke();
         fill(red.light1);
-        textFont(bold,20);
-        text(this.platButtons[2].textA,-130,246-35-3);
+        //textFont(bold,20);
+        scaledText(this.platButtons[2].textA,-130,246-35-3,bold,20);
         fill(blue.light2);
-        text(this.platButtons[3].textA,-130,246+35-3);
+        scaledText(this.platButtons[3].textA,-130,246+35-3,bold,20);
 
         if(appState==1){
           this.auton.updateButton();
@@ -938,80 +989,81 @@ class Field{
   drawTMScreen(){
     noFill();
     stroke(100,100,110);
-    strokeWeight(5);
+    strokeWeight(5*screenScale);
     /*
     line(-95-60,-22,-95+60,-22);
     line(95-60,-22,95+60,-22);
     line(-95-60,-20*5,-95+60,-20*5);
     line(95-60,-20*5,95+60,-20*5);
     */
-    line(-95-60,-22,95+60,-22);
-    line(-95-60,-20*5,95+60,-20*5);
+    scaledLine(-95-60,-22,95+60,-22);
+    scaledLine(-95-60,-20*5,95+60,-20*5);
     push();
-    scale(5);
-    strokeWeight(1);
+
+    //scale(5);
+    strokeWeight(5*screenScale);
     stroke(210,210,220);
     beginShape();
     //vertex(-8,14);
     //vertex(-8,10);
-    vertex(-10,10);
-    vertex(-10,7);
-    vertex(-7,3);
-    vertex(7,3);
-    vertex(10,7);
-    vertex(10,10);
-    vertex(-10,10);
+    vertex(-50*screenScale,50*screenScale);
+    vertex(-50*screenScale,35*screenScale);
+    vertex(-35*screenScale,15*screenScale);
+    vertex(35*screenScale,15*screenScale);
+    vertex(50*screenScale,35*screenScale);
+    vertex(50*screenScale,50*screenScale);
+    vertex(-50*screenScale,50*screenScale);
     //vertex(8,10);
     //vertex(8,14);
     //vertex(-8,14);
     endShape();
 
-    line(-8,12,-7.3,14);
-    line(-7.3,14,7.3,14);
-    line(7.3,14,8,12);
+    scaledLine(-40,60,-36.5,70);
+    scaledLine(-36.5,70,36.5,70);
+    scaledLine(36.5,70,40,60);
 
-    line(-10,10,10,10);
+    scaledLine(-50,50,50,50);
 
-    line(0,3,0,-10);
-    line(0,-10,6,-14);
-    line(0,-10,-6,-14);
-    line(0,-13,0,-26);
-    line(0,-26,6,-30);
-    line(0,-26,-6,-30);
+    scaledLine(0,15,0,-50);
+    scaledLine(0,-50,30,-70);
+    scaledLine(0,-50,-30,-70);
+    scaledLine(0,-65,0,-130);
+    scaledLine(0,-130,30,-150);
+    scaledLine(0,-130,-30,-150);
 
-    textFont(semibold,7);
+    //textFont(semibold,7);
     noStroke();
     if(appState==1){
       fill(red.light2);
-      text(this.scoredRings[1][2],-19,-32+3);
-      text(this.scoredRings[1][1],-19,-16+3);
-      text(this.scoredRings[1][0],-19,0+3)
+      scaledText(this.scoredRings[1][2],-95,-145,semibold,45);
+      scaledText(this.scoredRings[1][1],-95,-65,semibold,45);
+      scaledText(this.scoredRings[1][0],-95,15,semibold,45)
       fill(blue.light2);
-      text(this.scoredRings[2][2],19,-32+3);
-      text(this.scoredRings[2][1],19,-16+3);
-      text(this.scoredRings[2][0],19,0+3);
+      scaledText(this.scoredRings[2][2],95,-145,semibold,45);
+      scaledText(this.scoredRings[2][1],95,-65,semibold,45);
+      scaledText(this.scoredRings[2][0],95,15,semibold,45);
       pop();
     }
     else{
       if(this==lrt.rFields[0])fill(red.light2);
       else if(this==lrt.rFields[1])fill(blue.light2);
       else fill(yellow.light1);
-      text(this.scoredRings[1][2]+this.scoredRings[2][2],-19,-32+3);
-      text(this.scoredRings[1][1]+this.scoredRings[2][1],-19,-16+3);
-      text(this.scoredRings[1][0]+this.scoredRings[2][0],-19,0+3)
+      scaledText(this.scoredRings[1][2]+this.scoredRings[2][2],-95,-145,semibold,45);
+      scaledText(this.scoredRings[1][1]+this.scoredRings[2][1],-95,-65,semibold,45);
+      scaledText(this.scoredRings[1][0]+this.scoredRings[2][0],-95,15,semibold,45)
 
       if(appState==2&&this.scores[0]>0){
         fill(purple.light2);
-        text(skillsSave[0],19,-32+3);
-        text(skillsSave[1],19,-16+3);
-        text(skillsSave[2],19,0+3)
+        scaledText(skillsSave[0],95,-145,semibold,45);
+        scaledText(skillsSave[1],95,-65,semibold,45);
+        scaledText(skillsSave[2],95,15,semibold,45)
       }
       pop();
     }
-    strokeWeight(3);
+    strokeWeight(3*screenScale);
     noFill();
     push();
-    translate(0,120+3);
+    translate(0,123*screenScale);
     this.mogos[1].drawHouse(color(210,210,220));
     pop();
 
@@ -1019,25 +1071,25 @@ class Field{
     textFont(semibold,35);
     if(appState==1){
     fill(red.light2);
-    text(this.scoredHomeZone[1],-95,120);
-    text(this.scoredPlatform[1],-95,190);
-    text((this.platButtons[2].textA*this.platButtons[0].toggled),-95,260);
+    scaledText(this.scoredHomeZone[1],-95,120,semibold,35);
+    scaledText(this.scoredPlatform[1],-95,190,semibold,35);
+    scaledText((this.platButtons[2].textA*this.platButtons[0].toggled),-95,260,semibold,35);
     fill(blue.light2);
-    text(this.scoredHomeZone[2],95,120);
-    text(this.scoredPlatform[2],95,190);
-    text((this.platButtons[3].textA*this.platButtons[1].toggled),95,260);
+    scaledText(this.scoredHomeZone[2],95,120,semibold,35);
+    scaledText(this.scoredPlatform[2],95,190,semibold,35);
+    scaledText((this.platButtons[3].textA*this.platButtons[1].toggled),95,260,semibold,35);
     }
     else if(appState==2){
       fill(yellow.light1);
-      text((this.scoredHomeZone[1]+this.scoredHomeZone[2]),-95,120);
-      text((this.scoredPlatform[1]+this.scoredPlatform[2]),-95,190);
-      text((this.platButtons[2].textA*this.platButtons[0].toggled+this.platButtons[3].textA*this.platButtons[1].toggled),-95,260);
+      scaledText((this.scoredHomeZone[1]+this.scoredHomeZone[2]),-95,120,semibold,35);
+      scaledText((this.scoredPlatform[1]+this.scoredPlatform[2]),-95,190,semibold,35);
+      scaledText((this.platButtons[2].textA*this.platButtons[0].toggled+this.platButtons[3].textA*this.platButtons[1].toggled),-95,260,semibold,35);
 
       if(this.scores[0]>0){
         fill(purple.light2);
-        text(skillsSave[3],95,120);
-        text(skillsSave[4],95,190);
-        text(skillsSave[5],95,260);
+        scaledText(skillsSave[3],95,120,semibold,35);
+        scaledText(skillsSave[4],95,190,semibold,35);
+        scaledText(skillsSave[5],95,260,semibold,35);
       }
 
 
@@ -1049,26 +1101,26 @@ class Field{
         }
     }
     push();
-    translate(0,190+3);
+    translate(0,193*screenScale);
     this.mogos[1].drawPlat(color(210,210,220));
     pop();
 
     push();
-    translate(0,10);
-    strokeWeight(10);
+    translate(0,10*screenScale);
+    strokeWeight(10*screenScale);
     stroke(210,210,220);
-    line(-20,260,20,260);
-    strokeWeight(5);
+    scaledLine(-20,260,20,260);
+    strokeWeight(5*screenScale);
     stroke(40,40,45);
-    line(-20,260,20,260);
-    strokeWeight(5);
-    line(-7,265,7,265);
-    strokeWeight(3);
+    scaledLine(-20,260,20,260);
+    strokeWeight(5*screenScale);
+    scaledLine(-7,265,7,265);
+    strokeWeight(3*screenScale);
     stroke(210,210,220);
-    line(-5,258,-5,270);
-    line(5,258,5,270);
-    line(-5,270,-8,273);
-    line(5,270,8,273);
+    scaledLine(-5,258,-5,270);
+    scaledLine(5,258,5,270);
+    scaledLine(-5,270,-8,273);
+    scaledLine(5,270,8,273);
     //noFill();
     //fill(210,210,220);
     //stroke(red.light2);
@@ -1077,14 +1129,14 @@ class Field{
     //rect(12,246,16,16,5);
 
     fill(210,210,220);
-    ellipse(-10,250,5,5)
-    ellipse(10,250,5,5);
-    line(-4,250,4,250);
-    line(-2,250,-2,242);
-    line(-2,242,4,238);
+    scaledEllipse(-10,250,5,5,3)
+    scaledEllipse(10,250,5,5,3);
+    scaledLine(-4,250,4,250);
+    scaledLine(-2,250,-2,242);
+    scaledLine(-2,242,4,238);
     stroke(210,210,220);
     noFill();
-    arc(10,236,6,6,QUARTER_PI+0.3,TWO_PI-QUARTER_PI-0.75);
+    scaledArc(10,236,6,6,QUARTER_PI+0.3,TWO_PI-QUARTER_PI-0.75,3);
     pop();
   }
 
@@ -1094,55 +1146,55 @@ class Field{
     //stroke(yellow.light2);
     //stroke(yellow.medium);
     stroke(210,210,220);
-    if(appState==1)translate(135,-280);
-    else translate(140,-280);
-    strokeWeight(2);
+    if(appState==1)translate(135*screenScale,-280*screenScale);
+    else translate(140*screenScale,-280*screenScale);
+    strokeWeight(2*screenScale);
     noFill();
     beginShape();
-    vertex(-8,14);
-    vertex(-8,10);
-    vertex(-10,10);
-    vertex(-10,7);
-    vertex(-7,3);
-    vertex(7,3);
-    vertex(10,7);
-    vertex(10,10);
-    vertex(8,10);
-    vertex(8,14);
-    vertex(-8,14);
+    vertex(-8*screenScale,14*screenScale);
+    vertex(-8*screenScale,10*screenScale);
+    vertex(-10*screenScale,10*screenScale);
+    vertex(-10*screenScale,7*screenScale);
+    vertex(-7*screenScale,3*screenScale);
+    vertex(7*screenScale,3*screenScale);
+    vertex(10*screenScale,7*screenScale);
+    vertex(10*screenScale,10*screenScale);
+    vertex(8*screenScale,10*screenScale);
+    vertex(8*screenScale,14*screenScale);
+    vertex(-8*screenScale,14*screenScale);
     endShape();
-    line(0,3,0,-10);
-    line(0,-10,7,-14);
-    line(0,-10,-7,-14);
-    line(0,-10,0,-26);
-    line(0,-26,6,-30);
-    line(0,-26,-6,-30);
-    textFont(bold,14);
+    scaledLine(0,3,0,-10);
+    scaledLine(0,-10,7,-14);
+    scaledLine(0,-10,-7,-14);
+    scaledLine(0,-10,0,-26);
+    scaledLine(0,-26,6,-30);
+    scaledLine(0,-26,-6,-30);
+    //textFont(bold,14);
     noStroke();
     if(appState==1){
       fill(red.light2);
-      text(this.scoredRings[1][2],-21,-32);
-      text(this.scoredRings[1][1],-21,-16);
-      text(this.scoredRings[1][0],-21,0)
+      scaledText(this.scoredRings[1][2],-21,-32,bold,14);
+      scaledText(this.scoredRings[1][1],-21,-16,bold,14);
+      scaledText(this.scoredRings[1][0],-21,0,bold,14)
       fill(blue.light2);
-      text(this.scoredRings[2][2],21,-32);
-      text(this.scoredRings[2][1],21,-16);
-      text(this.scoredRings[2][0],21,0);
+      scaledText(this.scoredRings[2][2],21,-32,bold,14);
+      scaledText(this.scoredRings[2][1],21,-16,bold,14);
+      scaledText(this.scoredRings[2][0],21,0,bold,14);
       pop();
     }
     else if(appState==2){
       fill(yellow.light1);
-      text(this.scoredRings[1][2]+this.scoredRings[2][2],-21,-32);
-      text(this.scoredRings[1][1]+this.scoredRings[2][1],-21,-16);
-      text(this.scoredRings[1][0]+this.scoredRings[2][0],-21,0)
+      scaledText(this.scoredRings[1][2]+this.scoredRings[2][2],-21,-32,bold,14);
+      scaledText(this.scoredRings[1][1]+this.scoredRings[2][1],-21,-16,bold,14);
+      scaledText(this.scoredRings[1][0]+this.scoredRings[2][0],-21,0,bold,14)
       pop();
     }
     else{
       if(this==lrt.rFields[0])fill(red.light2);
       else if(this==lrt.rFields[1])fill(blue.light2);
-      text(this.scoredRings[1][2],-21,-32);
-      text(this.scoredRings[1][1],-21,-16);
-      text(this.scoredRings[1][0],-21,0)
+      scaledText(this.scoredRings[1][2],-21,-32,bold,14);
+      scaledText(this.scoredRings[1][1],-21,-16,bold,14);
+      scaledText(this.scoredRings[1][0],-21,0,bold,14)
       pop();
     }
   }
@@ -1154,71 +1206,75 @@ class Field{
 
 
   displayScores(){
-    textFont(regular,50);
+    //textFont(regular,50);
     stroke(40,40,45);
-    strokeWeight(15);
+    strokeWeight(15*screenScale);
     if(appState==1){
       fill(red.light2);
-      text(this.scores[1],-65,-234);
+      scaledText(this.scores[1],-65,-234,regular,50);
       fill(blue.light2);
-      text(this.scores[2],65,-234);
+      scaledText(this.scores[2],65,-234,regular,50);
     }
     else if(appState==2){
       if(!tmScreen.toggled){
         fill(yellow.light1);
-        text(this.scores[3],0,-234);
+        scaledText(this.scores[3],0,-234,regular,50);
       }
       else{
         fill(yellow.light1);
-        text(this.scores[3],-65,-234);
+        scaledText(this.scores[3],-65,-234,regular,50);
         fill(purple.light2);
-        if(this.scores[0]>0)text(this.scores[0],65,-234);
+        if(this.scores[0]>0)scaledText(this.scores[0],65,-234,regular,50);
       }
     }
 
     else if(appState==3){//}&&this.zoneMogos[5].length==0){
       //if(remoteFieldSelected==1)fill(red.light2);
       //else if(remoteFieldSelected==2)fill(blue.light2);
-      strokeWeight(10);
-      textFont(regular,30);
+      fill(30,30,35);
+      noStroke();
+      scaledRect(0,-190,210,32,15,15,15,15,0);
+      strokeWeight(10*screenScale);
+      //textFont(regular,30);
       //text(this.scores[3],0,-252.5);
       fill(red.medium);
-      text(this.zonePoints[0],-60,-193);//-255);
+      scaledText(this.zonePoints[0],-60,-193,regular,30);//-255);
       fill(yellow.medium);
-      text(this.zonePoints[1],0,-193);//-255);
+      scaledText(this.zonePoints[1],0,-193,regular,30);//-255);
       fill(blue.medium);
-      text(this.zonePoints[2],60,-193);//-255);
+      scaledText(this.zonePoints[2],60,-193,regular,30);//-255);
     }
 
   }
 
   resetIcon(){
     push();
-    translate(130,246);
-    scale(0.7);
+    translate(130*screenScale,246*screenScale);
+    //scale(0.7);
     stroke(210,210,220);
-    strokeWeight(3);
+    strokeWeight(2.1*screenScale);
     noFill();
-    arc(0,0,30,30,PI+QUARTER_PI-0.1,TWO_PI+PI-QUARTER_PI-0.1);
-    translate(-11.61,-9.49);
-    line(0,0,0,-7.25);
-    line(0,0,7,0.5);
+    scaledArc(0,0,21,21,PI+QUARTER_PI-0.1,TWO_PI+PI-QUARTER_PI-0.1);
+    //translate(-11.61,-9.49);
+    translate(-8.127*screenScale,-6.643*screenScale)
+    scaledLine(0,0,0,-5.075);
+    scaledLine(0,0,4.9,0.35);
     pop();
   }
 
   drawField(){
     stroke(180,180,190);
-    strokeWeight(3);
-    line(-53,-160,-53,160);
-    line(53,-160,53,160);
-    line(-3,-160,-3,160);
-    line(3,-160,3,160);
-    line(53,-107,106,-160);
-    line(-53,107,-106,160);
+    strokeWeight(3*screenScale);
+    scaledLine(-53,-160,-53,160);
+    scaledLine(53,-160,53,160);
+    scaledLine(-3,-160,-3,160);
+    scaledLine(3,-160,3,160);
+    scaledLine(53,-107,106,-160);
+    scaledLine(-53,107,-106,160);
     stroke(160,160,170);
-    strokeWeight(5);
+    //strokeWeight(5*screenScale);
     noFill();
-    rect(0,0,320,320,15);
+    scaledRect(0,0,320,320,15,15,15,15,5);
   }
 
   scoreField(){
@@ -1570,58 +1626,58 @@ class remoteField{
     this.lrtHighLights();
 
     stroke(180,180,190);
-    strokeWeight(3);
-    line(-53,-160,-53,160);
-    line(53,-160,53,160);
+    strokeWeight(3*screenScale);
+    scaledLine(-53,-160,-53,160);
+    scaledLine(53,-160,53,160);
     stroke(160);
-    strokeWeight(5);
+    //strokeWeight(5*screenScale);
     noFill();
-    rect(0,0,320,320,15);
+    scaledRect(0,0,320,320,15,15,15,15,5);
   }
 
   lrtHighLights(){
     noStroke();
     noFill();
-    strokeWeight(10);
+    //strokeWeight(10);
     if(this.lrtScores[0][0]>this.lrtScores[1][0])fill(red.dark5,50);
     else if(this.lrtScores[0][0]<this.lrtScores[1][0])fill(blue.dark5,50);
-    rect(-125.5,0,64,314,12,0,0,12);
-    rect(-73.25,0,40.5,314)
+    scaledRect(-125.5,0,64,314,12,0,0,12,10);
+    scaledRect(-73.25,0,40.5,314,0,0,0,0,10)
     if(remoteFieldSelected==0){
-      rect(-125.5,0,64,314,12,0,0,12);
-      rect(-73.25,0,40.5,314)
+      scaledRect(-125.5,0,64,314,12,0,0,12,10);
+      scaledRect(-73.25,0,40.5,314,10)
     }
 
     noFill();
     if(this.lrtScores[0][1]>this.lrtScores[1][1])fill(red.dark5,50)
     else if(this.lrtScores[0][1]<this.lrtScores[1][1])fill(blue.dark5,50);
-    rect(0,0,106,314)
+    scaledRect(0,0,106,314,0,0,0,0,10)
     if(remoteFieldSelected==0){
-      rect(0,0,106,314)
+      scaledRect(0,0,106,314,0,0,0,0,10)
     }
 
     noFill();
     if(this.lrtScores[0][2]>this.lrtScores[1][2])fill(red.dark5,50)
     else if(this.lrtScores[0][2]<this.lrtScores[1][2])fill(blue.dark5,50);
-    rect(125.5,0,64,314,0,12,12,0);
-    rect(73.25,0,40.5,314)
+    scaledRect(125.5,0,64,314,0,12,12,0,10);
+    scaledRect(73.25,0,40.5,314,0,0,0,0,10)
     if(remoteFieldSelected==0){
-      rect(125.5,0,64,314,0,12,12,0);
-      rect(73.25,0,40.5,314)
+      scaledRect(125.5,0,64,314,0,12,12,0,10);
+      scaledRect(73.25,0,40.5,314,0,0,0,0,10)
     }
 
   }
 
   drawLRTScore(){
-    textFont(bold,30);
-    strokeWeight(2);
+    //textFont(bold,30);
+    strokeWeight(2*screenScale);
     noStroke();
     fill(red.light2);
     if(this.lrtScores[0][0]>this.lrtScores[1][0]){
       stroke(240);
       fill(red.dark1);
     }
-    text(this.lrtScores[0][0],-107,-134);
+    scaledText(this.lrtScores[0][0],-107,-134,bold,30);
 
     noStroke();
     fill(blue.light2);
@@ -1629,7 +1685,7 @@ class remoteField{
       stroke(240);
       fill(blue.dark1);
     }
-    text(this.lrtScores[1][0],-107,-100);
+    scaledText(this.lrtScores[1][0],-107,-100,bold,30);
 
     fill(red.light2);
     noStroke();
@@ -1637,7 +1693,7 @@ class remoteField{
       stroke(240);
       fill(red.dark1);
     }
-    text(this.lrtScores[0][1],0,-134);
+    scaledText(this.lrtScores[0][1],0,-134,bold,30);
 
     fill(blue.light2);
     noStroke();
@@ -1645,7 +1701,7 @@ class remoteField{
       stroke(240);
       fill(blue.dark1);
     }
-    text(this.lrtScores[1][1],0,-100);
+    scaledText(this.lrtScores[1][1],0,-100,bold,30);
 
     fill(red.light2);
     noStroke();
@@ -1653,7 +1709,7 @@ class remoteField{
       stroke(240);
       fill(red.dark1);
     }
-    text(this.lrtScores[0][2],107,-134);
+    scaledText(this.lrtScores[0][2],107,-134,bold,30);
 
     fill(blue.light2);
     noStroke();
@@ -1661,21 +1717,21 @@ class remoteField{
       stroke(240);
       fill(blue.dark1);
     }
-    text(this.lrtScores[1][2],107,-100);
+    scaledText(this.lrtScores[1][2],107,-100,bold,30);
 
     fill(45,45,50);
-    strokeWeight(2);
+    //strokeWeight(2);
     stroke(100,100,110);
     //noStroke();
-    rect(0,35,200,210,15);
+    scaledRect(0,35,200,210,15,15,15,15,2);
     fill(210,210,220);
     noStroke();
-    textFont(regular,20);
-    text("Match Points:",0,-50);
-    text("Auton WP:",0,15);
-    text("Total WP:",0,80);
+    //textFont(regular,20);
+    scaledText("Match Points:",0,-50,regular,20);
+    scaledText("Auton WP:",0,15,regular,20);
+    scaledText("Total WP:",0,80,regular,20);
 
-    textFont(bold,30);
+    //textFont(bold,30);
     if(this.rFields[0].scores[3]>this.rFields[1].scores[3]){
       stroke(240);
       fill(red.dark1);
@@ -1684,7 +1740,7 @@ class remoteField{
       noStroke();
       fill(red.light2);
     }
-    text(this.rFields[0].scores[3],-40,-20);
+    scaledText(this.rFields[0].scores[3],-40,-20,bold,30);
 
     if(this.rFields[0].scores[3]<this.rFields[1].scores[3]){
       stroke(240);
@@ -1694,18 +1750,18 @@ class remoteField{
       fill(blue.light2);
       noStroke();
     }
-    text(this.rFields[1].scores[3],40,-20);
+    scaledText(this.rFields[1].scores[3],40,-20,bold,30);
 
     noStroke();
     fill(red.light2);
-    text(int(this.rFields[0].awp.toggled),-40,45);
+    scaledText(int(this.rFields[0].awp.toggled),-40,45,bold,30);
     fill(blue.light2);
-    text(int(this.rFields[1].awp.toggled),40,45);
+    scaledText(int(this.rFields[1].awp.toggled),40,45,bold,30);
 
     fill(red.light2);
-    text(this.lrtWP[0],-40,110);
+    scaledText(this.lrtWP[0],-40,110,bold,30);
     fill(blue.light2);
-    text(this.lrtWP[1],40,110);
+    scaledText(this.lrtWP[1],40,110,bold,30);
   }
 
   scoreLRT(){
@@ -1796,21 +1852,21 @@ class RingCounter{
       this.minus.x=this.xOriginal*-1;
     }
     fill(40,40,45);
-    strokeWeight(3);
+    strokeWeight(3*screenScale);
     stroke(purple.dark3);
-    rect(this.x,this.y,50,94);
-    textFont(regular,25);
+    scaledRect(this.x,this.y,50,94,0,0,0,0,3);
+    //textFont(regular,25);
     stroke(purple.medium);
     fill(230,230,240);
     if(settingButtons[0].toggled&&appState!=3&&(this.id==1||this.id==3)){
       if(this.id==1){
-        text((this.ringCount+fields[appState].mogos[mogoSelected].rings[2]),this.x,this.y-3);
+        scaledText((this.ringCount+fields[appState].mogos[mogoSelected].rings[2]),this.x,this.y-3,regular,25);
       }
       else if(this.id==3){
-        text((this.ringCount+fields[appState].mogos[mogoSelected].rings[4]),this.x,this.y-3);
+        scaledText((this.ringCount+fields[appState].mogos[mogoSelected].rings[4]),this.x,this.y-3,regular,25);
       }
     }
-    else text(this.ringCount,this.x,this.y-3);
+    else scaledText(this.ringCount,this.x,this.y-3,regular,25);
     this.plus.updateButton();
     this.minus.updateButton();
     if(this.plus.clicked){
@@ -1927,16 +1983,22 @@ class Mogo {
     }
     fill(30,30,35);
     stroke(30,30,35);
-    strokeWeight(20);
-    rect(0,255,55*5+40,55,15,15,15,15);
-    if(appState==3)rect(0,315,150,45,0,0,15,15);
-
+    //strokeWeight(20);
+    if(appState!=3)scaledRect(0,265,55*5+40,55,15,15,15,15,20);
+    else {
+      scaledRect(0,255,55*5+40,55,15,15,15,15,20);
+      scaledRect(0,315,150,35,0,0,15,15,20);
+    }
     if(settingButtons[1].toggled)this.scored.x=-130;
     else this.scored.x=130;
     //rect(this.scored.x,this.scored.y,55,55,15,15,0,0);
     let limit=5;
     if(appState==3)limit=6;
     for(let i=0;i<limit;i++){
+      if(i<5){
+        if(appState!=3)this.zoneButtons[i].y=265;
+        else this.zoneButtons[i].y=255;
+      }
       this.zoneButtons[i].updateButton();
       if(this.zoneButtons[i].clicked){
         for(let j=0;j<limit;j++){
@@ -2063,117 +2125,84 @@ class Mogo {
 
   drawIcons(){
     push();
-    translate(this.zoneButtons[0].x,this.zoneButtons[0].y);
+    translate(this.zoneButtons[0].x*screenScale,this.zoneButtons[0].y*screenScale);
     this.drawPlat(red.medium);
     pop();
 
     push();
-    translate(this.zoneButtons[1].x,this.zoneButtons[1].y);
+    translate(this.zoneButtons[1].x*screenScale,this.zoneButtons[1].y*screenScale);
     this.drawHouse(red.light2);
     pop();
 
     push();
-    translate(this.zoneButtons[2].x,this.zoneButtons[2].y);
+    translate(this.zoneButtons[2].x*screenScale,this.zoneButtons[2].y*screenScale);
     this.drawNeut(yellow.light2);
     pop();
 
     push();
-    translate(this.zoneButtons[3].x,this.zoneButtons[3].y);
+    translate(this.zoneButtons[3].x*screenScale,this.zoneButtons[3].y*screenScale);
     this.drawHouse(blue.light2);
     pop();
 
     push();
-    translate(this.zoneButtons[4].x,this.zoneButtons[4].y);
+    translate(this.zoneButtons[4].x*screenScale,this.zoneButtons[4].y*screenScale);
     this.drawPlat(blue.medium);
     pop();
-
-    push();
-    translate(this.scored.x,this.scored.y);
-    //this.drawScored();
-    pop();
-  }
-
-  drawScored(){
-    stroke(green.light2);
-    if(this.scored.toggled){
-      translate(0,2);
-      stroke(red.light2);
-    }
-    line(-17,17,17,17);
-    strokeWeight(3);
-    noFill();
-    if(this.scored.toggled)translate(0,-7);
-    beginShape();
-    vertex(-9,15);
-    vertex(-9,10);
-    vertex(-11,10);
-    vertex(-11,7);
-    vertex(-8,3);
-    vertex(8,3);
-    vertex(11,7);
-    vertex(11,10);
-    vertex(9,10);
-    vertex(9,15);
-    vertex(-9,15);
-    endShape();
-    line(0,3,0,-10);
-    line(0,-10,6,-14);
-    line(0,-10,-6,-14);
   }
 
   drawNeut(iconColor){
-    strokeWeight(3);
+    strokeWeight(3*screenScale);
     noFill();
     stroke(iconColor);
-    ellipse(0,0,33,33);
+    scaledEllipse(0,0,33,33,3);
     fill(iconColor);
     noStroke();
-    rect(0,0,17,4.75);
+    scaledRect(0,0,17,4.75,0,0,0,0,3);
   }
 
   drawPlat(iconColor){
-    strokeWeight(3);
+    strokeWeight(3*screenScale);
     noFill();
     stroke(iconColor);
-    rect(0,0,25,40,7);
+    scaledRect(0,0,25,40,7,7,7,7,3);
     noStroke();
     fill(iconColor);
-    rect(0,-15,15,1.5);
-    rect(0,-11,15,3);
-    rect(0,-6, 15,4);
-    rect(0,0,15,5);
-    rect(0,6,15,4);
-    rect(0,11,15,3);
-    rect(0,15,15,1.5);
+    simpleRect(0,-15,15,1.5);
+    simpleRect(0,-11,15,3);
+    simpleRect(0,-6, 15,4);
+    simpleRect(0,0,15,5);
+    simpleRect(0,6,15,4);
+    simpleRect(0,11,15,3);
+    simpleRect(0,15,15,1.5);
   }
 
   drawHouse(iconColor){
     stroke(iconColor);
     noFill();
     beginShape();
-    vertex(0, -14);
-    vertex(14, 0);
-    vertex(10, 0);
-    vertex(10, 13);
-    vertex(-10, 13);
-    vertex(-10, 0);
-    vertex(-14, 0);
-    vertex(0, -14);
+    vertex(0, -14*screenScale);
+    vertex(14*screenScale, 0);
+    vertex(10*screenScale, 0);
+    vertex(10*screenScale, 13*screenScale);
+    vertex(-10*screenScale, 13*screenScale);
+    vertex(-10*screenScale, 0);
+    vertex(-14*screenScale, 0);
+    vertex(0, -14*screenScale);
     endShape();
     fill(iconColor);
     beginShape();
-    vertex(-1.5,13);
-    vertex(-1.5,4);
-    vertex(1.5,4);
-    vertex(1.5,13);
-    vertex(-2,13);
+    vertex(-1.5*screenScale,13*screenScale);
+    vertex(-1.5*screenScale,4*screenScale);
+    vertex(1.5*screenScale,4*screenScale);
+    vertex(1.5*screenScale,13*screenScale);
+    vertex(-2*screenScale,13*screenScale);
     endShape();
     beginShape();
-    vertex(7,-7);
-    vertex(7,-11);
-    vertex(9,-11);
-    vertex(9,-5);
-    vertex(7,-7);
+    vertex(7*screenScale,-7*screenScale);
+    vertex(7*screenScale,-11*screenScale);
+    vertex(9*screenScale,-11*screenScale);
+    vertex(9*screenScale,-5*screenScale);
+    vertex(7*screenScale,-7*screenScale);
     endShape();
   }
 
@@ -2181,7 +2210,7 @@ class Mogo {
     //if(this.id==0&&mouseIsPressed){
     //  console.log("goal 0");
     //}
-    strokeWeight(3);
+    strokeWeight(3*screenScale);
     push();
     if(this.dragging==false){
     }
@@ -2193,26 +2222,33 @@ class Mogo {
 
     }
 
+    mogoScale=1;
+    comboScale=1;
+
     if(mogoSelected==-1){
       if(this.dragged){
-        translate(translatedMouseX,translatedMouseY);
+        translate(translatedMouseX*screenScale,translatedMouseY*screenScale);
       }
-      else translate(this.x, this.y);
-      scale(0.5);
+      else translate(this.x*screenScale, this.y*screenScale);
+      //scale(0.5);
+      mogoScale=0.5;
     }
     else{
-      if(this.id==5)translate(0,125);
-      else translate(0,75);
-      scale(1.5);
+      if(this.id==5)translate(0,125*screenScale);
+      else translate(0,75*screenScale);
+      //scale(1.5);
+      mogoScale=1.5;
     }
 
     if(this.mogoButton.clicked){
       mogoSelected=this.id;
     }
 
-    translate(0, -50);
+    translate(0, -50*screenScale*mogoScale);
     push();
-    scale(1.4);
+    mogoScale*=1.4;
+    comboScale=mogoScale*screenScale;
+    //scale(1.4);
 
 /*
     if(this.scored.toggled){
@@ -2229,82 +2265,84 @@ class Mogo {
     */
 
 
-    translate(0, -14);
+    translate(0, -14*comboScale);
     fill(10);
     stroke(10);
-    rect(0, 58, 65, 20);
-    ellipse(0, 68, 65, 30);
+    simpleRect(0, 58*mogoScale, 65*mogoScale, 20*mogoScale);
+    scaledEllipse(0, 68*mogoScale, 65*mogoScale, 30*mogoScale,3*mogoScale);
 
-    strokeWeight(0.5);
+    strokeWeight(0.5*comboScale);
     stroke(this.c.dark2);
     fill(this.c.dark2);
     beginShape();
-    vertex(-22, 67);
-    vertex(-40, 50);
-    vertex(-40, 60);
-    vertex(-22, 77);
-    vertex(-22, 67);
+    vertex(-22*comboScale, 67*comboScale);
+    vertex(-40*comboScale, 50*comboScale);
+    vertex(-40*comboScale, 60*comboScale);
+    vertex(-22*comboScale, 77*comboScale);
+    vertex(-22*comboScale, 67*comboScale);
     endShape();
 
     stroke(this.c.dark1);
     fill(this.c.dark1);
     beginShape();
-    vertex(-22, 67);
-    vertex(22, 67);
-    vertex(22, 77);
-    vertex(-22, 77);
-    vertex(-22, 67);
+    vertex(-22*comboScale, 67*comboScale);
+    vertex(22*comboScale, 67*comboScale);
+    vertex(22*comboScale, 77*comboScale);
+    vertex(-22*comboScale, 77*comboScale);
+    vertex(-22*comboScale, 67*comboScale);
     endShape();
 
     stroke(this.c.medium);
     fill(this.c.medium);
     beginShape();
-    vertex(22, 67);
-    vertex(40, 50);
-    vertex(40, 60);
-    vertex(22, 77);
-    vertex(22, 67);
+    vertex(22*comboScale, 67*comboScale);
+    vertex(40*comboScale, 50*comboScale);
+    vertex(40*comboScale, 60*comboScale);
+    vertex(22*comboScale, 77*comboScale);
+    vertex(22*comboScale, 67*comboScale);
     endShape();
 
     stroke(this.c.light1);
     fill(this.c.light1);
     beginShape();
-    ellipse(0, 40, 60, 30);
-    vertex(29, 36);
-    vertex(40, 50);
-    vertex(22, 67);
-    vertex(-22, 67);
-    vertex(-40, 50);
-    vertex(-29, 36);
+    scaledEllipse(0, 40*mogoScale, 60*mogoScale, 30*mogoScale);
+    vertex(29*comboScale, 36*comboScale);
+    vertex(40*comboScale, 50*comboScale);
+    vertex(22*comboScale, 67*comboScale);
+    vertex(-22*comboScale, 67*comboScale);
+    vertex(-40*comboScale, 50*comboScale);
+    vertex(-29*comboScale, 36*comboScale);
     endShape();
 
 
     stroke(this.c.dark3);
 
     fill(this.c.dark3);
-    ellipse(0, 50, 60, 30);
+    scaledEllipse(0, 50*mogoScale, 60*mogoScale, 30*mogoScale);
 
     stroke(this.c.light1);
     noFill();
-    strokeWeight(11);
-    arc(0, 45, 66, 30, 0.11, PI-0.11);
-    strokeWeight(2);
+    strokeWeight(11*comboScale);
+    scaledArc(0, 45*mogoScale, 66*mogoScale, 30*mogoScale, 0.11, PI-0.11,11*mogoScale);
+    strokeWeight(2*comboScale);
 
     noFill();
     stroke(this.c.light2);
-    strokeWeight(1);
-    ellipse(0, 40, 60, 30);
+    strokeWeight(1*comboScale);
+    scaledEllipse(0, 40*mogoScale, 60*mogoScale, 30*mogoScale,1*mogoScale);
 
+    mogoScale/=1.4;
+    comboScale/=1.4;
     pop();
 
 
     if(settingButtons[2].toggled&&mogoSelected==-1){
       fill(230,230,240);
       stroke(purple.dark2);
-      strokeWeight(10);
-      textFont(regular,45);
-      if(appState!=3)text(this.ringScore(),0,25);
-      else text(this.ringScoreLRT(),0,25);
+      strokeWeight(10*comboScale);
+      //textFont(regular,45);
+      if(appState!=3)scaledText(this.ringScore(),0,25*mogoScale,regular,45*mogoScale);
+      else scaledText(this.ringScoreLRT(),0,25*mogoScale,regular,45*mogoScale);
       //text((this.rings[0]+this.rings[1]+this.rings[2]+this.rings[3]+this.rings[4]),0,25)
     }
     else {
@@ -2315,92 +2353,94 @@ class Mogo {
       fill(80);
       stroke(50);
       stroke(80);
-      ellipse(0, 50, 10, 5);
+      strokeWeight(2*comboScale);
+      scaledEllipse(0, 50*mogoScale, 10*mogoScale, 5*mogoScale,2*mogoScale);
       stroke(80);
-      rect(0, 12.5, 10, 75);
+      simpleRect(0, 12.5*mogoScale, 10*mogoScale, 75*mogoScale);
       stroke(50);
-      line(-5, 50, -5, -25);
+      scaledLine(-5*mogoScale, 50*mogoScale, -5*mogoScale, -25*mogoScale);
       stroke(110);
-      line(5, 50, 5, -25);
+      scaledLine(5*mogoScale, 50*mogoScale, 5*mogoScale, -25*mogoScale);
       fill(50);
-      ellipse(0, -25, 10, 5);
+      scaledEllipse(0, -25*mogoScale, 10*mogoScale, 5*mogoScale,2*mogoScale);
     }
 
     if (this.type!=0) {
       fill(80);
       stroke(50);
       stroke(80);
-      ellipse(0, 50, 10, 5);
+      strokeWeight(2*comboScale);
+      scaledEllipse(0, 50*mogoScale, 10*mogoScale, 5*mogoScale,2*mogoScale);
       stroke(80);
-      rect(0, 0, 10, 100);
+      simpleRect(0, 0, 10*mogoScale, 100*mogoScale);
       stroke(50);
-      line(-5, 50, -5, -50);
+      scaledLine(-5*mogoScale, 50*mogoScale, -5*mogoScale, -50*mogoScale);
       stroke(110);
-      line(5, 50, 5, -50);
+      scaledLine(5*mogoScale, 50*mogoScale, 5*mogoScale, -50*mogoScale);
       fill(50);
-      ellipse(0, -50, 10, 5);
+      scaledEllipse(0, -50*mogoScale, 10*mogoScale, 5*mogoScale,2*mogoScale);
 
 
       if (this.type==2) {
         push();
-        translate(0, -100);
+        translate(0, -100*comboScale);
 
-
+        strokeWeight(2*comboScale);
         fill(80);
         stroke(50);
         stroke(80);
-        ellipse(0, 50, 10, 5);
+        scaledEllipse(0, 50*mogoScale, 10*mogoScale, 5*mogoScale,2*mogoScale);
         stroke(80);
-        rect(0, 0, 10, 100);
+        simpleRect(0, 0, 10*mogoScale, 100*mogoScale);
         stroke(50);
-        line(-5, 50, -5, -50);
+        scaledLine(-5*mogoScale, 50*mogoScale, -5*mogoScale, -50*mogoScale);
         stroke(110);
-        line(5, 50, 5, -50);
+        scaledLine(5*mogoScale, 50*mogoScale, 5*mogoScale, -50*mogoScale);
         fill(50);
-        ellipse(0, -50, 10, 5);
+        scaledEllipse(0, -50*mogoScale, 10*mogoScale, 5*mogoScale,2*mogoScale);
         stroke(20);
         fill(25);
         beginShape();
         //vertex(-9,-43);
-        vertex(-8, -43);
-        vertex(-16, -51);
-        vertex(-16, -57);
-        vertex(-12.5, -62);
-        vertex(12.5, -62);
-        vertex(16, -57);
-        vertex(16, -51);
+        vertex(-8*comboScale, -43*comboScale);
+        vertex(-16*comboScale, -51*comboScale);
+        vertex(-16*comboScale, -57*comboScale);
+        vertex(-12.5*comboScale, -62*comboScale);
+        vertex(12.5*comboScale, -62*comboScale);
+        vertex(16*comboScale, -57*comboScale);
+        vertex(16*comboScale, -51*comboScale);
         //vertex(9,-43);
         //vertex(-9,-43);
-        vertex(8, -43);
-        vertex(-8, -43);
+        vertex(8*comboScale, -43*comboScale);
+        vertex(-8*comboScale, -43*comboScale);
         endShape();
         stroke(80);
         fill(80);
         push();
-        translate(-26, -67);
+        translate(-26*comboScale, -67*comboScale);
         rotate(-53*PI/180);
-        rect(0, 0, 10, 30);
+        simpleRect(0, 0, 10*mogoScale, 30*mogoScale);
         stroke(50);
-        line(-5, -15, -5, 15);
+        scaledLine(-5*mogoScale, -15*mogoScale, -5*mogoScale, 15*mogoScale);
         stroke(110);
-        line(5, -15, 5, 15);
+        scaledLine(5*mogoScale, -15*mogoScale, 5*mogoScale, 15*mogoScale);
         fill(50);
-        ellipse(0, -15, 10, 5);
+        scaledEllipse(0, -15*mogoScale, 10*mogoScale, 5*mogoScale,2*mogoScale);
         pop();
 
         push();
-        translate(26, -67);
+        translate(26*comboScale, -67*comboScale);
         rotate(53*PI/180);
         fill(80);
         stroke(80);
-        rect(0, 0, 10, 30);
+        simpleRect(0, 0, 10*mogoScale, 30*mogoScale);
         stroke(50);
-        line(5, -15, 5, 15);
+        scaledLine(5*mogoScale, -15*mogoScale, 5*mogoScale, 15*mogoScale);
         stroke(110);
-        line(-5, -15, -5, 15);
+        scaledLine(-5*mogoScale, -15*mogoScale, -5*mogoScale, 15*mogoScale);
         //fill(50);
         //ellipse(0, -15, 10, 5);
-        arc(0, -15, 10, 5, PI, TWO_PI);
+        scaledArc(0, -15*mogoScale, 10*mogoScale, 5, PI, TWO_PI);
         pop();
         pop();
       }
@@ -2411,45 +2451,45 @@ class Mogo {
       fill(25);
       beginShape();
       //vertex(-9,-43);
-      vertex(-8, -43);
-      vertex(-16, -51);
-      vertex(-16, -57);
-      vertex(-12.5, -62);
-      vertex(12.5, -62);
-      vertex(16, -57);
-      vertex(16, -51);
+      vertex(-8*comboScale, -43*comboScale);
+      vertex(-16*comboScale, -51*comboScale);
+      vertex(-16*comboScale, -57*comboScale);
+      vertex(-12.5*comboScale, -62*comboScale);
+      vertex(12.5*comboScale, -62*comboScale);
+      vertex(16*comboScale, -57*comboScale);
+      vertex(16*comboScale, -51*comboScale);
       //vertex(9,-43);
       //vertex(-9,-43);
-      vertex(8, -43);
-      vertex(-8, -43);
+      vertex(8*comboScale, -43*comboScale);
+      vertex(-8*comboScale, -43*comboScale);
       endShape();
       stroke(80);
       fill(80);
       push();
-      translate(-26, -67);
+      translate(-26*comboScale, -67*comboScale);
       rotate(-53*PI/180);
-      rect(0, 0, 10, 30);
+      simpleRect(0, 0, 10*mogoScale, 30*mogoScale);
       stroke(50);
-      line(-5, -15, -5, 15);
+      scaledLine(-5*mogoScale, -15*mogoScale, -5*mogoScale, 15*mogoScale);
       stroke(110);
-      line(5, -15, 5, 15);
+      scaledLine(5*mogoScale, -15*mogoScale, 5*mogoScale, 15*mogoScale);
       fill(50);
-      ellipse(0, -15, 10, 5);
+      scaledEllipse(0, -15*mogoScale, 10*mogoScale, 5*mogoScale,2*mogoScale);
       pop();
 
       push();
-      translate(26, -67);
+      translate(26*comboScale, -67*comboScale);
       rotate(53*PI/180);
       fill(80);
       stroke(80);
-      rect(0, 0, 10, 30);
+      simpleRect(0, 0, 10*mogoScale, 30*mogoScale);
       stroke(50);
-      line(5, -15, 5, 15);
+      scaledLine(5*mogoScale, -15*mogoScale, 5*mogoScale, 15*mogoScale);
       stroke(110);
-      line(-5, -15, -5, 15);
+      scaledLine(-5*mogoScale, -15*mogoScale, -5*mogoScale, 15*mogoScale);
       //fill(50);
       //ellipse(0, -15, 10, 5);
-      arc(0, -15, 10, 5, PI, TWO_PI);
+      scaledArc(0, -15*mogoScale, 10*mogoScale, 5*mogoScale, PI, TWO_PI,2*mogoScale);
       pop();
     }
 
@@ -2457,18 +2497,18 @@ class Mogo {
     }
     if(this.scored.toggled&&mogoSelected==-1){
       push();
-      translate(0,50);
-      strokeWeight(15);
+      translate(0,50*comboScale);
+      strokeWeight(15*comboScale);
       noFill();
       stroke(10,10,15);
-      ellipse(0,0,110,90);
+      scaledEllipse(0,0,110*mogoScale,90*mogoScale,15*mogoScale);
 
       fill(10,10,15);
       noStroke();
       rotate(QUARTER_PI*0.75);
       //rect(0,0,110,15,2);
       rotate(-QUARTER_PI*1.5);
-      rect(0,0,110,15,2);
+      rect(0,0,110*comboScale,15*comboScale,2*comboScale);
       pop();
     }
     pop();
@@ -2477,37 +2517,45 @@ class Mogo {
 
   drawRingBack() {
     push();
-    scale(0.8);
+    //scale(0.8);
+    comboScale*=0.8;
+    mogoScale*=0.8;
     noFill();
     //stroke(r, g, b);
     stroke(purple.medium);
-    strokeWeight(10);
-    arc(0, 0, 40, 30, PI, TWO_PI);
-    strokeWeight(2);
+    //strokeWeight(10);
+    scaledArc(0, 0, 40*mogoScale, 30*mogoScale, PI, TWO_PI,10*mogoScale);
+    //strokeWeight(2);
     stroke(purple.light3);
     //stroke(r+light, g+light, b+light);
-    arc(0, 0, 50-2, 40-2, PI+0.5, TWO_PI-0.5);
+    scaledArc(0, 0, (50-2)*mogoScale, (40-2)*mogoScale, PI+0.5, TWO_PI-0.5,2*mogoScale);
     //stroke(r-dark, g-dark, b-dark);
     stroke(purple.dark3);
-    arc(0, 0, 30+2, 20+2, PI+0.5, TWO_PI-0.5);
+    scaledArc(0, 0, (30+2)*mogoScale, (20+2)*mogoScale, PI+0.5, TWO_PI-0.5,2*mogoScale);
+    comboScale/=0.8;
+    mogoScale/=0.8;
     pop();
   }
 
   drawRingFront() {
     push();
-    scale(0.8);
+    //scale(0.8);
+    comboScale*=0.8;
+    mogoScale*=0.8;
     noFill();
     //stroke(r, g, b);
     stroke(purple.medium);
-    strokeWeight(10);
-    arc(0, 0, 40, 30, 0, PI);
+    //strokeWeight(10);
+    scaledArc(0, 0, 40*mogoScale, 30*mogoScale, 0, PI,10*mogoScale);
     //stroke(r-dark, g-dark, b-dark);
     stroke(purple.dark3);
-    strokeWeight(2);
-    arc(0, 0, 50-2, 40-2, 0-0.08+0.5, PI+0.08-0.5);
+    //strokeWeight(2);
+    scaledArc(0, 0, (50-2)*mogoScale, (40-2)*mogoScale, 0-0.08+0.5, PI+0.08-0.5,2*mogoScale);
     //stroke(r+light, g+light, b+light);
     stroke(purple.light3);
-    arc(0, 0, 30+2, 20+2, 0-0.08+0.5, PI+0.08-0.5);
+    scaledArc(0, 0, (30+2)*mogoScale, (20+2)*mogoScale, 0-0.08+0.5, PI+0.08-0.5,2*mogoScale);
+    comboScale/=0.8;
+    mogoScale/=0.8;
     pop();
   }
 
@@ -2515,14 +2563,14 @@ class Mogo {
     for(let i=0;i<this.rings[0];i++){
       if(i<5){
         push();
-        translate(-30,25-8.3*i);
+        translate(-30*comboScale,(25-8.3*i)*comboScale);
         rotate(0.6);
         this.drawRingBack();
         pop();
       }
       else if(i<10){
         push();
-        translate(30,25-8.3*(i-5));
+        translate(30*comboScale,(25-8.3*(i-5))*comboScale);
         rotate(-0.6);
         this.drawRingBack();
         pop();
@@ -2530,14 +2578,14 @@ class Mogo {
     }
     for (let i=0; i<this.rings[2]; i++) {
       push();
-      translate(16+7*(this.rings[2]-i-1), -50-5-5*(this.rings[2]-i-1));
+      translate((16+7*(this.rings[2]-i-1))*comboScale, (-50-5-5*(this.rings[2]-i-1))*comboScale);
       rotate(-0.2-0.5*PI);
       this.drawRingBack();
       pop();
     }
     for(let i=0;i<this.rings[4];i++){
       push();
-      translate(16+7*(this.rings[4]-i-1), -150-5-5*(this.rings[4]-i-1));
+      translate((16+7*(this.rings[4]-i-1))*comboScale, (-150-5-5*(this.rings[4]-i-1))*comboScale);
       rotate(-0.2-0.5*PI);
       this.drawRingBack();
       pop();
@@ -2545,13 +2593,13 @@ class Mogo {
     for (let i=0; i<this.rings[1]; i++) {
       if (this.type==0) {
         push();
-        translate(0, 39-8.3*i);
+        translate(0, (39-8.3*i)*comboScale);
         rotate(0.2);
         this.drawRingBack();
         pop();
       } else {
         push();
-        translate(-16-7*i, -50-5-5*i);
+        translate((-16-7*i)*comboScale, (-50-5-5*i)*comboScale);
         rotate(0.2-0.5*PI);
         this.drawRingBack();
         pop();
@@ -2559,7 +2607,7 @@ class Mogo {
     }
     for (let i=0; i<this.rings[3]; i++) {
       push();
-      translate(-16-7*i, -150-5-5*i);
+      translate((-16-7*i)*comboScale, (-150-5-5*i)*comboScale);
       rotate(0.2-0.5*PI);
       this.drawRingBack();
       pop();
@@ -2570,14 +2618,14 @@ class Mogo {
     for(let i=0;i<this.rings[0];i++){
       if(i<5){
         push();
-        translate(-30,25-8.3*i);
+        translate(-30*comboScale,(25-8.3*i)*comboScale);
         rotate(0.6);
         this.drawRingFront();
         pop();
       }
       else if(i<10){
         push();
-        translate(30,25-8.3*(i-5));
+        translate(30*comboScale,(25-8.3*(i-5))*comboScale);
         rotate(-0.6);
         this.drawRingFront();
         pop();
@@ -2585,14 +2633,14 @@ class Mogo {
     }
     for (let i=0; i<this.rings[2]; i++) {
       push();
-      translate(16+7*(this.rings[2]-i-1), -50-5-5*(this.rings[2]-i-1));
+      translate((16+7*(this.rings[2]-i-1))*comboScale, (-50-5-5*(this.rings[2]-i-1))*comboScale);
       rotate(-0.2-0.5*PI);
       this.drawRingFront();
       pop();
     }
     for(let i=0;i<this.rings[4];i++){
       push();
-      translate(16+7*(this.rings[4]-i-1), -150-5-5*(this.rings[4]-i-1));
+      translate((16+7*(this.rings[4]-i-1))*comboScale, (-150-5-5*(this.rings[4]-i-1))*comboScale);
       rotate(-0.2-0.5*PI);
       this.drawRingFront();
       pop();
@@ -2600,13 +2648,13 @@ class Mogo {
     for (let i=0; i<this.rings[1]; i++) {
       if (this.type==0) {
         push();
-        translate(0, 39-8.3*i);
+        translate(0, (39-8.3*i)*comboScale);
         rotate(0.2);
         this.drawRingFront();
         pop();
       } else {
         push();
-        translate(-16-7*i, -50-5-5*i);
+        translate((-16-7*i)*comboScale, (-50-5-5*i)*comboScale);
         rotate(0.2-0.5*PI);
         this.drawRingFront();
         pop();
@@ -2614,7 +2662,7 @@ class Mogo {
     }
     for(let i=0;i<this.rings[3];i++){
       push();
-      translate(-16-7*i,-150-5-5*i);
+      translate((-16-7*i)*comboScale,(-150-5-5*i)*comboScale);
       rotate(0.2-0.5*PI);
       this.drawRingFront();
       pop();
@@ -2622,7 +2670,7 @@ class Mogo {
     for(let i=10;i<this.rings[0];i++){
       if(i<15){
         push();
-        translate(-22,42-8.3*(i-10));
+        translate(-22*comboScale,(42-8.3*(i-10))*comboScale);
         rotate(0.4);
         this.drawRingBack();
         this.drawRingFront();
@@ -2630,7 +2678,7 @@ class Mogo {
       }
       else{
         push();
-        translate(22,42-8.3*(i-15));
+        translate(22*comboScale,(42-8.3*(i-15))*comboScale);
         rotate(-0.4);
         this.drawRingBack();
         this.drawRingFront();
@@ -2654,53 +2702,53 @@ class Platform{
 
   drawPlatform(){
     push();
-    translate(this.x,this.y);
-    scale(1.2);
-    strokeWeight(9);
+    translate(this.x*screenScale,this.y*screenScale);
+    //scale(1.2);
+    strokeWeight(10.8);
     stroke(20);
     noFill();
-    arc(-12.5,-37.5,15,15,PI,PI+HALF_PI);
-    arc(12.5,-37.5,15,15,PI+HALF_PI,TWO_PI);
-    arc(12.5,37.5,15,15,0,HALF_PI);
-    arc(-12.5,37.5,15,15,HALF_PI,PI);
+    scaledArc(-15,-45,18,18,PI,PI+HALF_PI,10.8);
+    scaledArc(15,-45,18,18,PI+HALF_PI,TWO_PI,10.8);
+    scaledArc(15,45,18,18,0,HALF_PI,11);
+    scaledArc(-15,45,18,18,HALF_PI,PI,10.8);
 
     noStroke();
    fill(20);
-   rect(20,5,13,25);
-   rect(-20,5,13,25);
+   simpleRect(24,6,15.6,30);
+   simpleRect(-24,6,15.6,30);
 
     //fill(this.c.light1);
     fill(this.c.dark1);
     noStroke();
-    rect(0,-45,23,9);
-    rect(0,45,23,9);
-    rect(20,0,9,73);
-    rect(-20,0,9,73);
+    simpleRect(0,-54,27.6,10.8);
+    simpleRect(0,54,27.6,10.8);
+    simpleRect(24,0,10.8,87.6);
+    simpleRect(-24,0,10.8,87.6);
 
     fill(20);
-    rect(20,0,11,15);
-    rect(-20,0,11,15);
-    ellipse(-20,36.5,9,4.5);
-    ellipse(20,36.5,9,4.5);
+    simpleRect(24,0,13.2,18);
+    simpleRect(-24,0,13.2,18);
+    scaledEllipse(-24,43.8,10.8,5.4,10.8);
+    scaledEllipse(24,43.8,10.8,5.4,10.8);
 
     //fill(this.c.light1);
     fill(this.c.dark1);
-    ellipse(-20,7.5,9,4.5);
-    ellipse(20,7.5,9,4.5);
-    ellipse(-20,-36.5,9,4.5);
-    ellipse(20,-36.5,9,4.5);
+    scaledEllipse(-24,9,10.8,5.4,10.8);
+    scaledEllipse(24,9,10.8,5.4,10.8);
+    scaledEllipse(-24,-43.8,10.8,5.4,10.8);
+    scaledEllipse(24,-43.8,10.8,5.4,10.8);
 
     noStroke();
     fill(140,20);
-    rect(0,0,52,115);
+    simpleRect(0,0,62.4,138);
 
     //fill(this.c.light1);
     fill(this.c.dark1);
     noStroke();
 
     for(let i=0;i<9;i++){
-      rect(0,i*3.4,20,16/(i+5));
-      rect(0,-i*3.4,20,16/(i+5));
+      simpleRect(0,i*3.4*1.2,24,16/(i+5)*1.2);
+      simpleRect(0,-i*3.4*1.2,24,16/(i+5)*1.2);
     }
 
     pop();
