@@ -1,4 +1,4 @@
-let version="0.1.7"
+let version="0.1.8"
 
 let yellow; //Color Presets
 let purple;
@@ -32,6 +32,7 @@ let mediumBack;
 let largeBack;
 let settingButtons=[];
 let linkButtons=[];
+let manualButtons=[];
 
 let warningButton;
 let warningExit;
@@ -70,8 +71,8 @@ function preload(){
 }
 
 function setup() {
-  //createCanvas(windowWidth, windowHeight);
-  createCanvas(375, 667);
+  createCanvas(windowWidth, windowHeight);
+  //createCanvas(375, 667);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
   rectMode(CENTER);
@@ -101,14 +102,25 @@ function setup() {
   lrt.resetLRT();
 
 
-  menuButtons[0]=new Button(0,-100,300,130,"MATCH");
-  menuButtons[1]=new Button(0,55,300,130,"SKILLS");
-  menuButtons[2]=new Button(0,210,300,130,"REMOTE");
+  //menuButtons[0]=new Button(0,-100,300,130,"MATCH");
+  //menuButtons[1]=new Button(0,55,300,130,"SKILLS");
+  //menuButtons[2]=new Button(0,210,300,130,"REMOTE");
+
+  menuButtons[0]=new Button(0,-105,300,120,"MATCH");
+  menuButtons[1]=new Button(0,37,300,120,"SKILLS");
+  menuButtons[2]=new Button(0,179,300,120,"REMOTE");
+  menuButtons[0].tSize=25;
+  menuButtons[1].tSize=25;
+  menuButtons[2].tSize=25;
+
   menuButtons[3]=new Button(-155,-300,0,0,"?");
   menuButtons[3].tSize=25;
   menuButtons[3].setColors(color(40,40,45),0,0,0,0,0,color(150,150,160));
   menuButtons[4]=new Button(155,-300,55,55,"");
   menuButtons[4].setColors(color(40,40,45),0,0,0,0,0,color(150,150,160));
+
+  menuButtons[5]=new Button(0,286,300,50,"Game Manual");
+  menuButtons[5].tSize=17;
 
   backButton=new Button(-155,-300,55,55," « ");
   smallBack=new Button(0,-300,375,55,"");
@@ -134,6 +146,19 @@ function setup() {
   linkButtons[0]=new Button(0,100,200,65,"Join Server");
   linkButtons[0].setColors(color(88, 101, 242),color(73, 86, 222),0,0,0,0,0)
   linkButtons[0].tSize=20;
+
+  manualButtons[0]=new Button(0,-170,300,95,"Game Manual");
+  manualButtons[1]=new Button(0,-69,300,65,"Field Specifications");
+  manualButtons[2]=new Button(0,17,300,65,"Robot Skills Challenge");
+  manualButtons[3]=new Button(0,103,300,65,"VEX U");
+  manualButtons[4]=new Button(0,189,300,65,"VEX AI Competition");
+  manualButtons[5]=new Button(0,275,300,65,"Live Remote Tournaments");
+
+  manualButtons[0].tSize=22;
+  for(let i=1;i<6;i++){
+    manualButtons[i].tSize=17;
+  }
+
 
   //hideRings=new Button(135,-280,75,75,"Hide\nRings");
   //hideRings.setExtraData(2,"Show\nRings",17);
@@ -184,7 +209,7 @@ function setup() {
   }
   disableHover=isTouchDevice();
   //console.log(disableHover);
-  windowResized();
+  //windowResized();
 }
 
 function isTouchDevice() {
@@ -259,6 +284,12 @@ function draw(){
     noStroke();
     scaledText("Settings", 0,-290,regular,30);
     updateSettings();
+  }
+  else if(appState==6){
+    fill(200);
+    noStroke();
+    scaledText("Game Manual", 0,-290,regular,30);
+    updateManual();
   }
   if(appState!=0&&!warningExit.toggled){
     //fill(red.dark5);
@@ -392,9 +423,11 @@ function updateMenu(){
   //textFont(regular,20);
   fill(red.dark1);
   scaledText("BETA "+version,0,-200,regular,20);
-  for(let i=0;i<5;i++){
-    menuButtons[i].updateButton();
-    if(menuButtons[i].clicked)appState=i+1;
+  for(let i=0;i<6;i++){
+    if(i!=5||settingButtons[3].toggled){
+      menuButtons[i].updateButton();
+      if(menuButtons[i].clicked)appState=i+1;
+    }
   }
   backButton.updateButton();
   if(backButton.clicked){
@@ -438,6 +471,20 @@ function updateSettings(){
   if(settingButtons[0].clicked)storeItem('counterSave',settingButtons[0].toggled);
   if(settingButtons[1].clicked)storeItem('cSideSave',settingButtons[1].toggled);
   if(settingButtons[2].clicked)storeItem('ringSave',settingButtons[2].toggled);
+}
+
+function updateManual(){
+  for(let i=0;i<manualButtons.length;i++){
+    manualButtons[i].updateButton();
+  }
+  fill(210,210,220);
+  scaledText("Version 1.1",0,-170+27,regular,13);
+  if(manualButtons[0].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual");
+  else if(manualButtons[1].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A");
+  else if(manualButtons[2].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B");
+  else if(manualButtons[3].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C");
+  else if(manualButtons[4].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D");
+  else if(manualButtons[5].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E");
 }
 
 
@@ -1080,16 +1127,34 @@ class Field{
     pop();
 
     noStroke();
-    textFont(semibold,35);
     if(appState==1){
-    fill(red.light2);
-    scaledText(this.scoredHomeZone[1],-95,120,semibold,35);
-    scaledText(this.scoredPlatform[1],-95,190,semibold,35);
-    scaledText((this.platButtons[2].textA*this.platButtons[0].toggled),-95,260,semibold,35);
-    fill(blue.light2);
-    scaledText(this.scoredHomeZone[2],95,120,semibold,35);
-    scaledText(this.scoredPlatform[2],95,190,semibold,35);
-    scaledText((this.platButtons[3].textA*this.platButtons[1].toggled),95,260,semibold,35);
+      if(this.autonWinner==1){
+        stroke(red.light2);
+        strokeWeight(15*screenScale)
+        scaledLine(-65-20,-185,-65+20,-185);
+        noStroke();
+        fill(40,40,45);
+        //fill(210,210,220)
+        scaledText("Auton",-65,-186,bold,11);
+      }
+      else if(this.autonWinner==2){
+        stroke(blue.light2);
+        strokeWeight(15*screenScale)
+        scaledLine(65-20,-185,65+20,-185);
+        noStroke();
+        fill(40,40,45);
+        //fill(210,210,220)
+        scaledText("Auton",65,-186,bold,11);
+      }
+
+      fill(red.light2);
+      scaledText(this.scoredHomeZone[1],-95,120,semibold,35);
+      scaledText(this.scoredPlatform[1],-95,190,semibold,35);
+      scaledText((this.platButtons[2].textA*this.platButtons[0].toggled),-95,260,semibold,35);
+      fill(blue.light2);
+      scaledText(this.scoredHomeZone[2],95,120,semibold,35);
+      scaledText(this.scoredPlatform[2],95,190,semibold,35);
+      scaledText((this.platButtons[3].textA*this.platButtons[1].toggled),95,260,semibold,35);
     }
     else if(appState==2){
       fill(yellow.light1);
@@ -1222,7 +1287,7 @@ class Field{
     stroke(40,40,45);
     strokeWeight(15*screenScale);
     if(appState==1){
-      strokeWeight(3*screenScale);
+      strokeWeight(3.5*screenScale);
       noStroke();
       fill(red.light2);
       scaledText(this.scores[1],-65,-234,regular,50);
