@@ -156,7 +156,7 @@ function setup() {
   manualButtons[4]=new Button(0,189,300,65,"VEX AI Competition");
   manualButtons[5]=new Button(0,275,300,65,"Live Remote Tournaments");
 
-  manualShort=new Button(-90,-300,55,55,"");
+  manualShort=new Button(-95,-300,55,55,"");
   manualShort.fillA=color(40,40,45);
 
   manualButtons[0].tSize=22;
@@ -261,7 +261,7 @@ function draw(){
     //textFont(regular, 30);
     fill(200);
     noStroke();
-    scaledText("Match", 0,-290,regular,30);
+    scaledText("Match", 0,-302,regular,30);
 
   }
   else if(appState==2){ //Skills
@@ -269,20 +269,20 @@ function draw(){
     //textFont(regular, 30);
     fill(200);
     noStroke();
-    scaledText("Skills", 0,-290,regular,30);
+    scaledText("Skills", 0,-302,regular,30);
   }
   else if(appState==3){ //Remote
     updateRemote();
     //textFont(regular, 30);
     fill(200);
     noStroke();
-    scaledText("Remote", 0,-290,regular,30);
+    scaledText("Remote", 0,-302,regular,30);
   }
   else if(appState==4){
     //textFont(regular, 30);
     fill(200);
     noStroke();
-    scaledText("Info", 0,-290,regular,30);
+    scaledText("Info", 0,-302,regular,30);
     fill(100,100,110);
     //textSize(15);
     scaledText("Version "+version,0,290,regular,15);
@@ -292,13 +292,13 @@ function draw(){
     //textFont(regular, 30);
     fill(200);
     noStroke();
-    scaledText("Settings", 0,-290,regular,30);
+    scaledText("Settings", 0,-302,regular,30);
     updateSettings();
   }
   else if(appState==6){
     fill(200);
     noStroke();
-    scaledText("Game Manual", 0,-290,regular,30);
+    scaledText("Manual", 0,-302,regular,30);
     updateManual();
   }
   if(appState!=0&&!warningExit.toggled){
@@ -314,7 +314,7 @@ function draw(){
   }
 
   if(appState!=0){
-    if(appState!=4&&appState!=5&&settingButtons[3].toggled){
+    if(appState<=3&&settingButtons[3].toggled){
       manualShort.updateButton();
       drawManual(manualShort.x,manualShort.y);
     }
@@ -394,7 +394,7 @@ function checkClicked(){
 
 function drawManual(x,y){
   push();
-  translate(x*screenScale,y*screenScale);
+  translate(x*screenScale,(y+1)*screenScale);
   scale(0.8);
   stroke(230,230,240);
   noFill();
