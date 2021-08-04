@@ -156,7 +156,7 @@ function setup() {
   manualButtons[4]=new Button(0,189,300,65,"VEX AI Competition");
   manualButtons[5]=new Button(0,275,300,65,"Live Remote Tournaments");
 
-  manualShort=new Button(-95,-300,55,55,"");
+  manualShort=new Button(-100,-300,55,55,"");
   manualShort.fillA=color(40,40,45);
 
   manualButtons[0].tSize=22;
@@ -259,7 +259,7 @@ function draw(){
   else if(appState==1){ //Match
     updateMatch();
     //textFont(regular, 30);
-    fill(200);
+    fill(230,230,240);
     noStroke();
     scaledText("Match", 0,-302,regular,30);
 
@@ -267,20 +267,20 @@ function draw(){
   else if(appState==2){ //Skills
     updateSkills();
     //textFont(regular, 30);
-    fill(200);
+    fill(230,230,240);
     noStroke();
     scaledText("Skills", 0,-302,regular,30);
   }
   else if(appState==3){ //Remote
     updateRemote();
     //textFont(regular, 30);
-    fill(200);
+    fill(230,230,240);
     noStroke();
     scaledText("Remote", 0,-302,regular,30);
   }
   else if(appState==4){
     //textFont(regular, 30);
-    fill(200);
+    fill(230,230,240);
     noStroke();
     scaledText("Info", 0,-302,regular,30);
     fill(100,100,110);
@@ -290,13 +290,13 @@ function draw(){
   }
   else if(appState==5){
     //textFont(regular, 30);
-    fill(200);
+    fill(230,230,240);
     noStroke();
     scaledText("Settings", 0,-302,regular,30);
     updateSettings();
   }
   else if(appState==6){
-    fill(200);
+    fill(230,230,240);
     noStroke();
     scaledText("Manual", 0,-302,regular,30);
     updateManual();
