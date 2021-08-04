@@ -299,11 +299,11 @@ function draw(){
     textFont(regular,18);
     let xPos=mouseX;
     let yPos=mouseY;
-    if(xPos<70)xPos+=70;
-    else if(xPos>width-70)xPos-=70;
-    if(yPos>height-50)yPos-=20;
+    if(xPos<80)xPos+=80;
+    else if(xPos>width-80)xPos-=80;
+    if(yPos>height-60)yPos-=20;
     else yPos+=30;
-    text(int(translatedMouseX*10)/10+", "+int(translatedMouseY*10)/10,xPos,yPos);
+    text("X:"+int(translatedMouseX*10)/10+", Y:"+int(translatedMouseY*10)/10,xPos,yPos);
   }
 }
 else console.log("no draw");
@@ -1884,33 +1884,56 @@ class RingCounter{
     if(this.plus.clicked){
       this.ringCount++;
       let nPoleMax=7;
-      if(this.ringCount==nPoleMax+1&&mogoSelected>=4&&this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]<nPoleMax){
-        this.ringCount--;
-        //fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[2].ringCount++;
-        fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]++;
+      if(settingButtons[0].toggled&&appState!=3&&(this.id==1||this.id==3)){
+        if(this.id==1&&this.ringCount<=nPoleMax+1&&mogoSelected>=4&&this.ringCount-1>fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]){
+          this.ringCount--;
+          fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]++;
+        }
+        else if(this.id==3&&this.ringCount<=nPoleMax+1&&mogoSelected>=4&&this.ringCount-1>fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]){
+          this.ringCount--;
+          fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]++;
+        }
       }
-      if(this.ringCount==nPoleMax+1&&mogoSelected>=4&&this.id==2&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]<nPoleMax){
-        this.ringCount--;
-        fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]++;
-      }
-      if(this.ringCount==nPoleMax+1&&this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]<nPoleMax){
-        this.ringCount--;
-        //fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[4].ringCount++;
-        fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]++;
-      }
-      if(this.ringCount==nPoleMax+1&&this.id==4&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]<nPoleMax){
-        this.ringCount--;
-        fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]++;
+      else{
+        if(this.ringCount==nPoleMax+1&&mogoSelected>=4&&this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]<nPoleMax){
+          this.ringCount--;
+          //fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[2].ringCount++;
+          fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]++;
+        }
+        if(this.ringCount==nPoleMax+1&&mogoSelected>=4&&this.id==2&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]<nPoleMax){
+          this.ringCount--;
+          fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]++;
+        }
+        if(this.ringCount==nPoleMax+1&&this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]<nPoleMax){
+          this.ringCount--;
+          //fields[appState+remoteFieldSelected].mogos[mogoSelected].ringCounters[4].ringCount++;
+          fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]++;
+        }
+        if(this.ringCount==nPoleMax+1&&this.id==4&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]<nPoleMax){
+          this.ringCount--;
+          fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]++;
+        }
       }
     }
     else if(this.minus.clicked){
-      this.ringCount--;
-      if(this.ringCount<0){
-        if(this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]--;
-        if(this.id==2&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]--;
-        if(this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]--;
-        if(this.id==4&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]--;
-        this.ringCount=0;
+      if(settingButtons[0].toggled&&appState!=3&&(this.id==1||this.id==3)){
+        if(this.id==1&&mogoSelected>=4&&this.ringCount<fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]){
+          fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]--;
+        }
+        else if(this.id==3&&mogoSelected>=4&&this.ringCount<fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]){
+          fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]--;
+        }
+        else if(this.ringCount>0) this.ringCount--;
+      }
+      else{
+        this.ringCount--;
+        if(this.ringCount<0){
+          if(this.id==1&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[2]--;
+          if(this.id==2&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[1]--;
+          if(this.id==3&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[4]--;
+          if(this.id==4&&fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]>0)fields[appState+remoteFieldSelected].mogos[mogoSelected].rings[3]--;
+          this.ringCount=0;
+        }
       }
     }
     return this.ringCount;
