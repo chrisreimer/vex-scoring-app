@@ -20,6 +20,7 @@ let matchField; //Field Objects
 let skillsField;
 let skillsSave=[];
 let fields=[];
+let fieldsSave=[];
 let lrt;
 
 let appState=0;
@@ -207,6 +208,11 @@ function setup() {
   else{
     skillsSave=[0,0,0,0,0,0];
   }
+
+  let fSave=getItem('fieldsSave');
+  if(!(fSave===null)){
+    //fields=fSave;
+  }
   disableHover=isTouchDevice();
   //console.log(disableHover);
   //windowResized();
@@ -337,7 +343,7 @@ function draw(){
     text("X:"+int(translatedMouseX*10)/10+", Y:"+int(translatedMouseY*10)/10,xPos,yPos);
   }
 }
-else console.log("no draw");
+//else console.log("no draw");
   pMouseX=mouseX;
   pMouseY=mouseY;
 }
@@ -431,6 +437,7 @@ function updateMenu(){
   }
   backButton.updateButton();
   if(backButton.clicked){
+    storeItem('fieldsSave',fields);
     window.open("/index.html","_self");
   }
   image(gear,155*screenScale,-300*screenScale,40*screenScale,40*screenScale);
@@ -480,7 +487,7 @@ function updateManual(){
   fill(210,210,220);
   scaledText("Version 1.1",0,-170+27,regular,13);
   if(manualButtons[0].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_self");
-  else if(manualButtons[1].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_blank");
+  else if(manualButtons[1].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_self");
   else if(manualButtons[2].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B","_self");
   else if(manualButtons[3].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C","_self");
   else if(manualButtons[4].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_self");
