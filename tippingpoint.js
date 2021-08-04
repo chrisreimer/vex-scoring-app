@@ -1222,8 +1222,27 @@ class Field{
     stroke(40,40,45);
     strokeWeight(15*screenScale);
     if(appState==1){
+      strokeWeight(3*screenScale);
+      noStroke();
       fill(red.light2);
       scaledText(this.scores[1],-65,-234,regular,50);
+      if(this.scores[1]>this.scores[2]){
+        let tWidth=textWidth(this.scores[1])*0.5+0*screenScale;
+        stroke(red.light2);
+        //stroke(230);
+        let winHeight=-202;
+        line(-65*screenScale-tWidth,winHeight*screenScale,-65*screenScale+tWidth,winHeight*screenScale)
+        //line(-65*screenScale-tWidth,winHeight*screenScale,-73*screenScale-tWidth,(winHeight-5)*screenScale)
+        //line(-65*screenScale+tWidth,winHeight*screenScale,-57*screenScale+tWidth,(winHeight-5)*screenScale)
+      }
+      if(this.scores[2]>this.scores[1]){
+        let tWidth=textWidth(this.scores[2])*0.5+0*screenScale;
+        stroke(blue.light2);
+        //stroke(230);
+        let winHeight=-202;
+        line(65*screenScale-tWidth,winHeight*screenScale,65*screenScale+tWidth,winHeight*screenScale)
+      }
+      noStroke();
       fill(blue.light2);
       scaledText(this.scores[2],65,-234,regular,50);
     }
