@@ -156,7 +156,7 @@ function setup() {
   manualButtons[4]=new Button(0,189,300,65,"VEX AI Competition");
   manualButtons[5]=new Button(0,275,300,65,"Live Remote Tournaments");
 
-  manualShort=new Button(-100,-300,55,55,"");
+  manualShort=new Button(-99,-300,55,55,"");
   manualShort.fillA=color(40,40,45);
 
   manualButtons[0].tSize=22;
