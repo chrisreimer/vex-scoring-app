@@ -480,7 +480,7 @@ function updateManual(){
   fill(210,210,220);
   scaledText("Version 1.1",0,-170+27,regular,13);
   if(manualButtons[0].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_self");
-  else if(manualButtons[1].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_self");
+  else if(manualButtons[1].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_blank");
   else if(manualButtons[2].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B","_self");
   else if(manualButtons[3].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C","_self");
   else if(manualButtons[4].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_self");
