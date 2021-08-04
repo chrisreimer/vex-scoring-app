@@ -34,6 +34,7 @@ let largeBack;
 let settingButtons=[];
 let linkButtons=[];
 let manualButtons=[];
+let manualShort;
 
 let warningButton;
 let warningExit;
@@ -154,6 +155,9 @@ function setup() {
   manualButtons[3]=new Button(0,103,300,65,"VEX U");
   manualButtons[4]=new Button(0,189,300,65,"VEX AI Competition");
   manualButtons[5]=new Button(0,275,300,65,"Live Remote Tournaments");
+
+  manualShort=new Button(-90,-300,55,55,"");
+  manualShort.fillA=color(40,40,45);
 
   manualButtons[0].tSize=22;
   for(let i=1;i<6;i++){
@@ -310,6 +314,11 @@ function draw(){
   }
 
   if(appState!=0){
+    if(appState!=4&&appState!=5&&settingButtons[3].toggled){
+      manualShort.updateButton();
+      drawManual(manualShort.x,manualShort.y);
+    }
+
     backButton.updateButton();
 
     if(mogoSelected==5)smallBack.updateButton();
@@ -381,6 +390,26 @@ function checkClicked(){
     }
     dragging=false;
   }
+}
+
+function drawManual(x,y){
+  push();
+  translate(x*screenScale,y*screenScale);
+  scale(0.8);
+  stroke(230,230,240);
+  noFill();
+  scaledArc(-7.5,-13,15,5,PI+0.2,TWO_PI-0.5,3);
+  scaledArc(7.5,-13,15,5,PI+0.5,TWO_PI-0.2,3);
+  scaledArc(-7.5,14.5,15,5,PI+0.2,TWO_PI-0.5,3);
+  scaledArc(7.5,14.5,15,5,PI+0.5,TWO_PI-0.2,3);
+  scaledLine(-15,-13,-15,13);
+  scaledLine(15,-13,15,13);
+  scaledArc(-7.5,-4,10,5,PI+0.8,TWO_PI-0.8,2);
+  scaledArc(7.5,-4,10,5,PI+0.8,TWO_PI-0.8,2);
+  scaledArc(-7.5,6,10,5,PI+0.8,TWO_PI-0.8,2);
+  scaledArc(7.5,6,10,5,PI+0.8,TWO_PI-0.8,2);
+  scaledLine(0,-15,0,13);
+  pop();
 }
 
 
