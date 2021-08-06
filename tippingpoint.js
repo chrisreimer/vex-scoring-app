@@ -365,10 +365,10 @@ function mouseClicked(){
   if(appState==6||manualShort.toggled){
     if(manualButtons[0].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_blank");
     else if(manualButtons[1].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_blank");
-    else if(manualButtons[2].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B","_self");
-    else if(manualButtons[3].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C","_self");
-    else if(manualButtons[4].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_self");
-    else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_self");
+    else if(manualButtons[2].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B","_blank");
+    else if(manualButtons[3].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C","_blank");
+    else if(manualButtons[4].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_blank");
+    else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_blank");
   }
 }
 
