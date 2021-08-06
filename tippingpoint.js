@@ -157,6 +157,7 @@ function setup() {
   manualButtons[5]=new Button(0,275,300,65,"Live Remote Tournaments");
 
   manualShort=new Button(-100,-300,55,55,"");
+  manualShort.setExtraData(2,"",25);
   manualShort.fillA=color(40,40,45);
 
   manualButtons[0].tSize=22;
@@ -250,6 +251,7 @@ function draw(){
     initialDragging=false;
     dragging=false;
   }
+  if(!manualShort.toggled){
   if(mogoSelected!=5&&!tmScreen.toggled&&(appState==1||appState==2)&&warningExit.toggled){
     tmScreen.updateButton();
   }
@@ -295,7 +297,8 @@ function draw(){
     scaledText("Settings", 0,-302,regular,30);
     updateSettings();
   }
-  else if(appState==6){
+  }
+  if(appState==6||manualShort.toggled){
     fill(230,230,240);
     noStroke();
     scaledText("Manual", 0,-302,regular,30);
@@ -314,7 +317,7 @@ function draw(){
   }
 
   if(appState!=0){
-    if(appState<=3&&settingButtons[3].toggled){
+    if(appState<=3&&settingButtons[3].toggled&&!manualShort.toggled){
       manualShort.updateButton();
       drawManual(manualShort.x,manualShort.y);
     }
@@ -325,7 +328,8 @@ function draw(){
     else mediumBack.updateButton();
     //else largeBack.updateButton();
     if(backButton.clicked||smallBack.clicked||mediumBack.clicked){//||largeBack.clicked){
-      if(tmScreen.toggled)tmScreen.toggled=false;
+      if(manualShort.toggled)manualShort.toggled=false;
+      else if(tmScreen.toggled)tmScreen.toggled=false;
       else if(remoteFieldSelected!=0&&mogoSelected==-1)lrt.fieldButtons[remoteFieldSelected-1].toggled=false;
       else if(mogoSelected==-1)appState=0;
       else mogoSelected=-1;
@@ -355,6 +359,17 @@ function draw(){
 //else console.log("no draw");
   pMouseX=mouseX;
   pMouseY=mouseY;
+}
+
+function mouseClicked(){
+  if(appState==6||manualShort.toggled){
+    if(manualButtons[0].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_blank");
+    else if(manualButtons[1].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_blank");
+    else if(manualButtons[2].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B","_self");
+    else if(manualButtons[3].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C","_self");
+    else if(manualButtons[4].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_self");
+    else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_self");
+  }
 }
 
 function checkClicked(){
@@ -515,12 +530,14 @@ function updateManual(){
   }
   fill(210,210,220);
   scaledText("Version 1.1",0,-170+27,regular,13);
+  /*
   if(manualButtons[0].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_self");
   else if(manualButtons[1].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_self");
   else if(manualButtons[2].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B","_self");
   else if(manualButtons[3].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C","_self");
   else if(manualButtons[4].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_self");
   else if(manualButtons[5].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_self");
+  */
 }
 
 
