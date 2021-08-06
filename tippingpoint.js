@@ -1,4 +1,4 @@
-let version="0.1.8"
+let version="0.1.9"
 
 let yellow; //Color Presets
 let purple;
@@ -156,7 +156,7 @@ function setup() {
   manualButtons[4]=new Button(0,189,300,65,"VEX AI Competition");
   manualButtons[5]=new Button(0,275,300,65,"Live Remote Tournaments");
 
-  manualShort=new Button(-99,-300,55,55,"");
+  manualShort=new Button(-100,-300,55,55,"");
   manualShort.fillA=color(40,40,45);
 
   manualButtons[0].tSize=22;
@@ -661,6 +661,7 @@ class Field{
     this.mogoDrawList=[];
     this.parkedBots; //1=Red Bots Parked, 2=Blue Bots Parked
     this.scoredRings=[[0,0,0],[0,0,0],[0,0,0]]//[0=lrt,1=red,2=blue][0=base,1=low pole,2=high pole]
+    this.totalRings=0;
     this.scoredHomeZone=[0,0,0];//0=lrt,1=red,2=blue
     this.scoredPlatform=[0,0,0];
     this.platforms=[];
@@ -872,7 +873,7 @@ class Field{
         else if(highlight==5){
           strokeWeight(1*screenScale);
           for(let y=0;y<100;y++){
-            stroke(30,240,30,40-y/80.0*40);
+            stroke(30,240,30,40-y/80.0*80);
             scaledLine(-145,-162.5-y,145,-162.5-y);
           }
         }
@@ -922,6 +923,10 @@ class Field{
       for(let i=0;i<this.mogoDrawList.length;i++){
         this.mogoDrawList[i].drawMogo();
       }
+
+      fill(40,40,45);
+      noStroke();
+      //rect(0,-280*screenScale,width,160*screenScale)
 
       if(this.draggedMogo!=-1)this.mogos[this.draggedMogo].drawMogo();
       for(let i=0;i<this.nodes[5][6].length;i++){
@@ -1323,6 +1328,17 @@ class Field{
     stroke(40,40,45);
     strokeWeight(15*screenScale);
     if(appState==1){
+      /*
+      fill(30,30,35);
+      noStroke();
+      scaledRect(0,-229,280,54,30,30,30,30,0);
+      */
+      fill(40,40,45,120);
+      noStroke();
+      textFont(regular,50*screenScale);
+      scaledRect(-65,-230,textWidth(this.scores[1])+40,56,0,0,28,28,3.5);
+      scaledRect(65,-230,textWidth(this.scores[2])+40,56,0,0,28,28,3.5);
+
       strokeWeight(3.5*screenScale);
       noStroke();
       fill(red.light2);
@@ -1349,6 +1365,10 @@ class Field{
     }
     else if(appState==2){
       if(!tmScreen.toggled){
+        fill(40,40,45,120);
+        noStroke();
+        textFont(regular,50*screenScale);
+        scaledRect(0,-230,textWidth(this.scores[1])+40,56,0,0,28,28,3.5);
         fill(yellow.light1);
         scaledText(this.scores[3],0,-234,regular,50);
       }
@@ -1416,6 +1436,13 @@ class Field{
     this.scoredHomeZone=[0,0,0]
     this.scoredPlatform=[0,0,0]
     this.scores[0]=skillsSave[0]*10+skillsSave[1]*3+skillsSave[2]+skillsSave[3]*20+skillsSave[4]*40+skillsSave[5]*30;
+    this.totalRings=0;
+
+    for(let i=0;i<7;i++){
+      for(let j=0;j<5;j++){
+        this.totalRings+=this.mogos[i].rings[j];
+      }
+    }
 
 
     if(appState==1||appState==2){
@@ -1439,7 +1466,10 @@ class Field{
       //Ring Counter
       for(let i=0;i<2;i++){
         for(let j=0;j<2;j++){
-          this.scoredRings[i+1][j]=this.mogos[i*2].rings[j]+this.mogos[i*2+1].rings[j];
+          this.scoredRings[i+1][j]=0;
+          if(this.mogos[i*2].zone!=5)this.scoredRings[i+1][j]+=this.mogos[i*2].rings[j];
+          if(this.mogos[i*2+1].zone!=5)this.scoredRings[i+1][j]+=this.mogos[i*2+1].rings[j];
+          //this.scoredRings[i+1][j]=this.mogos[i*2].rings[j]+this.mogos[i*2+1].rings[j];
         }
       }
 
@@ -1999,9 +2029,14 @@ class RingCounter{
       }
     }
     else scaledText(this.ringCount,this.x,this.y-3,regular,25);
+
+
     this.plus.updateButton();
     this.minus.updateButton();
-    if(this.plus.clicked){
+    let ringLimit=72;
+    if(appState==2)ringLimit=66;
+    else if(appState==3)ringLimit=63;
+    if(this.plus.clicked&&fields[appState+remoteFieldSelected].totalRings<ringLimit){
       this.ringCount++;
       let nPoleMax=7;
       if(settingButtons[0].toggled&&appState!=3&&(this.id==1||this.id==3)){
@@ -2139,24 +2174,26 @@ class Mogo {
     fill(30,30,35);
     stroke(30,30,35);
     //strokeWeight(20);
-    if(appState!=3)scaledRect(0,265,55*5+40,55,15,15,15,15,20);
-    else {
+    //if(appState!=3)scaledRect(0,265,55*5+40,55,15,15,15,15,20);
+    //else {
       scaledRect(0,255,55*5+40,55,15,15,15,15,20);
       scaledRect(0,315,150,35,0,0,15,15,20);
-    }
+    //}
     if(settingButtons[1].toggled)this.scored.x=-130;
     else this.scored.x=130;
     //rect(this.scored.x,this.scored.y,55,55,15,15,0,0);
-    let limit=5;
-    if(appState==3)limit=6;
-    for(let i=0;i<limit;i++){
+    //let limit=5;
+    //if(appState==3)limit=6;
+    for(let i=0;i<6;i++){
+      /*
       if(i<5){
         if(appState!=3)this.zoneButtons[i].y=265;
         else this.zoneButtons[i].y=255;
       }
+      */
       this.zoneButtons[i].updateButton();
       if(this.zoneButtons[i].clicked){
-        for(let j=0;j<limit;j++){
+        for(let j=0;j<6;j++){
           this.zoneButtons[j].toggled=false;
         }
         this.zoneButtons[i].toggled=true;
@@ -2181,7 +2218,7 @@ class Mogo {
   }
 
   findZone(){
-    if(translatedMouseY<-160&&appState==3){
+    if(translatedMouseY<-160){
       return 5;
     }
     else if(translatedMouseX<-125+31.2&&translatedMouseY<69&&translatedMouseY>-69){
@@ -2256,6 +2293,7 @@ class Mogo {
 
 
   ringScore(){
+    if(this.zone==5)return 0;
     this.sum=0;
     this.sum+=this.rings[0];
     this.sum+=(this.rings[1]+this.rings[2])*3;
@@ -2265,6 +2303,7 @@ class Mogo {
   }
 
   ringScoreLRT(){
+    if(this.zone==5)return 0;
     this.sum=0;
     for(let i=1;i<5;i++){
       if(this.rings[i]>=4)this.sum+=4*((floor((i+1)*0.5)-1)*7+3);
@@ -2490,7 +2529,7 @@ class Mogo {
     comboScale/=1.4;
     pop();
 
-
+    if((!this.dragged&&this.zone!=5)||(this.dragged&&translatedMouseY>-160)||mogoSelected!=-1){
     if(settingButtons[2].toggled&&mogoSelected==-1){
       fill(230,230,240);
       stroke(purple.dark2);
@@ -2665,6 +2704,7 @@ class Mogo {
       rotate(-QUARTER_PI*1.5);
       rect(0,0,110*comboScale,15*comboScale,2*comboScale);
       pop();
+    }
     }
     pop();
   }
