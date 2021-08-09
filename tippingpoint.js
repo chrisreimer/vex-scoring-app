@@ -1,4 +1,4 @@
-let version="0.1.9e"
+let version="0.1.9f"
 
 let yellow; //Color Presets
 let purple;
@@ -63,6 +63,7 @@ let pMouseY;
 let hovered;
 
 let clickAnimation=0;
+let animationTrigger=0; //0=mouse click, 1=touchpad
 
 function preload(){
 
@@ -363,10 +364,14 @@ function draw(){
   pMouseY=mouseY;
 
   if(clickAnimation>0){
-    stroke(red.medium);
-    noFill();
-    strokeWeight(clickAnimation/10.0);
-    ellipse(mouseX,mouseY,100-clickAnimation,100-clickAnimation)
+    //stroke(red.medium);
+    fill(40,40,45);
+    ellipse(mouseX,mouseY,40-clickAnimation,40-clickAnimation);
+    if(animationTrigger==1)fill(230,40,40,500*clickAnimation/40.0);
+    else if(animationTrigger==0)fill(40,230,40,500*clickAnimation/40.0);
+    noStroke();
+    ellipse(mouseX,mouseY,40-clickAnimation,40-clickAnimation)
+    clickAnimation-=2;
   }
 }
 
@@ -380,6 +385,8 @@ function mouseClicked(){
     else if(manualButtons[4].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_blank");
     else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_blank");
   //}
+    clickAnimation=30;
+    animationTrigger=0;
   }
 }
 
@@ -393,7 +400,8 @@ function touchReleased(){
     else if(manualButtons[4].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_blank");
     else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_blank");
   //}
-    clickAnimation=50;
+    clickAnimation=30;
+    animationTrigger=1;
   }
 }
 
