@@ -1,4 +1,4 @@
-let version="0.1.9f"
+let version="0.1.9g"
 
 let yellow; //Color Presets
 let purple;
@@ -558,21 +558,25 @@ function updateSettings(){
 }
 
 function updateManual(){
+  if(disableHover&&click){
+    animationTrigger=1;
+    clickAnimation=30;
+  }
   for(let i=0;i<manualButtons.length;i++){
     manualButtons[i].updateButton();
   }
   fill(210,210,220);
   scaledText("Version 1.1",0,-170+27,regular,13);
-  /*
+
   if(disableHover){
-  if(manualButtons[0].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_blank");
+  if(manualButtons[0].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_self");
   else if(manualButtons[1].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_blank");
   else if(manualButtons[2].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B","_blank");
   else if(manualButtons[3].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C","_blank");
   else if(manualButtons[4].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_blank");
   else if(manualButtons[5].clicked)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_blank");
   }
-  */
+
 }
 
 
