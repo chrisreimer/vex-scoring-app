@@ -1,4 +1,4 @@
-let version="0.1.9d"
+let version="0.1.9e"
 
 let yellow; //Color Presets
 let purple;
@@ -61,6 +61,8 @@ let disableHover;
 let pMouseX;
 let pMouseY;
 let hovered;
+
+let clickAnimation=0;
 
 function preload(){
 
@@ -359,6 +361,13 @@ function draw(){
 //else console.log("no draw");
   pMouseX=mouseX;
   pMouseY=mouseY;
+
+  if(clickAnimation>0){
+    stroke(red.medium);
+    noFill();
+    strokeWeight(clickAnimation/10.0);
+    ellipse(mouseX,mouseY,100-clickAnimation,100-clickAnimation)
+  }
 }
 
 function mouseClicked(){
@@ -385,6 +394,7 @@ function touchReleased(){
     else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_blank");
   //}
   }
+  clickAnimation=50;
 }
 
 function checkClicked(){
