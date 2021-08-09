@@ -393,8 +393,8 @@ function touchReleased(){
     else if(manualButtons[4].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_blank");
     else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_blank");
   //}
+    clickAnimation=50;
   }
-  clickAnimation=50;
 }
 
 function checkClicked(){
