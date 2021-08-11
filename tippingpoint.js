@@ -1,4 +1,4 @@
-let version="0.1.10"
+let version="0.1.10a"
 
 let yellow; //Color Presets
 let purple;
@@ -233,7 +233,7 @@ function setup() {
     console.log(appSave);
     appState=appSave;
   }
-
+  try{
   let mfSave=getItem('matchFieldSave');
   if(!(mfSave===null)){
     //matchField=mfSave;
@@ -266,11 +266,12 @@ function setup() {
     matchField.updateMogoList();
     //matchField.scoreField();
   }
+  }
 
   fields[1]=matchField;
-
+  try{
   let sfSave=getItem('skillsFieldSave');
-  console.log(sfSave);
+  //console.log(sfSave);
   if(!(sfSave===null)){
     for(let i=0;i<7;i++){
       skillsField.mogos[i].rings=sfSave.mogos[i].rings;
@@ -294,9 +295,11 @@ function setup() {
     skillsField.updateMogoList();
     //skillsField.scoreField();
   }
+  }
 
   fields[2]=skillsField;
 
+  try{
   let rfSave=getItem('remoteFieldSave');
   if(!(rfSave===null)){
     for(let r=0;r<2;r++){
@@ -324,6 +327,8 @@ function setup() {
     lrt.autonWinner=rfSave.autonWinner;
     lrt.lrtAuton.toggled=true;
   }
+  }
+
   lrt.rFields[0].updateMogoList();
   lrt.rFields[1].updateMogoList();
   fields[4]=lrt.rFields[0];
