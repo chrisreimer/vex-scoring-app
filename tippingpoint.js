@@ -1,4 +1,4 @@
-let version="0.1.9h"
+let version="0.1.10"
 
 let yellow; //Color Presets
 let purple;
@@ -111,9 +111,13 @@ function setup() {
   //menuButtons[1]=new Button(0,55,300,130,"SKILLS");
   //menuButtons[2]=new Button(0,210,300,130,"REMOTE");
 
-  menuButtons[0]=new Button(0,-105,300,120,"MATCH");
-  menuButtons[1]=new Button(0,37,300,120,"SKILLS");
-  menuButtons[2]=new Button(0,179,300,120,"REMOTE");
+  //menuButtons[0]=new Button(0,-105,300,120,"MATCH");
+  //menuButtons[1]=new Button(0,37,300,120,"SKILLS");
+  //menuButtons[2]=new Button(0,179,300,120,"REMOTE");
+
+  menuButtons[0]=new Button(0,-113,300,104,"MATCH");
+  menuButtons[1]=new Button(0,11,300,104,"SKILLS");
+  menuButtons[2]=new Button(0,135,300,104,"REMOTE");
   menuButtons[0].tSize=25;
   menuButtons[1].tSize=25;
   menuButtons[2].tSize=25;
@@ -124,8 +128,9 @@ function setup() {
   menuButtons[4]=new Button(155,-300,55,55,"");
   menuButtons[4].setColors(color(40,40,45),0,0,0,0,0,color(150,150,160));
 
-  menuButtons[5]=new Button(0,286,300,50,"Game Manual");
-  menuButtons[5].tSize=17;
+  //menuButtons[5]=new Button(0,286,300,50,"Game Manual");
+  menuButtons[5]=new Button(0,259,300,104,"Manual");
+  menuButtons[5].tSize=25;//17;
 
   backButton=new Button(-155,-300,55,55," « ");
   smallBack=new Button(0,-300,375,55,"");
@@ -221,6 +226,114 @@ function setup() {
   if(!(fSave===null)){
     //fields=fSave;
   }
+
+
+  let appSave=getItem('appSave');
+  if(!(appSave===null)){
+    console.log(appSave);
+    appState=appSave;
+  }
+
+  let mfSave=getItem('matchFieldSave');
+  if(!(mfSave===null)){
+    //matchField=mfSave;
+    for(let i=0;i<7;i++){
+      matchField.mogos[i].rings=mfSave.mogos[i].rings;
+      matchField.autonWinner=mfSave.autonWinner;
+      matchField.auton.toggled=true;
+      matchField.platButtons[0].toggled=mfSave.platButtons[0].toggled;
+      matchField.platButtons[1].toggled=mfSave.platButtons[1].toggled;
+      matchField.platButtons[2].textA=mfSave.platButtons[2].textA;
+      matchField.platButtons[3].textA=mfSave.platButtons[3].textA;
+      //matchField.mogos[i].zone=mfSave.mogos[i].zone;
+    }
+    matchField.zoneMogos=[[],[],[],[],[],[]]
+    //matchField.mogoDrawList=[];
+    for(let i=0;i<6;i++){
+      for(let j=0;j<mfSave.zoneMogos[i].length;j++){
+        if(!(mfSave.zoneMogos[i][j]===null)){
+          if(!(mfSave.zoneMogos[i][j].id===null)){
+            //console.log(i+", "+j);
+            //console.log(mfSave.zoneMogos[i][j].id)
+            matchField.zoneMogos[i][j]=matchField.mogos[mfSave.zoneMogos[i][j].id];
+            matchField.zoneMogos[i][j].zone=i;
+          }
+        }
+        //matchField.zoneMogos[i][j]=matchField.mogos[mfSave.zoneMogos[i][j].id];
+        //matchField.zoneMogos[i][j]=matchField.mogos[mfSave.zoneMogos[i][j].id];
+      }
+    }
+    matchField.updateMogoList();
+    //matchField.scoreField();
+  }
+
+  fields[1]=matchField;
+
+  let sfSave=getItem('skillsFieldSave');
+  console.log(sfSave);
+  if(!(sfSave===null)){
+    for(let i=0;i<7;i++){
+      skillsField.mogos[i].rings=sfSave.mogos[i].rings;
+      skillsField.platButtons[0].toggled=sfSave.platButtons[0].toggled;
+      skillsField.platButtons[1].toggled=sfSave.platButtons[1].toggled;
+      skillsField.platButtons[2].textA=sfSave.platButtons[2].textA;
+      skillsField.platButtons[3].textA=sfSave.platButtons[3].textA;
+    }
+    skillsField.zoneMogos=[[],[],[],[],[],[]];
+    for(let i=0;i<6;i++){
+      for(let j=0;j<sfSave.zoneMogos[i].length;j++){
+        if(!(sfSave.zoneMogos[i][j]===null)){
+          if(!(sfSave.zoneMogos[i][j].id===null)){
+            console.log(i+", "+j);
+            console.log(sfSave.zoneMogos[i][j].id)
+            skillsField.zoneMogos[i][j]=skillsField.mogos[sfSave.zoneMogos[i][j].id];
+          }
+        }
+      }
+    }
+    skillsField.updateMogoList();
+    //skillsField.scoreField();
+  }
+
+  fields[2]=skillsField;
+
+  let rfSave=getItem('remoteFieldSave');
+  if(!(rfSave===null)){
+    for(let r=0;r<2;r++){
+      for(let i=0;i<7;i++){
+        lrt.rFields[r].mogos[i].rings=rfSave.rFields[r].mogos[i].rings;
+        lrt.rFields[r].awp.toggled=rfSave.rFields[r].awp.toggled;
+        lrt.rFields[r].platButtons[0].toggled=rfSave.rFields[r].platButtons[0].toggled;
+        lrt.rFields[r].platButtons[1].toggled=rfSave.rFields[r].platButtons[1].toggled;
+        lrt.rFields[r].platButtons[2].textA=rfSave.rFields[r].platButtons[2].textA;
+        lrt.rFields[r].platButtons[3].textA=rfSave.rFields[r].platButtons[3].textA;
+      }
+      lrt.rFields[r].zoneMogos=[[],[],[],[],[],[]];
+      for(let i=0;i<6;i++){
+        for(let j=0;j<rfSave.rFields[r].zoneMogos[i].length;j++){
+          if(!(rfSave.rFields[r].zoneMogos[i][j]===null)){
+            if(!(rfSave.rFields[r].zoneMogos[i][j].id===null)){
+              //console.log(i+", "+j);
+              //console.log(sfSave.zoneMogos[i][j].id)
+              lrt.rFields[r].zoneMogos[i][j]=lrt.rFields[r].mogos[rfSave.rFields[r].zoneMogos[i][j].id];
+            }
+          }
+        }
+      }
+    }
+    lrt.autonWinner=rfSave.autonWinner;
+    lrt.lrtAuton.toggled=true;
+  }
+  lrt.rFields[0].updateMogoList();
+  lrt.rFields[1].updateMogoList();
+  fields[4]=lrt.rFields[0];
+  fields[5]=lrt.rFields[1];
+
+
+  if(appState==1)matchField.scoreField();
+  else if(appState==2)skillsField.scoreField();
+  else if(appState==3)lrt.scoreLRT();
+
   disableHover=isTouchDevice();
   //console.log(disableHover);
   //windowResized();
@@ -320,7 +433,7 @@ function draw(){
   }
 
   if(appState!=0){
-    if(appState<=3&&settingButtons[3].toggled&&!manualShort.toggled){
+    if(appState<=3&&!manualShort.toggled){
       manualShort.updateButton();
       drawManual(manualShort.x,manualShort.y);
     }
@@ -336,6 +449,7 @@ function draw(){
       else if(remoteFieldSelected!=0&&mogoSelected==-1)lrt.fieldButtons[remoteFieldSelected-1].toggled=false;
       else if(mogoSelected==-1)appState=0;
       else mogoSelected=-1;
+      storeItem('appSave',appState)
     }
     smallBack.clicked=false;
     mediumBack.clicked=false;
@@ -362,7 +476,6 @@ function draw(){
 //else console.log("no draw");
   pMouseX=mouseX;
   pMouseY=mouseY;
-
   if(clickAnimation>0){
     //stroke(red.medium);
     fill(40,40,45);
@@ -372,6 +485,14 @@ function draw(){
     noStroke();
     ellipse(mouseX,mouseY,40-clickAnimation,40-clickAnimation)
     clickAnimation-=2;
+  }
+}
+
+function touchMoved(){
+  if(settingButtons[3].toggled){
+    fill(purple.light3);
+    noStroke();
+    ellipse(mouseX,mouseY,30,30);
   }
 }
 
@@ -385,23 +506,23 @@ function mouseClicked(){
     else if(manualButtons[4].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_blank");
     else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_blank");
   //}
-    clickAnimation=30;
-    animationTrigger=0;
+    //clickAnimation=30;
+    //animationTrigger=0;
   }
 }
 
 function touchEnded(){
   if((appState==6||manualShort.toggled)&&disableHover){
     //if(disableHover){
-    if(manualButtons[0].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_self");
+    if(manualButtons[0].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_blank");
     else if(manualButtons[1].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_blank");
     else if(manualButtons[2].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-B","_blank");
     else if(manualButtons[3].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-C","_blank");
     else if(manualButtons[4].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-D","_blank");
     else if(manualButtons[5].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-E","_blank");
   //}
-    clickAnimation=30;
-    animationTrigger=1;
+    //clickAnimation=30;
+    //animationTrigger=1;
   }
 }
 
@@ -507,14 +628,13 @@ function updateMenu(){
   fill(red.dark1);
   scaledText("BETA "+version,0,-200,regular,20);
   for(let i=0;i<6;i++){
-    if(i!=5||settingButtons[3].toggled){
-      menuButtons[i].updateButton();
-      if(menuButtons[i].clicked)appState=i+1;
-    }
+    menuButtons[i].updateButton();
+    if(menuButtons[i].clicked)appState=i+1;
+    storeItem('appSave',appState)
   }
   backButton.updateButton();
   if(backButton.clicked){
-    storeItem('fieldsSave',fields);
+    //storeItem('fieldsSave',fields);
     window.open("/index.html","_self");
   }
   image(gear,155*screenScale,-300*screenScale,40*screenScale,40*screenScale);
@@ -688,6 +808,7 @@ class Button{
   }
 
 }
+
 
 
 class mogoNode{
@@ -1114,8 +1235,9 @@ class Field{
 
       if(this.reset.clicked||this.skillsReset.clicked)this.resetField();
       if(appState==1){
-        if(this.auton.clicked){
-          this.autonWinner=(this.autonWinner+1)%3;
+        if(this.auton.clicked||this.auton.toggled){
+          if(this.auton.clicked)this.autonWinner=(this.autonWinner+1)%3;
+          this.auton.toggled=false;
           if(this.autonWinner==0){
             this.auton.strokeA=color(0,0);
             this.auton.textColor=color(230,230,240);
@@ -1425,7 +1547,7 @@ class Field{
         fill(40,40,45,120);
         noStroke();
         textFont(regular,50*screenScale);
-        scaledRect(0,-230,textWidth(this.scores[1])+40,56,0,0,28,28,3.5);
+        scaledRect(0,-230,textWidth(this.scores[3])+40,56,0,0,28,28,3.5);
         fill(yellow.light1);
         scaledText(this.scores[3],0,-234,regular,50);
       }
@@ -1634,6 +1756,18 @@ class Field{
 
     this.scores[3]=this.scores[1]+this.scores[2];
     if(appState==3)this.scores[3]=this.zonePoints[0]+this.zonePoints[1]+this.zonePoints[2];
+
+    if(appState==1){
+      storeItem('matchFieldSave',matchField);
+    }
+    else if(appState==2){
+      storeItem('skillsFieldSave',skillsField);
+      console.log("skills saved");
+    }
+    else if(appState==3){
+      storeItem('remoteFieldSave',lrt)
+    }
+
     return this.zonePoints;
   }
 
@@ -1716,6 +1850,7 @@ class Field{
   }
 
   updateMogoList(){
+    let usedIDs=[];
     this.mogoDrawList=[];
     //this.zoneMogos=[[],[],[],[],[]]
 
@@ -1726,16 +1861,32 @@ class Field{
     for(let i=0;i<6;i++){
       if(i!=1&&i!=3){
         for(let j=0;j<this.zoneMogos[i].length;j++){
-          this.zoneMogos[i][j].setAtNode(this.nodes[i][this.zoneMogos[i].length-1][j]);
-          this.mogoDrawList.push(this.zoneMogos[i][j]);
+          if(usedIDs[this.zoneMogos[i][j].id==1]){
+            this.zoneMogos[i][j]=null;
+          }
+          else{
+            this.zoneMogos[i][j].setAtNode(this.nodes[i][this.zoneMogos[i].length-1][j]);
+            this.mogoDrawList.push(this.zoneMogos[i][j]);
+            this.zoneMogos[i][j].zone=i;
+            this.zoneMogos[i][j].forceUpdateZoneButtons();
+            usedIDs[this.zoneMogos[i][j].id]=1;
+          }
         }
       }
     }
     for(let i=1;i<4;i+=2){
       for(let j=0;j<7;j++){
         if(this.zoneMogos[i][j]!=null){
-          this.zoneMogos[i][j].setAtNode(this.nodes[i][6][j]);
-          this.mogoDrawList.push(this.zoneMogos[i][j]);
+          if(usedIDs[this.zoneMogos[i][j].id==1]){
+            this.zoneMogos[i][j]=null;
+          }
+          else{
+            this.zoneMogos[i][j].setAtNode(this.nodes[i][6][j]);
+            this.mogoDrawList.push(this.zoneMogos[i][j]);
+            this.zoneMogos[i][j].zone=i;
+            this.zoneMogos[i][j].forceUpdateZoneButtons();
+            usedIDs[this.zoneMogos[i][j].id]=1;
+          }
         }
       }
     }
@@ -1786,8 +1937,9 @@ class remoteField{
       this.drawLRTField();
       this.drawLRTScore();
       this.lrtAuton.updateButton();
-      if(this.lrtAuton.clicked){
-        this.autonWinner=(this.autonWinner+1)%3;
+      if(this.lrtAuton.clicked||this.lrtAuton.toggled){
+        if(this.lrtAuton.toggled)this.lrtAuton.toggled=false;
+        if(this.lrtAuton.clicked)this.autonWinner=(this.autonWinner+1)%3;
         if(this.autonWinner==0){
           this.lrtAuton.strokeA=color(0,0);
           this.lrtAuton.textColor=color(230,230,240);
@@ -2261,6 +2413,12 @@ class Mogo {
     this.drawIcons();
   }
 
+  forceUpdateZoneButtons(){
+    for(let i=0;i<6;i++){
+      this.zoneButtons[i].toggled=(this.zone==i);
+    }
+  }
+
   checkDragged(){
     if(abs(translatedMouseX-this.x)<=30&&abs(translatedMouseY-this.y)<=25){
       initialDragging=false;
@@ -2320,6 +2478,8 @@ class Mogo {
       }
     }
     fields[appState+remoteFieldSelected].updateMogoList();
+    //storeItem('matchFieldSave',matchField);
+    //storeItem('skillsFieldSave',skillsField);
   }
 
   isntMogo(a){
