@@ -1,4 +1,4 @@
-let version="0.1.10d"
+let version="0.1.10e"
 
 let yellow; //Color Presets
 let purple;
@@ -487,6 +487,10 @@ function draw(){
     if(yPos>height-60)yPos-=20;
     else yPos+=30;
     text("X:"+int(translatedMouseX*10)/10+", Y:"+int(translatedMouseY*10)/10,xPos,yPos);
+    fill(purple.light2);
+    for(let i=0;i<touches.length;i++){
+      ellipse(touches[i].x,touches[i].y,40,40)
+    }
   }
 }
 //else console.log("no draw");
@@ -504,6 +508,7 @@ function draw(){
   }
 }
 
+/*
 function touchMoved(){
   if(settingButtons[3].toggled){
     fill(purple.light3);
@@ -511,6 +516,7 @@ function touchMoved(){
     ellipse(mouseX,mouseY,30,30);
   }
 }
+*/
 
 function mouseClicked(){
   if((appState==6||manualShort.toggled)&&!disableHover){
