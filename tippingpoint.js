@@ -1,4 +1,4 @@
-let version="0.1.10b"
+let version="0.1.10c"
 
 let yellow; //Color Presets
 let purple;
@@ -166,7 +166,9 @@ function setup() {
 
   manualShort=new Button(-100,-300,55,55,"");
   manualShort.setExtraData(2,"",25);
-  manualShort.fillA=color(40,40,45);
+  //manualShort.fillA=color(40,40,45);
+  manualShort.fillA=color(0,0);
+  manualShort.fillA2=color(0,0);
 
   manualButtons[0].tSize=22;
   for(let i=1;i<6;i++){
@@ -268,6 +270,7 @@ function setup() {
   }
   }
   catch{
+    console.log("Match Loading Failed")
   }
 
   fields[1]=matchField;
@@ -299,6 +302,7 @@ function setup() {
   }
   }
   catch{
+    console.log("Skills Loading Failed")
   }
 
   fields[2]=skillsField;
@@ -333,6 +337,7 @@ function setup() {
   }
   }
   catch{
+    console.log("Remote Loading Failed")
   }
 
   lrt.rFields[0].updateMogoList();
@@ -446,7 +451,7 @@ function draw(){
   if(appState!=0){
     if(appState<=3&&!manualShort.toggled){
       manualShort.updateButton();
-      drawManual(manualShort.x,manualShort.y);
+      //drawManual(manualShort.x,manualShort.y);
     }
 
     backButton.updateButton();
@@ -653,14 +658,17 @@ function updateMenu(){
 
 function updateMatch(){
   matchField.updateField();
+  drawManual(manualShort.x,manualShort.y);
 }
 
 function updateSkills(){
   skillsField.updateField();
+  drawManual(manualShort.x,manualShort.y);
 }
 
 function updateRemote(){
   lrt.updateLRT();
+  drawManual(manualShort.x,manualShort.y);
 }
 
 function updateInfo(){
@@ -2383,7 +2391,7 @@ class Mogo {
 
 
   editMogo(){
-    this.drawMogo();
+    if(mogoSelected==-1||mogoSelected==this.id)this.drawMogo();
     for(let i=0;i<this.ringCounters.length;i++){
       //if((settingButtons[0].toggled&&i!=2&&i!=4)||settingButtons[0].toggled==false)this.ringCounters[i].updateCounter(this.rings[i]);
       //this.rings[i]=this.ringCounters[i].ringCount;
@@ -2629,6 +2637,8 @@ class Mogo {
   }
 
   drawMogo() {
+
+    if(mogoSelected==-1||this.id==mogoSelected){
     //if(this.id==0&&mouseIsPressed){
     //  console.log("goal 0");
     //}
@@ -2935,6 +2945,7 @@ class Mogo {
     }
     }
     pop();
+  }
   }
 
 
