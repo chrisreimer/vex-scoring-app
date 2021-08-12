@@ -1,4 +1,4 @@
-let version="0.1.10a"
+let version="0.1.10b"
 
 let yellow; //Color Presets
 let purple;
@@ -267,6 +267,8 @@ function setup() {
     //matchField.scoreField();
   }
   }
+  catch{
+  }
 
   fields[1]=matchField;
   try{
@@ -295,6 +297,8 @@ function setup() {
     skillsField.updateMogoList();
     //skillsField.scoreField();
   }
+  }
+  catch{
   }
 
   fields[2]=skillsField;
@@ -327,6 +331,8 @@ function setup() {
     lrt.autonWinner=rfSave.autonWinner;
     lrt.lrtAuton.toggled=true;
   }
+  }
+  catch{
   }
 
   lrt.rFields[0].updateMogoList();
