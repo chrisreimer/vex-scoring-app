@@ -53,6 +53,16 @@ function setup(){
 
   menuButtons[0]=new Button(0,0,320,100,"Change Up");
   menuButtons[1]=new Button(0,-120,320,100,"Tipping Point");
+
+  let appSave=getItem('appSave');
+  if(!(appSave===null)){
+    console.log(appSave);
+    appState=appSave;
+  }
+
+  if(appState!=0){
+    window.open("/tip.html","_self");
+  }
 }
 
 function windowResized() {
