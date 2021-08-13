@@ -1,4 +1,4 @@
-let version="0.1.10g"
+let version="0.1.10h"
 
 let yellow; //Color Presets
 let purple;
@@ -436,7 +436,7 @@ function draw(){
     scaledText("Manual", 0,-302,regular,30);
     updateManual();
   }
-  if((appState!=0&&!warningExit.toggled)||warningExit.clicked){
+  if(appState!=0&&!warningExit.toggled){
     //fill(red.dark5);
     //noStroke();
     //rect(0,43-7.5,340,667-86-15);
