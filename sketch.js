@@ -51,8 +51,8 @@ function setup(){
   discordButton.fillA2=color(73, 86, 222);
   discordButton.tSize=20;
 
-  menuButtons[0]=new Button(0,0,320,100,"Change Up");
-  menuButtons[1]=new Button(0,-120,320,100,"Tipping Point");
+  menuButtons[0]=new Button(0,11,300,104,"Change Up");
+  menuButtons[1]=new Button(0,-113,300,104,"Tipping Point");
 
   let appSave=getItem('appSave');
   if(!(appSave===null)){
@@ -62,7 +62,6 @@ function setup(){
 
   if(appState!=0){
     window.open("/tip.html","_self");
-    appState=0;
   }
 }
 
