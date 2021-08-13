@@ -1,4 +1,4 @@
-let version="0.1.11a"
+let version="0.1.12"
 
 let yellow; //Color Presets
 let purple;
@@ -179,10 +179,11 @@ function setup() {
   //hideRings=new Button(135,-280,75,75,"Hide\nRings");
   //hideRings.setExtraData(2,"Show\nRings",17);
 
-  warningButton=new Button(0,43-7.5-5,340,667-86-15-10,"This scoring app is\nstill in development,\nand until more scenarios\npertaining to mobile\ngoal and ring scoring are\ncleared up in the Official\nQnA, this app may not\nalways be correct.\n\nUse at your own risk.\n\n");
+  warningButton=new Button(0,43-7.5-5,340,667-86-15-10,"The Official Game Manual is still\nevolving, and as more scenarios\nare cleared up there and in the\nOfficial Q&A, this app will be\nupdated to match.\n\n\n\nThis is a Progressive Web App\nand can be downloaded to the\nhome screen and run offline.\n\n");
+  //This scoring app is\nstill in development,\nand until more scenarios\npertaining to mobile\ngoal and ring scoring are\ncleared up in the Official\nQnA, this app may not\nalways be correct.\n\nUse at your own risk.\n\n");
 
   warningButton.setColors(red.dark4,red.dark4,0,0,0,0,color(230,230,240));
-  warningButton.tSize=20;
+  warningButton.tSize=16;
 
   warningExit=new Button(0,210,200,80,"Proceed");
   warningExit.setColors(red.dark1,red.dark2,0,0,0,0,color(230,230,240));
@@ -1242,6 +1243,19 @@ class Field{
 
         if(appState==1){
           this.auton.updateButton();
+          if(this.autonWinner==0){
+            stroke(red.light2);
+            noFill();
+            scaledArc(this.auton.x-this.auton.w*0.5+15,this.auton.y-this.auton.h*0.5+15,30,30,PI,PI*1.5);
+            scaledArc(this.auton.x-this.auton.w*0.5+15,this.auton.y+this.auton.h*0.5-15,30,30,PI*0.5,PI);
+            scaledLine(this.auton.x-this.auton.w*0.5,this.auton.y-this.auton.h*0.5+15,this.auton.x-this.auton.w*0.5,this.auton.y+this.auton.h*0.5-15);
+            scaledLine(this.auton.x-this.auton.w*0.5+15,this.auton.y-this.auton.h*0.5,this.auton.x-1.5,this.auton.y-this.auton.h*0.5);
+            scaledLine(this.auton.x-this.auton.w*0.5+15,this.auton.y+this.auton.h*0.5,this.auton.x-1.5,this.auton.y+this.auton.h*0.5);
+            noStroke();
+            fill(red.light2);
+            simpleRect(this.auton.x-1.5,this.auton.y+this.auton.h*0.5,3,3);
+            simpleRect(this.auton.x-1.5,this.auton.y-this.auton.h*0.5,3,3);
+          }
         }
         else if(appState==3){
           this.awp.updateButton();
@@ -1261,10 +1275,11 @@ class Field{
       if(this.reset.clicked||this.skillsReset.clicked)this.resetField();
       if(appState==1){
         if(this.auton.clicked||this.auton.toggled){
-          if(this.auton.clicked)this.autonWinner=(this.autonWinner+1)%3;
+          if(this.auton.clicked)this.autonWinner=(this.autonWinner+1)%4;
           this.auton.toggled=false;
           if(this.autonWinner==0){
-            this.auton.strokeA=color(0,0);
+            //this.auton.strokeA=color(0,0);
+            this.auton.strokeA=color(blue.light2);
             this.auton.textColor=color(230,230,240);
             this.auton.textA="Auton:\nTied";
           }
@@ -1277,6 +1292,11 @@ class Field{
             this.auton.strokeA=blue.light2;
             this.auton.textColor=blue.light2;
             this.auton.textA="Auton:\nBlue";
+          }
+          else if(this.autonWinner==3){
+            this.auton.strokeA=color(0,0);
+            this.auton.textColor=color(230,230,240);
+            this.auton.textA="Auton:\nNeither";
           }
         }
       }
@@ -1390,6 +1410,14 @@ class Field{
         fill(40,40,45);
         //fill(210,210,220)
         scaledText("Auton",65,-186,bold,11);
+      }
+      else if(this.autonWinner==0){
+        stroke(210,210,220);
+        strokeWeight(15*screenScale);
+        scaledLine(-30,-185,30,-185);
+        noStroke();
+        fill(40,40,45);
+        scaledText("Auton Tie",0,-186,bold,11);
       }
 
       fill(red.light2);
@@ -1651,7 +1679,7 @@ class Field{
 
     if(appState==1||appState==2){
     //Auton Points
-    if(appState==1){
+    if(appState==1&&this.autonWinner!=3){
       this.scores[this.autonWinner]+=20;
       if(this.autonWinner==0){
         this.scores[0]=0;
@@ -1805,6 +1833,7 @@ class Field{
     this.autonWinner=0;
     this.auton=new Button(44-6-61-4,246,122-6,120,"Auton:\nTied",1);
     this.auton.sWeight=4;
+    this.auton.strokeA=blue.light2;
     this.awp.toggled=false;
     this.parked.toggled=false;
     this.parked.x=-130;
@@ -1962,11 +1991,25 @@ class remoteField{
       this.drawLRTField();
       this.drawLRTScore();
       this.lrtAuton.updateButton();
+      if(this.autonWinner==0){
+        stroke(red.light2);
+        noFill();
+        scaledArc(this.lrtAuton.x-this.lrtAuton.w*0.5+15,this.lrtAuton.y-this.lrtAuton.h*0.5+15,30,30,PI,PI*1.5);
+        scaledArc(this.lrtAuton.x-this.lrtAuton.w*0.5+15,this.lrtAuton.y+this.lrtAuton.h*0.5-15,30,30,PI*0.5,PI);
+        scaledLine(this.lrtAuton.x-this.lrtAuton.w*0.5,this.lrtAuton.y-this.lrtAuton.h*0.5+15,this.lrtAuton.x-this.lrtAuton.w*0.5,this.lrtAuton.y+this.lrtAuton.h*0.5-15);
+        scaledLine(this.lrtAuton.x-this.lrtAuton.w*0.5+15,this.lrtAuton.y-this.lrtAuton.h*0.5,this.lrtAuton.x-1.5,this.lrtAuton.y-this.lrtAuton.h*0.5);
+        scaledLine(this.lrtAuton.x-this.lrtAuton.w*0.5+15,this.lrtAuton.y+this.lrtAuton.h*0.5,this.lrtAuton.x-1.5,this.lrtAuton.y+this.lrtAuton.h*0.5);
+        noStroke();
+        fill(red.light2);
+        simpleRect(this.lrtAuton.x-1.5,this.lrtAuton.y+this.lrtAuton.h*0.5,3,3);
+        simpleRect(this.lrtAuton.x-1.5,this.lrtAuton.y-this.lrtAuton.h*0.5,3,3);
+      }
       if(this.lrtAuton.clicked||this.lrtAuton.toggled){
         if(this.lrtAuton.toggled)this.lrtAuton.toggled=false;
-        if(this.lrtAuton.clicked)this.autonWinner=(this.autonWinner+1)%3;
+        if(this.lrtAuton.clicked)this.autonWinner=(this.autonWinner+1)%4;
         if(this.autonWinner==0){
-          this.lrtAuton.strokeA=color(0,0);
+          //this.lrtAuton.strokeA=color(0,0);
+          this.lrtAuton.strokeA=color(blue.light2);
           this.lrtAuton.textColor=color(230,230,240);
           this.lrtAuton.textA="Auton:\nTied";
         }
@@ -1980,7 +2023,14 @@ class remoteField{
           this.lrtAuton.textColor=blue.light2;
           this.lrtAuton.textA="Auton:\nBlue";
         }
+        else if(this.autonWinner==3){
+          this.lrtAuton.strokeA=color(0,0);
+          this.lrtAuton.textColor=color(230,230,240);
+          this.lrtAuton.textA="Auton:\nNeither";
+        }
       }
+
+
       this.lrtReset.updateButton();
       if(this.lrtReset.clicked)this.resetLRT();
     }
@@ -2164,8 +2214,8 @@ class remoteField{
     this.lrtWP=[0,0];
     this.lrtScores[0]=this.rFields[0].scoreField();
     this.lrtScores[1]=this.rFields[1].scoreField();
-    if(this.autonWinner!=0)this.rFields[this.autonWinner-1].scores[3]+=20;
-    else{
+    if(this.autonWinner!=0&&this.autonWinner!=3)this.rFields[this.autonWinner-1].scores[3]+=20;
+    else if(this.autonWinner==0){
       this.rFields[0].scores[3]+=10;
       this.rFields[1].scores[3]+=10;
     }
@@ -2186,7 +2236,7 @@ class remoteField{
     this.autonWinner=0;
     this.lrtAuton.textA="Auton:\nTied";
     this.lrtAuton.textColor=color(230,230,240);
-    this.lrtAuton.strokeA=color(0,0);
+    this.lrtAuton.strokeA=blue.light2;
     this.lrtScores=[[0,0,0],[0,0,0]];
     this.lrtWP=[0,0];
     this.rFields[0].resetField();
