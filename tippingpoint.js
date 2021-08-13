@@ -648,8 +648,14 @@ function updateMenu(){
   //fill(150);
   //text("By Chris Reimer",0,-200);
   //textFont(regular,20);
+
+
+  fill(150);
+  scaledText("Version "+version,0,-200,regular,15);
+  /*
   fill(red.dark1);
   scaledText("BETA "+version,0,-200,regular,20);
+  */
   for(let i=0;i<6;i++){
     menuButtons[i].updateButton();
     if(menuButtons[i].clicked)appState=i+1;
