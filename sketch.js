@@ -62,6 +62,7 @@ function setup(){
 
   if(appState!=0){
     window.open("/tip.html","_self");
+    appState=0;
   }
 }
 
