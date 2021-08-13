@@ -1,4 +1,4 @@
-let version="0.1.10f"
+let version="0.1.10g"
 
 let yellow; //Color Presets
 let purple;
@@ -436,7 +436,7 @@ function draw(){
     scaledText("Manual", 0,-302,regular,30);
     updateManual();
   }
-  if(appState!=0&&!warningExit.toggled){
+  if((appState!=0&&!warningExit.toggled)||warningExit.clicked){
     //fill(red.dark5);
     //noStroke();
     //rect(0,43-7.5,340,667-86-15);
@@ -568,7 +568,7 @@ function checkClicked(){
 
   initialDragging=false;
   finalDragging=false;
-  if(!click&&held&&(abs(pressX-translatedMouseX)>3||abs(pressY-translatedMouseY)>2)){
+  if(!click&&held&&((abs(pressX-translatedMouseX)>3||abs(pressY-translatedMouseY)>2)||dragging)){
     if(!dragging){
       initialDragging=true;
     }
