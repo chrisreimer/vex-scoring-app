@@ -1,4 +1,5 @@
-let version="1.0.0"
+let version="Version 1.0.1"
+let rndm;
 
 let yellow; //Color Presets
 let purple;
@@ -57,6 +58,7 @@ let pressY=0;
 let translatedMouseX;
 let translatedMouseY;
 let disableHover;
+let forceRefresh=0;
 
 let pMouseX;
 let pMouseY;
@@ -244,6 +246,7 @@ function setup() {
       matchField.mogos[i].rings=mfSave.mogos[i].rings;
       matchField.autonWinner=mfSave.autonWinner;
       matchField.auton.toggled=true;
+      forceRefresh=2;
       matchField.platButtons[0].toggled=mfSave.platButtons[0].toggled;
       matchField.platButtons[1].toggled=mfSave.platButtons[1].toggled;
       matchField.platButtons[2].textA=mfSave.platButtons[2].textA;
@@ -315,6 +318,7 @@ function setup() {
       for(let i=0;i<7;i++){
         lrt.rFields[r].mogos[i].rings=rfSave.rFields[r].mogos[i].rings;
         lrt.rFields[r].awp.toggled=rfSave.rFields[r].awp.toggled;
+        forceRefresh=2;
         lrt.rFields[r].platButtons[0].toggled=rfSave.rFields[r].platButtons[0].toggled;
         lrt.rFields[r].platButtons[1].toggled=rfSave.rFields[r].platButtons[1].toggled;
         lrt.rFields[r].platButtons[2].textA=rfSave.rFields[r].platButtons[2].textA;
@@ -354,6 +358,9 @@ function setup() {
   disableHover=isTouchDevice();
   //console.log(disableHover);
   //windowResized();
+  rndm=floor(random(1000000));
+  console.log(rndm);
+  if(rndm==3553)version="Go Team NXS!";
 }
 
 function isTouchDevice() {
@@ -372,7 +379,8 @@ function draw(){
 
   checkClicked();
 
-  if(pMouseX!=mouseX||pMouseY!=mouseY||mouseIsPressed||postClick!=0){
+  if(pMouseX!=mouseX||pMouseY!=mouseY||mouseIsPressed||postClick!=0||forceRefresh>0){
+    if(forceRefresh>0)forceRefresh--;
   background(40,40,45);
   push();
   translate(width*0.5,height*0.5);
@@ -651,7 +659,7 @@ function updateMenu(){
 
 
   fill(150);
-  scaledText("Version "+version,0,-200,regular,15);
+  scaledText(version,0,-200,regular,15);
   /*
   fill(red.dark1);
   scaledText("BETA "+version,0,-200,regular,20);
@@ -2459,7 +2467,7 @@ class Mogo {
       //this.rings[i]=this.ringCounters[i].ringCount;
       if((settingButtons[0].toggled&&((i!=2&&i!=4)||appState==3))||settingButtons[0].toggled==false)this.rings[i]=this.ringCounters[i].updateCounter(this.rings[i]);
       if(i>0&&mogoSelected>3&&this.rings[i]>7)this.rings[i]=7
-      if(i==1&&mogoSelected<=3&&this.rings[i]>11)this.rings[i]=11;
+      if(i==1&&mogoSelected<=3&&this.rings[i]>12)this.rings[i]=12;
     }
     fill(30,30,35);
     stroke(30,30,35);
