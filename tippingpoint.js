@@ -1,4 +1,4 @@
-let version="Version 1.0.1"
+let version="Version 1.0.1b"
 let rndm;
 
 let yellow; //Color Presets
