@@ -1,4 +1,4 @@
-let version="Version 1.0.1b"
+let version="Version 1.1.0"
 let rndm;
 
 let yellow; //Color Presets
@@ -6,6 +6,9 @@ let purple;
 let red;
 let blue;
 let green;
+let grey;
+let darkgrey;
+let white;
 
 let screenScale=1;
 let mogoScale=1;
@@ -36,6 +39,7 @@ let settingButtons=[];
 let linkButtons=[];
 let manualButtons=[];
 let manualShort;
+let camera;
 
 let warningButton;
 let warningExit;
@@ -92,6 +96,10 @@ function setup() {
   red=new ColorBase(200, 20, 20);
   blue=new ColorBase(25, 95, 200);
   green=new ColorBase(20,200,20);
+  grey=new ColorBase(40,40,45);
+  darkgrey=new ColorBase(20,20,22);
+  white=new ColorBase(240,240,250);
+  main=grey;
 
 
   matchField=new Field();
@@ -177,6 +185,7 @@ function setup() {
     manualButtons[i].tSize=17;
   }
 
+  camera=new Button(-155,-245,55,55,"C");
 
   //hideRings=new Button(135,-280,75,75,"Hide\nRings");
   //hideRings.setExtraData(2,"Show\nRings",17);
@@ -381,7 +390,8 @@ function draw(){
 
   if(pMouseX!=mouseX||pMouseY!=mouseY||mouseIsPressed||postClick!=0||forceRefresh>0){
     if(forceRefresh>0)forceRefresh--;
-  background(40,40,45);
+  if(settingButtons[3].toggled)background(20,20,22);
+  else background(40,40,45);
   push();
   translate(width*0.5,height*0.5);
   //scale(screenScale);
@@ -464,6 +474,11 @@ function draw(){
     }
 
     backButton.updateButton();
+    if(settingButtons[3].toggled)camera.updateButton();
+    if(camera.clicked){
+      to_save=get(width*0.5-375*0.5*screenScale,height*0.5-667*0.5*screenScale,375*screenScale,667*screenScale);
+      to_save.save("Match_1.png")
+    }
 
     if(mogoSelected==5)smallBack.updateButton();
     else mediumBack.updateButton();
@@ -726,7 +741,7 @@ function updateManual(){
     manualButtons[i].updateButton();
   }
   fill(210,210,220);
-  scaledText("Version 1.1",0,-170+27,regular,13);
+  scaledText("Version 2.0",0,-170+27,regular,13);
 
 /*
   if(disableHover){
@@ -1661,6 +1676,9 @@ class Field{
   }
 
   drawField(){
+    noStroke();
+    fill(40,40,45);
+    scaledRect(0,0,320,320,15,15,15,15,5);
     stroke(180,180,190);
     strokeWeight(3*screenScale);
     scaledLine(-53,-160,-53,160);
@@ -1694,11 +1712,11 @@ class Field{
     if(appState==1||appState==2){
     //Auton Points
     if(appState==1&&this.autonWinner!=3){
-      this.scores[this.autonWinner]+=20;
+      this.scores[this.autonWinner]+=6;
       if(this.autonWinner==0){
         this.scores[0]=0;
-        this.scores[1]+=10;
-        this.scores[2]+=10;
+        this.scores[1]+=3;
+        this.scores[2]+=3;
       }
     }
 
@@ -2228,10 +2246,10 @@ class remoteField{
     this.lrtWP=[0,0];
     this.lrtScores[0]=this.rFields[0].scoreField();
     this.lrtScores[1]=this.rFields[1].scoreField();
-    if(this.autonWinner!=0&&this.autonWinner!=3)this.rFields[this.autonWinner-1].scores[3]+=20;
+    if(this.autonWinner!=0&&this.autonWinner!=3)this.rFields[this.autonWinner-1].scores[3]+=6;
     else if(this.autonWinner==0){
-      this.rFields[0].scores[3]+=10;
-      this.rFields[1].scores[3]+=10;
+      this.rFields[0].scores[3]+=3;
+      this.rFields[1].scores[3]+=3;
     }
     for(let i=0;i<3;i++){
       if(this.lrtScores[0][i]>this.lrtScores[1][i])this.lrtWP[0]++;
