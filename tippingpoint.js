@@ -936,6 +936,7 @@ class Button{
         if(this!=dropdown)dropdown.toggled=false;
         this.clicked=true;
         click=false;
+        forceRefresh+=2;
       }
     }
     if(this.clicked&&this.type==2)this.toggleButton();
