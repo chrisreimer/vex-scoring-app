@@ -1,4 +1,4 @@
-let version="Version 1.1.0"
+let version="Version 1.1.1"
 let rndm;
 
 let yellow; //Color Presets
@@ -39,7 +39,12 @@ let settingButtons=[];
 let linkButtons=[];
 let manualButtons=[];
 let manualShort;
+
+let dropdown;
+let timer;
 let camera;
+
+let timers=[];
 
 let warningButton;
 let warningExit;
@@ -174,18 +179,34 @@ function setup() {
   manualButtons[4]=new Button(0,189,300,65,"VEX AI Competition");
   manualButtons[5]=new Button(0,275,300,65,"Live Remote Tournaments");
 
-  manualShort=new Button(-100,-300,55,55,"");
+  manualShort=new Button(-100,-245,55,55,"");
   manualShort.setExtraData(2,"",25);
   //manualShort.fillA=color(40,40,45);
-  manualShort.fillA=color(0,0);
-  manualShort.fillA2=color(0,0);
+  //manualShort.fillA=color(0,0);
+  //manualShort.fillA2=color(0,0);
+  manualShort.setColors(color(0,0),color(35,35,40),color(0,0),color(35,35,40),0,0,0);
+
+  dropdown=new Button(-100,-300,55,55,"");
+  dropdown.setExtraData(2,"",0);
+  dropdown.setColors(color(0,0),color(45,45,50),color(0,0),color(35,35,40),0,0,0);
+
+  timer=new Button(-100,-190,55,55,"")
+  timer.setColors(color(0,0),color(35,35,40),color(0,0),color(35,35,40),0,0,0);
+  timer.type=2;
+
+  timers[1]=new Timer(1);
+  timers[2]=new Timer(2);
+  timers[3]=new Timer(3);
+
+  camera=new Button(-100,-135,55,55,"");
+  camera.setColors(color(0,0),color(35,35,40),color(0,0),color(35,35,40),0,0,0);
+  camera.type=2;
 
   manualButtons[0].tSize=22;
   for(let i=1;i<6;i++){
     manualButtons[i].tSize=17;
   }
 
-  camera=new Button(-155,-245,55,55,"C");
 
   //hideRings=new Button(135,-280,75,75,"Hide\nRings");
   //hideRings.setExtraData(2,"Show\nRings",17);
@@ -390,8 +411,8 @@ function draw(){
 
   if(pMouseX!=mouseX||pMouseY!=mouseY||mouseIsPressed||postClick!=0||forceRefresh>0){
     if(forceRefresh>0)forceRefresh--;
-  if(settingButtons[3].toggled)background(20,20,22);
-  else background(40,40,45);
+  //if(settingButtons[3].toggled)background(20,20,22);
+  background(40,40,45);
   push();
   translate(width*0.5,height*0.5);
   //scale(screenScale);
@@ -402,34 +423,45 @@ function draw(){
     initialDragging=false;
     dragging=false;
   }
-  if(!manualShort.toggled){
+  if(!manualShort.toggled&&!timer.toggled&&!camera.toggled){
   if(mogoSelected!=5&&!tmScreen.toggled&&(appState==1||appState==2)&&warningExit.toggled){
     tmScreen.updateButton();
   }
+
+  for(let i=1;i<4;i++){
+    if(appState!=i&&timers[i].timerState!=0)timers[i].backgroundUpdate();
+  }
+
   if(appState==0){  //Main Menu
     updateMenu();
   }
   else if(appState==1){ //Match
     updateMatch();
     //textFont(regular, 30);
-    fill(230,230,240);
-    noStroke();
-    scaledText("Match", 0,-302,regular,30);
+    if(timers[1].timerState==0){
+      fill(230,230,240);
+      noStroke();
+      scaledText("Match", 0,-302,regular,30);
+    }
 
   }
   else if(appState==2){ //Skills
     updateSkills();
     //textFont(regular, 30);
-    fill(230,230,240);
-    noStroke();
-    scaledText("Skills", 0,-302,regular,30);
+    if(timers[2].timerState==0){
+      fill(230,230,240);
+      noStroke();
+      scaledText("Skills", 0,-302,regular,30);
+    }
   }
   else if(appState==3){ //Remote
     updateRemote();
     //textFont(regular, 30);
-    fill(230,230,240);
-    noStroke();
-    scaledText("Remote", 0,-302,regular,30);
+    if(timers[3].timerState==0){
+      fill(230,230,240);
+      noStroke();
+      scaledText("Remote", 0,-302,regular,30);
+    }
   }
   else if(appState==4){
     //textFont(regular, 30);
@@ -455,6 +487,9 @@ function draw(){
     scaledText("Manual", 0,-302,regular,30);
     updateManual();
   }
+  else if(timer.toggled){
+    timers[appState].updateTimer();
+  }
   if(appState!=0&&!warningExit.toggled){
     //fill(red.dark5);
     //noStroke();
@@ -468,11 +503,12 @@ function draw(){
   }
 
   if(appState!=0){
+    /*
     if(appState<=3&&!manualShort.toggled){
       manualShort.updateButton();
       //drawManual(manualShort.x,manualShort.y);
     }
-
+    */
     backButton.updateButton();
     if(settingButtons[3].toggled)camera.updateButton();
     if(camera.clicked){
@@ -485,6 +521,8 @@ function draw(){
     //else largeBack.updateButton();
     if(backButton.clicked||smallBack.clicked||mediumBack.clicked){//||largeBack.clicked){
       if(manualShort.toggled)manualShort.toggled=false;
+      else if(timer.toggled)timer.toggled=false;
+      else if(camera.toggled)camera.toggled=false;
       else if(tmScreen.toggled)tmScreen.toggled=false;
       else if(remoteFieldSelected!=0&&mogoSelected==-1)lrt.fieldButtons[remoteFieldSelected-1].toggled=false;
       else if(mogoSelected==-1)appState=0;
@@ -497,6 +535,7 @@ function draw(){
   }
 
   pop();
+  /*
   if(settingButtons[3].toggled){
     //noStroke();
     stroke(40,40,45);
@@ -516,6 +555,7 @@ function draw(){
       ellipse(touches[i].x,touches[i].y,40,40)
     }
   }
+  */
 }
 //else console.log("no draw");
   pMouseX=mouseX;
@@ -607,6 +647,64 @@ function checkClicked(){
   }
 }
 
+function updateDropDown(){
+  if(!settingButtons[3].toggled){
+    manualShort.y=dropdown.y;
+    manualShort.backEndUpdate();
+  }
+  else{
+    manualShort.y=dropdown.y+55;
+    dropdown.backEndUpdate();
+    if(dropdown.toggled){
+      manualShort.backEndUpdate();
+      camera.backEndUpdate();
+      timer.backEndUpdate();
+    }
+  }
+}
+
+function drawDropDown(){
+  //stroke(240,240,250);
+  //scaledEllipse(dropdown.x,dropdown.y,30,30,3);
+  if(!settingButtons[3].toggled){
+    manualShort.drawButton();
+    drawManual(-100,-300);
+  }
+  else{
+  if(dropdown.toggled){
+    noStroke();
+    fill(30,30,35);
+    scaledRect(-100,-217.5,55,55*4,15,15,15,15,0);
+    dropdown.drawButton();
+    stroke(240,240,250);
+    push();
+    translate(-100*screenScale,-300*screenScale);
+    strokeWeight(2.5*screenScale);
+    scaledLine(-10,-10,10,10);
+    scaledLine(-10,10,10,-10);
+    pop();
+
+    manualShort.drawButton();
+    drawManual(-100,-300+55);
+    timer.drawButton();
+    drawTimer(-100,-300+55*2);
+    camera.drawButton();
+    drawCamera(-100,-300+55*3);
+  }
+  else{
+    dropdown.drawButton();
+    push();
+    stroke(240,240,250);
+    strokeWeight(2.5*screenScale);
+    translate(-100*screenScale,-300*screenScale);
+    scaledLine(-10,0,10,0);
+    scaledLine(-10,-8,10,-8);
+    scaledLine(-10,8,10,8);
+    pop();
+  }
+  }
+}
+
 function drawManual(x,y){
   push();
   translate(x*screenScale,(y+1)*screenScale);
@@ -627,6 +725,39 @@ function drawManual(x,y){
   pop();
 }
 
+function drawCamera(x,y){
+  push();
+  translate(x*screenScale,(y+1)*screenScale);
+
+  translate(0,2*screenScale);
+  stroke(230,230,240);
+  fill(30,30,35);
+  scaledRect(0,-12,12,7,3,3,3,3,2);
+  noStroke();
+  simpleRect(0,-12,15,2);
+  stroke(230,230,240);
+  scaledRect(0,0,30,20,5,5,5,5,2.5);
+  scaledEllipse(0,0,10,10,2);
+
+  pop();
+}
+
+function drawTimer(x,y){
+  push();
+  translate(x*screenScale,(y+1)*screenScale);
+  //strokeCap(ROUND);
+  stroke(230,230,240);
+  //strokeWeight(3);
+  noFill();
+  scaledArc(0,0,20,20,-0.5,TWO_PI*3/4.0,3);
+  //line(0,-10,0,-5);
+  strokeWeight(2*screenScale);
+  push();
+  rotate(-0.5);
+  scaledLine(0,0,6,0);
+  pop();
+  pop();
+}
 
 function scaledRect(x,y,w,h,a,b,c,d,s){
   strokeWeight(s*screenScale);
@@ -693,18 +824,25 @@ function updateMenu(){
 }
 
 function updateMatch(){
+  updateDropDown();
+  if(timers[1].timerState!=0)timers[1].drawSmallTimer();
   matchField.updateField();
-  drawManual(manualShort.x,manualShort.y);
+  drawDropDown();
+  //drawManual(manualShort.x,manualShort.y);
 }
 
 function updateSkills(){
+  updateDropDown();
+  if(timers[2].timerState!=0)timers[2].drawSmallTimer();
   skillsField.updateField();
-  drawManual(manualShort.x,manualShort.y);
+  drawDropDown();
 }
 
 function updateRemote(){
+  updateDropDown();
+  if(timers[3].timerState!=0)timers[3].drawSmallTimer();
   lrt.updateLRT();
-  drawManual(manualShort.x,manualShort.y);
+  drawDropDown();
 }
 
 function updateInfo(){
@@ -785,17 +923,22 @@ class Button{
   }
 
   updateButton(){
+    this.backEndUpdate();
+    this.drawButton();
+  }
+
+  backEndUpdate(){
     this.hover=false;
     this.clicked=false;
     if(mouseX>width*0.5+(this.x-this.w*0.5)*screenScale&&mouseX<width*0.5+(this.x+this.w*0.5)*screenScale&&mouseY>height*0.5+(this.y-this.h*0.5)*screenScale&&mouseY<height*0.5+(this.y+this.h*0.5)*screenScale){
       this.hover=true;
       if(click){
+        if(this!=dropdown)dropdown.toggled=false;
         this.clicked=true;
         click=false;
       }
     }
     if(this.clicked&&this.type==2)this.toggleButton();
-    this.drawButton();
   }
 
   toggleButton(){
@@ -833,7 +976,7 @@ class Button{
       }
       if(this.strokeB==color(0,0))noStroke();
       else stroke(this.strokeB);
-      if(this.hover&&settingButtons[3].toggled)stroke(purple.dark2);
+      //if(this.hover&&settingButtons[3].toggled)stroke(purple.dark2);
       scaledRect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3],this.sWeight)
       //rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       fill(this.textColor);
@@ -852,7 +995,7 @@ class Button{
       }
       if(this.strokeA==color(0,0))noStroke();
       else stroke(this.strokeA);
-      if(this.hover&&settingButtons[3].toggled)stroke(green.dark2);
+      //if(this.hover&&settingButtons[3].toggled)stroke(green.dark2);
       //rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       scaledRect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3],this.sWeight)
       fill(this.textColor);
@@ -861,6 +1004,241 @@ class Button{
       scaledText(this.textA,this.x,this.y-this.yOffset,regular,this.tSize)
     }
   }
+
+}
+
+class Timer{
+  constructor(id_){
+    this.id=id_;
+    this.timerStart=new Button(-85,246,150,120,"Start\nAuton");
+    if(this.id==2)this.timerStart.textA="Start\nSkills";
+    this.timerStart.setExtraData(2,"Pause",25);
+    this.timeLeft=-1;
+    this.timerMode=new Button(85,246,150,120,"Mode:\nVRC");
+    this.timerMode.setExtraData(2,"Mode:\nVEXU",25);
+    this.timerReset=new Button(85,246,150,120,"Reset\nTimer");
+    this.timerReset.tSize=25;
+
+    if(this.id!=3)this.returnButton=new Button(0,-290,140,86,"");
+    else this.returnButton=new Button(0,-300,140,55,"");
+    this.returnButton.setColors(color(0,0),color(0,0),0,0,0,0,0)
+    this.timerState=0;//0=Not in use, 1=Running Auton, 2=Scoring Auton, 3=Running Driver, 4=Done Match
+  }
+  updateTimer(){
+
+    fill(230,230,240);
+    noStroke();
+    scaledText("Timer", 0,-302,regular,30);
+
+    if(this.id==1||this.id==3){
+      this.updateMatchButtons();
+      this.updateMatchTimer();
+      this.drawMatchTimer();
+    }
+    else if(this.id==2){
+      this.updateSkillsButtons();
+      this.updateSkillsTimer();
+      this.drawSkillsTimer();
+    }
+  }
+
+  backgroundUpdate(){
+    if(this.id==1||this.id==3){
+      this.updateMatchTimer();
+    }
+    else if(this.id==2){
+      this.updateSkillsTimer();
+    }
+  }
+
+  drawSmallTimer(){
+    this.updateMatchTimer();
+    this.returnButton.updateButton();
+    if(this.returnButton.clicked)timer.toggled=true;
+    this.min=floor(this.timeLeft/60);
+    this.sec=ceil(this.timeLeft%60);
+    if(this.sec>=10)scaledText(this.min+":"+this.sec, 0,-302,regular,42);
+    else scaledText(this.min+":0"+this.sec, 0,-302,regular,42);
+  }
+
+  updateMatchTimer(){
+    if((this.timerState==1||this.timerState==3)&&this.timerStart.toggled){//&&!timerPause.toggled){
+      this.timeLeft-=deltaTime/1000;
+      forceRefresh=1;
+    }
+    if(this.timerState==1&&this.timeLeft<=0){
+      this.timerStart.toggled=false;
+      this.timerState=2;
+      this.timerStart.textA="Start\nDriver";
+      if(!this.timerMode.toggled)this.timeLeft=105;
+      else if(this.timerMode.toggled)this.timeLeft=75;
+    }
+    else if(this.timerState==3&&this.timeLeft<=0){
+      this.timerStart.toggled=false;
+      this.timerState=4;
+      this.timerStart.textA="Next\nMatch";
+      this.timerStart.type=1;
+      this.timeLeft=0;
+    }
+  }
+  updateMatchButtons(){
+    this.timerStart.updateButton();
+    if(this.timerStart.clicked&&this.timerStart.toggled){
+      if(this.timerState==0){
+        this.timerState=1;
+        this.timerStart.textA="Resume\nAuton";
+        if(!this.timerMode.toggled)this.timeLeft=15;
+        else this.timeLeft=45;
+      }
+      else if(this.timerState==2){
+        this.timerState=3;
+        this.timerStart.textA="Resume\nDriver";
+      }
+    }
+    if(this.timerState==0)this.timerMode.updateButton();
+    else this.timerReset.updateButton();
+    if(this.timerReset.clicked){
+      this.timerState=4;
+      this.timerStart.clicked=true;
+    }
+    if(this.timerStart.clicked&&this.timerState==4){
+      this.timerStart.type=2;
+      this.timerStart.textA="Start\nAuton";
+      this.timerState=0;
+      this.timeLeft=-1;
+    }
+  }
+
+  drawMatchTimer(){
+    noFill();
+    fill(20,20,22);
+    noStroke();
+    scaledEllipse(0,0,310,310,0);
+    fill(230,200,10);
+    noStroke();
+    push();
+    this.tickCount=(this.timeLeft)/3;
+    if(this.timeLeft==-1)this.tickCount=40;
+    if(!this.timerMode.toggled){
+      if(this.timerState==1)this.tickCount+=35;
+      for(let i=39;i>=0;i--){
+        rotate(radians(9));
+        if(i>=this.tickCount)fill(40,40,45);
+        else if(i>34)fill(purple.light2);
+        else fill(yellow.light2);
+        rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+      }
+    }
+    else{
+      if(this.timerState==1)this.tickCount+=25;
+      for(let i=39;i>=0;i--){
+        rotate(radians(9));
+        if(i>=this.tickCount)fill(40,40,45);
+        else if(i>24)fill(purple.light2);
+        else fill(yellow.light2);
+        rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+      }
+    }
+    pop();
+    noStroke();
+    //console.log("Time Left: "+this.timeLeft);
+    //console.log("Timer State: "+this.timerState);
+    if(this.timerState==1)fill(purple.light2)
+    else fill(230,230,240);
+    if(this.timeLeft==120)scaledText("2:00",0,-10,semibold,80);
+    else if(this.timeLeft>=69)scaledText("1:"+(ceil(this.timeLeft)-60),0,-11,semibold,90);
+    else if(this.timeLeft>=59)scaledText("1:0"+(ceil(this.timeLeft)-60),0,-11,semibold,90);
+    else if(this.timeLeft>-1)scaledText(ceil(this.timeLeft),0,-16,semibold,140);
+    else scaledText("2:00",0,-11,semibold,90);
+
+    fill(230,230,240);
+    if(this.timerState==0)scaledText("Pre-Match",0,-230,regular,40);
+    else if(this.timerState==1)scaledText("Running\nAuton",0,-230,regular,40);
+    else if(this.timerState==2)scaledText("Scoring\nAuton",0,-230,regular,40);
+    else if(this.timerState==3)scaledText("Running\nDriver",0,-230,regular,40);
+    else if(this.timerState==4)scaledText("Scoring\nMatch",0,-230,regular,40);
+    //fill(red.light1);
+    //noStroke();
+    //ellipse(0,0,5,5);
+    //text("0:15",0,-2*screenScale);
+  }
+
+
+
+
+  updateSkillsTimer(){
+    if(this.timerState==1&&this.timerStart.toggled){//&&!timerPause.toggled){
+      this.timeLeft-=deltaTime/1000;
+      forceRefresh=1;
+    }
+    if(this.timerState==1&&this.timeLeft<=0){
+      this.timerStart.toggled=false;
+      this.timerState=2;
+      this.timerStart.textA="Next\nRun";
+      this.timerStart.type=1;
+      this.timeLeft=0;
+    }
+  }
+
+  updateSkillsButtons(){
+
+    this.timerStart.updateButton();
+    if(this.timerStart.clicked&&this.timerStart.toggled&&this.timerState==0){
+      this.timerState=1;
+      this.timerStart.textA="Resume\nSkills";
+      this.timeLeft=60;
+    }
+
+    this.timerReset.updateButton();
+    if(this.timerReset.clicked){
+      this.timerState=2;
+      this.timerStart.clicked=true;
+      this.timerStart.toggled=false;
+    }
+
+    if(this.timerStart.clicked&&this.timerState==2){
+      this.timerStart.type=2;
+      this.timerStart.textA="Start\nSkills";
+      this.timerState=0;
+      this.timeLeft=-1;
+    }
+  }
+
+  drawSkillsTimer(){
+    noFill();
+    fill(20,20,22);
+    noStroke();
+    scaledEllipse(0,0,310,310,0);
+    fill(230,200,10);
+    noStroke();
+    push();
+    this.tickCount=(this.timeLeft)/2;
+    if(this.timeLeft==-1)this.tickCount=30;
+    for(let i=29;i>=0;i--){
+      rotate(radians(12));
+      if(i>=this.tickCount)fill(40,40,45);
+      else fill(yellow.light2);
+      rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+    }
+    pop();
+    noStroke();
+    //console.log("Time Left: "+this.timeLeft);
+    //console.log("Timer State: "+this.timerState);
+    fill(230,230,240);
+    if(this.timeLeft>=59)scaledText("1:0"+(ceil(this.timeLeft)-60),0,-11,semibold,90);
+    else if(this.timeLeft>-1)scaledText(ceil(this.timeLeft),0,-16,semibold,140);
+    else scaledText("1:00",0,-11,semibold,90);
+
+    if(this.timerState==0)scaledText("Pre-Skills",0,-230,regular,40);
+    else if(this.timerState==1)scaledText("Running\nSkills",0,-230,regular,40);
+    else if(this.timerState==2)scaledText("Scoring\nSkills",0,-230,regular,40);
+    //fill(red.light1);
+    //noStroke();
+    //ellipse(0,0,5,5);
+    //text("0:15",0,-2*screenScale);
+  }
+
+
 
 }
 
