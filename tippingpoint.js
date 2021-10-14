@@ -1105,6 +1105,7 @@ class Camera{
     if(this.saveImage.clicked){
       this.to_save=get(width*0.5-375*0.5*screenScale,height*0.5-667*0.5*screenScale,375*screenScale,667*screenScale);
       this.to_save.save(this.matchInput.value()+".png")
+      forceRefresh+=1;
     }
     //stroke(25,25,30);
     //noFill();
