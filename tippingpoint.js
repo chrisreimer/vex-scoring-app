@@ -1,4 +1,4 @@
-let version="Version 1.1.3"
+let version="Version 1.1.3b"
 let rndm;
 
 let yellow; //Color Presets
@@ -76,6 +76,8 @@ let forceRefresh=0;
 let pMouseX;
 let pMouseY;
 let hovered;
+
+let ogOrientation
 
 let clickAnimation=0;
 let animationTrigger=0; //0=mouse click, 1=touchpad
@@ -400,6 +402,8 @@ function setup() {
   rndm=floor(random(1000000));
   console.log(rndm);
   if(rndm==3553)version="Go Team NXS!";
+
+  pOrientation=deviceOrientation
 }
 
 function isTouchDevice() {
@@ -417,7 +421,13 @@ function windowResized() {
   }
 }
 
+
 function draw(){
+
+  if(pOrientation!=deviceOrientation){
+    windowResized();
+    forceRefresh+=1
+  }
 
   checkClicked();
 
