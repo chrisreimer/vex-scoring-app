@@ -1,4 +1,4 @@
-let version="Version 1.1.2"
+let version="Version 1.1.3"
 let rndm;
 
 let yellow; //Color Presets
@@ -45,6 +45,9 @@ let timer;
 let camera;
 
 let timers=[];
+let cameras=[];
+
+let takingPicture=false;
 
 let warningButton;
 let warningExit;
@@ -62,6 +65,7 @@ let held;
 let dragging=false;
 let initialDragging=false;
 let finalDragging=false;
+let mouseDisabled=false;
 let pressX=0;
 let pressY=0;
 let translatedMouseX;
@@ -167,6 +171,7 @@ function setup() {
   settingButtons[3]=new Button(0,225,300,65,"");//debug button
   settingButtons[3].setExtraData(2,"Debug Mode: On",20);
   settingButtons[3].setColors(color(0,0),color(0,0),0,0,0,0,0);
+  //settingButtons[3].toggled=true;
 
   linkButtons[0]=new Button(0,100,200,65,"Join Server");
   linkButtons[0].setColors(color(88, 101, 242),color(73, 86, 222),0,0,0,0,0)
@@ -201,6 +206,10 @@ function setup() {
   camera=new Button(-100,-135,55,55,"");
   camera.setColors(color(0,0),color(35,35,40),color(0,0),color(35,35,40),0,0,0);
   camera.type=2;
+
+  cameras[1]=new Camera(1);
+  cameras[2]=new Camera(2);
+  cameras[3]=new Camera(3);
 
   manualButtons[0].tSize=22;
   for(let i=1;i<6;i++){
@@ -403,6 +412,9 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   if(width/375.0>height/667.0)screenScale=height/667.0;
   else screenScale=width/375.0;
+  for(let i=1;i<4;i++){
+    cameras[i].updateInputSize();
+  }
 }
 
 function draw(){
@@ -490,6 +502,9 @@ function draw(){
   else if(timer.toggled){
     timers[appState].updateTimer();
   }
+  else if(camera.toggled){
+    cameras[appState].updateCamera();
+  }
   if(appState!=0&&!warningExit.toggled){
     //fill(red.dark5);
     //noStroke();
@@ -510,11 +525,7 @@ function draw(){
     }
     */
     backButton.updateButton();
-    if(settingButtons[3].toggled)camera.updateButton();
-    if(camera.clicked){
-      to_save=get(width*0.5-375*0.5*screenScale,height*0.5-667*0.5*screenScale,375*screenScale,667*screenScale);
-      to_save.save("Match_1.png")
-    }
+    //if(settingButtons[3].toggled)camera.backEndUpdate();
 
     if(mogoSelected==5)smallBack.updateButton();
     else mediumBack.updateButton();
@@ -522,7 +533,10 @@ function draw(){
     if(backButton.clicked||smallBack.clicked||mediumBack.clicked){//||largeBack.clicked){
       if(manualShort.toggled)manualShort.toggled=false;
       else if(timer.toggled)timer.toggled=false;
-      else if(camera.toggled)camera.toggled=false;
+      else if(camera.toggled){
+        camera.toggled=false;
+        cameras[appState].matchInput.hide();
+      }
       else if(tmScreen.toggled)tmScreen.toggled=false;
       else if(remoteFieldSelected!=0&&mogoSelected==-1)lrt.fieldButtons[remoteFieldSelected-1].toggled=false;
       else if(mogoSelected==-1)appState=0;
@@ -660,6 +674,7 @@ function updateDropDown(){
       camera.backEndUpdate();
       timer.backEndUpdate();
     }
+    if(click)dropdown.toggled=false;
   }
 }
 
@@ -894,6 +909,7 @@ function updateManual(){
 }
 
 
+
 class Button{
   constructor(x_,y_,w_,h_,textA_){
   this.x=x_;
@@ -923,7 +939,7 @@ class Button{
   }
 
   updateButton(){
-    this.backEndUpdate();
+    if(!mouseDisabled)this.backEndUpdate();
     this.drawButton();
   }
 
@@ -964,6 +980,7 @@ class Button{
   }
 
   drawButton(){
+    if(mouseDisabled)this.hover=false;
     //textFont(regular,this.tSize);
     //strokeWeight(this.sWeight);
     if(this.toggled&&this.type==2){
@@ -1004,6 +1021,107 @@ class Button{
       //text(this.textA,this.x,this.y-this.yOffset);
       scaledText(this.textA,this.x,this.y-this.yOffset,regular,this.tSize)
     }
+  }
+
+}
+
+
+class Camera{
+  constructor(id_){
+    this.id=id_;
+    //this.matchNum=new Button(0,-220,200,50,'Match 1');
+    //if(this.id==2)this.matchNum.textA='Team# Skills 1'
+    //this.matchNum.setColors(color(25,25,30),color(20,20,25),0,0,0,0,0);
+    //this.matchNum.tSize=30;
+    this.saveImage=new Button(0,250,250,80,'Save Image')
+    this.saveImage.tSize=30;
+    this.matchInput;
+    if(this.id!=2)this.matchInput=createInput('Match 1');
+    else this.matchInput=createInput('Skills 1')
+    //this.matchInput.size(210,50);
+    this.matchInput.size(196*screenScale,47*screenScale)
+    this.matchInput.position(windowWidth/2-92*screenScale,windowHeight/2-237*screenScale);//-220*screenScale);
+    this.matchInput.style('background-color','rgb(20,20,25)')
+    this.matchInput.style('border','0px')
+    this.matchInput.style('border-radius',(15*screenScale)+'px')
+    this.matchInput.style('color','rgb(210,210,220)')
+    this.matchInput.style('text-align:center');
+    this.matchInput.style('font-family','verdana')
+    this.matchInput.style('font-size',(20*screenScale)+'px')
+    this.matchInput.hide();
+    //this.matchInput.value='Match 1'
+  }
+
+  updateInputSize(){
+    this.matchInput.size(196*screenScale,47*screenScale)
+    this.matchInput.position(windowWidth/2-92*screenScale,windowHeight/2-237*screenScale);
+    this.matchInput.style('border-radius',(15*screenScale)+'px')
+    this.matchInput.style('font-size',(20*screenScale)+'px')
+  }
+
+  updateCamera(){
+    fill(230,230,240);
+    noStroke();
+    scaledText("Record", 0,-302,regular,30);
+    //this.matchNum.drawButton();
+    //this.matchInput.position(0,-220*screenScale);
+    //this.matchInput.input(this.myInputEvent)
+    this.matchInput.show();
+    this.saveImage.updateButton();
+    this.drawEditIcon();
+    push();
+    if(this.saveImage.clicked){
+      background(40,40,45);
+      fill(230,230,240);
+      noStroke();
+      this.titleSize=30;
+      textSize(this.titleSize*screenScale);
+      if(textWidth(this.matchInput.value())>395)this.titleSize=23;
+      scaledText(this.matchInput.value(), 0,-302,regular,this.titleSize);
+    }
+    else scale(0.5);
+    mouseDisabled=true;
+    if(this.id==1){
+      matchField.updateField();
+    }
+    else if(this.id==2){
+      skillsField.updateField();
+    }
+    else if(this.id==3){
+      lrt.updateLRT();
+    }
+    mouseDisabled=false;
+    pop();
+    if(this.saveImage.clicked){
+      this.to_save=get(width*0.5-375*0.5*screenScale,height*0.5-667*0.5*screenScale,375*screenScale,667*screenScale);
+      this.to_save.save(this.matchInput.value()+".png")
+    }
+    //stroke(25,25,30);
+    //noFill();
+    //scaledRect(0,0,375*0.5+10,667*0.5+10,30,30,30,30,5);
+  }
+
+  drawEditIcon(){
+    noStroke();
+    fill(110,110,120);
+    push();
+    translate(110*screenScale,-210*screenScale);
+    beginShape();
+    vertex(5*screenScale,-1*screenScale);
+    vertex(0,0);
+    vertex(1*screenScale,-5*screenScale);
+    vertex(11*screenScale,-16*screenScale);
+    vertex(16*screenScale,-11*screenScale);
+    vertex(5*screenScale,-1*screenScale);
+    endShape();
+
+    beginShape();
+    vertex(13*screenScale,-18*screenScale);
+    vertex(17*screenScale,-22*screenScale);
+    vertex(22*screenScale,-17*screenScale);
+    vertex(18*screenScale,-13*screenScale);
+    endShape();
+    pop();
   }
 
 }
@@ -1495,7 +1613,7 @@ class Field{
        this.platforms[i].drawPlatform();
       }
 
-        for(let i=0;i<7&&initialDragging;i++){
+        for(let i=0;i<7&&initialDragging&&!mouseDisabled;i++){
           this.mogos[i].checkDragged();
         }
         //console.log(this.draggedMogo);
@@ -1545,7 +1663,7 @@ class Field{
         //this.nodes[5][6][i].drawNode();
       }
 
-      if(this.parked.toggled||appState==2){
+      if(this.parked.toggled||appState==2||mouseDisabled){
         fill(30,30,35);
         stroke(30,30,35);
         //strokeWeight(20);
@@ -1640,8 +1758,8 @@ class Field{
           scaledRect(-130,246+31.25,65,62.5,0,0,17.5,17.5,0);
         }
       }
-      if(appState!=2)this.parked.updateButton();
-      if(!this.parked.toggled&&appState!=2){
+      if(appState!=2&&!mouseDisabled)this.parked.updateButton();
+      if(!this.parked.toggled&&appState!=2&&!mouseDisabled){
         noStroke();
         fill(red.light1);
         //textFont(bold,20);
