@@ -1,4 +1,4 @@
-let version="Version 1.1.3b"
+let version="Version 1.1.3c"
 let rndm;
 
 let yellow; //Color Presets
@@ -277,7 +277,7 @@ function setup() {
   let appSave=getItem('appSave');
   if(!(appSave===null)){
     console.log(appSave);
-    appState=appSave;
+    if(appState==1||appState==2||appState==3)appState=appSave;
   }
   try{
   let mfSave=getItem('matchFieldSave');
@@ -838,7 +838,7 @@ function updateMenu(){
   for(let i=0;i<6;i++){
     menuButtons[i].updateButton();
     if(menuButtons[i].clicked)appState=i+1;
-    storeItem('appSave',appState)
+    if(appState==1||appState==2||appState==3)storeItem('appSave',appState)
   }
   backButton.updateButton();
   if(backButton.clicked){
