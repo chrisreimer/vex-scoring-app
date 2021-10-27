@@ -1,4 +1,4 @@
-let version="Version 1.1.3c"
+let version="Version 1.1.3d"
 let rndm;
 
 let yellow; //Color Presets
@@ -277,7 +277,7 @@ function setup() {
   let appSave=getItem('appSave');
   if(!(appSave===null)){
     console.log(appSave);
-    if(appState==1||appState==2||appState==3)appState=appSave;
+    if(appSave==1||appSave==2||appSave==3)appState=appSave;
   }
   try{
   let mfSave=getItem('matchFieldSave');
