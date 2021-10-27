@@ -60,7 +60,7 @@ function setup(){
     appState=appSave;
   }
 
-  if(appState!=0){
+  if(appState==1||appState==2||appState==3){
     window.open("/tip.html","_self");
   }
 }
