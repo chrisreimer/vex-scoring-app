@@ -101,9 +101,19 @@ function draw(){
       menuButtons[i].updateButton();
     }
     if(menuButtons[0].clicked){
+      background(40,40,45);
+      textFont(regular,30);
+      fill(200);
+      noStroke();
+      text("Loading...",0,-20);
       window.open("/cu.html","_self");
     }
     else if(menuButtons[1].clicked){
+      background(40,40,45);
+      textFont(regular,30);
+      fill(200);
+      noStroke();
+      text("Loading...",0,-20);
       window.open("/tip.html","_self");
     }
     infoButton.updateButton();
