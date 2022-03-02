@@ -1,4 +1,4 @@
-let version="Version 1.2.0"
+let version="Version 1.2.0b"
 let rndm;
 
 let yellow; //Color Presets
@@ -295,7 +295,7 @@ function setup() {
     console.log(appSave);
     if(appSave==1||appSave==2||appSave==3)appState=appSave;
   }
-  /*
+
   try{
   let mfSave=getItem('matchFieldSave');
   if(!(mfSave===null)){
@@ -334,10 +334,10 @@ function setup() {
   catch{
     console.log("Match Loading Failed")
   }
-  */
+
 
   fields[1]=matchField;
-  /*
+
   try{
   let sfSave=getItem('skillsFieldSave');
   //console.log(sfSave);
@@ -368,9 +368,9 @@ function setup() {
   catch{
     console.log("Skills Loading Failed")
   }
-  */
+
   fields[2]=skillsField;
-  /*
+
   try{
   let rfSave=getItem('remoteFieldSave');
   if(!(rfSave===null)){
@@ -404,7 +404,7 @@ function setup() {
   catch{
     console.log("Remote Loading Failed")
   }
-  */
+  
   lrt.rFields[0].updateMogoList();
   lrt.rFields[1].updateMogoList();
   fields[4]=lrt.rFields[0];
