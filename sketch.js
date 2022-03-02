@@ -85,7 +85,7 @@ function draw(){
     textFont(regular,30);
     fill(200);
     noStroke();
-    text("Loading...",0,0);
+    text("Loading...",0,-20);
     window.open("/tip.html","_self");
   }
   else if(appState==0){
