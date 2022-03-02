@@ -1,4 +1,4 @@
-let version="Version 1.2.0b"
+let version="Version 1.2.0"
 let rndm;
 
 let yellow; //Color Presets
@@ -943,7 +943,7 @@ function updateManual(){
     manualButtons[i].updateButton();
   }
   fill(210,210,220);
-  scaledText("Version 2.3",0,-170+27,regular,13);
+  scaledText("Version 2.4",0,-170+27,regular,13);
 
 /*
   if(disableHover){
