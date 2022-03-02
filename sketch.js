@@ -16,6 +16,8 @@ let menuButtons=[];
 let infoButton;
 let discordButton;
 
+let preloaded=0;
+
 
 function preload(){
   gear=loadImage('https://vexscoring.app/gear.png');
@@ -54,14 +56,15 @@ function setup(){
   menuButtons[0]=new Button(0,11,300,104,"Change Up");
   menuButtons[1]=new Button(0,-113,300,104,"Tipping Point");
 
-  let appSave=getItem('appSave');
-  if(!(appSave===null)){
-    console.log(appSave);
-    appState=appSave;
+  try{
+    let appSave=getItem('appSave');
+    if(!(appSave===null)){
+      console.log(appSave);
+      preloaded=appSave;
+    }
   }
-
-  if(appState==1||appState==2||appState==3){
-    window.open("/tip.html","_self");
+  catch{
+    console.log("Load Fail");
   }
 }
 
@@ -78,7 +81,14 @@ function draw(){
   translate(width*0.5,height*0.5);
   scale(screenScale);
 
-  if(appState==0){
+  if(preloaded!=0){
+    textFont(regular,30);
+    fill(200);
+    noStroke();
+    text("Loading...",0,0);
+    window.open("/tip.html","_self");
+  }
+  else if(appState==0){
     textFont(regular,30);
     fill(200);
     noStroke();
