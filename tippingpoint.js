@@ -1,4 +1,4 @@
-let version="Version 1.1.3d"
+let version="Version 1.2.0"
 let rndm;
 
 let yellow; //Color Presets
@@ -19,6 +19,7 @@ let gear; //Gear Icon image
 let regular;  //Fonts
 let semibold;
 let bold;
+let geomBold;
 
 let matchField; //Field Objects
 let skillsField;
@@ -43,6 +44,7 @@ let manualShort;
 let dropdown;
 let timer;
 let camera;
+let grade;
 
 let timers=[];
 let cameras=[];
@@ -89,6 +91,7 @@ function preload(){
   regular=loadFont('https://vexscoring.app/NEXT%20ART_Regular.otf');
   semibold=loadFont('https://vexscoring.app/NEXT%20ART_SemiBold.otf');
   bold=loadFont('https://vexscoring.app/NEXT%20ART_Bold.otf');
+  geomBold=loadFont('https://vexscoring.app/Geom%20Graphic%20W01%20Bold.ttf')
 
 }
 
@@ -168,11 +171,14 @@ function setup() {
   settingButtons[0].setExtraData(2,"Ring Editor: Simple\n",20);
   settingButtons[1]=new Button(0,-45,300,65,"Ring Editors: Left");
   settingButtons[1].setExtraData(2,"Ring Editors: Right",20);
+  settingButtons[1].toggled=true;
   settingButtons[2]=new Button(0,45,300,65,"Rings: Visible\n");
   settingButtons[2].setExtraData(2,"Rings: Hidden\n",20);
   settingButtons[3]=new Button(0,225,300,65,"");//debug button
   settingButtons[3].setExtraData(2,"Debug Mode: On",20);
   settingButtons[3].setColors(color(0,0),color(0,0),0,0,0,0,0);
+  //settingButtons[4]=new Button(0,135,300,65,"Zeroes: Shown")
+  //settingButtons[4].setExtraData(2,"Zeroes: Hidden",20);
   //settingButtons[3].toggled=true;
 
   linkButtons[0]=new Button(0,100,200,65,"Join Server");
@@ -212,6 +218,11 @@ function setup() {
   cameras[1]=new Camera(1);
   cameras[2]=new Camera(2);
   cameras[3]=new Camera(3);
+
+  grade=new Button(-100,-80,55,55,"");
+  grade.setColors(color(0,0),color(35,35,40),color(0,0),color(35,35,40),0,0,0);
+  grade.textB="";
+  grade.type=2;
 
   manualButtons[0].tSize=22;
   for(let i=1;i<6;i++){
@@ -255,6 +266,11 @@ function setup() {
     settingButtons[2].toggled=ringSave;
   }
 
+  let gradeSave=getItem('gradeSave');
+  if(!(gradeSave===null)){
+    grade.toggled=gradeSave;
+  }
+
   let warnedSave = getItem('warnedSave');
   if(!(warnedSave===null)){
     warningExit.toggled=warnedSave;
@@ -279,6 +295,7 @@ function setup() {
     console.log(appSave);
     if(appSave==1||appSave==2||appSave==3)appState=appSave;
   }
+  /*
   try{
   let mfSave=getItem('matchFieldSave');
   if(!(mfSave===null)){
@@ -317,8 +334,10 @@ function setup() {
   catch{
     console.log("Match Loading Failed")
   }
+  */
 
   fields[1]=matchField;
+  /*
   try{
   let sfSave=getItem('skillsFieldSave');
   //console.log(sfSave);
@@ -349,9 +368,9 @@ function setup() {
   catch{
     console.log("Skills Loading Failed")
   }
-
+  */
   fields[2]=skillsField;
-
+  /*
   try{
   let rfSave=getItem('remoteFieldSave');
   if(!(rfSave===null)){
@@ -385,7 +404,7 @@ function setup() {
   catch{
     console.log("Remote Loading Failed")
   }
-
+  */
   lrt.rFields[0].updateMogoList();
   lrt.rFields[1].updateMogoList();
   fields[4]=lrt.rFields[0];
@@ -430,7 +449,7 @@ function draw(){
   }
 
   checkClicked();
-
+  //console.log(forceRefresh)
   if(pMouseX!=mouseX||pMouseY!=mouseY||mouseIsPressed||postClick!=0||forceRefresh>0){
     if(forceRefresh>0)forceRefresh--;
   //if(settingButtons[3].toggled)background(20,20,22);
@@ -541,7 +560,8 @@ function draw(){
     else mediumBack.updateButton();
     //else largeBack.updateButton();
     if(backButton.clicked||smallBack.clicked||mediumBack.clicked){//||largeBack.clicked){
-      if(manualShort.toggled)manualShort.toggled=false;
+      //if(mogoSelected!=-1)mogoSelected=-1;
+      /*else*/ if(manualShort.toggled)manualShort.toggled=false;
       else if(timer.toggled)timer.toggled=false;
       else if(camera.toggled){
         camera.toggled=false;
@@ -622,7 +642,7 @@ function mouseClicked(){
 }
 
 function touchEnded(){
-  if((appState==6||manualShort.toggled)&&disableHover){
+  if((appState==6||manualShort.toggled)&&disableHover&&postClick==0){
     //if(disableHover){
     if(manualButtons[0].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Game-Manual","_blank");
     else if(manualButtons[1].hover)window.open("https://link.vex.com/docs/21-22/vrc/tipping-point/Appendix-A","_blank");
@@ -637,6 +657,7 @@ function touchEnded(){
 }
 
 function checkClicked(){
+  hovered=false;
   //if(mouseX>width*0.5+(this.x-this.w*0.5)*screenScale&&mouseX<width*0.5+(this.x+this.w*0.5)*screenScale&&mouseY>height*0.5+(this.y-this.h*0.5)*screenScale&&mouseY<height*0.5+(this.y+this.h*0.5)*screenScale){
     translatedMouseX=(mouseX-width*0.5)/screenScale;
     translatedMouseY=(mouseY-height*0.5)/screenScale;
@@ -672,34 +693,36 @@ function checkClicked(){
 }
 
 function updateDropDown(){
-  if(!settingButtons[3].toggled){
-    manualShort.y=dropdown.y;
-    manualShort.backEndUpdate();
-  }
-  else{
+  //if(!settingButtons[3].toggled){
+  //  manualShort.y=dropdown.y;
+  //  manualShort.backEndUpdate();
+  //}
+  //else{
     manualShort.y=dropdown.y+55;
     dropdown.backEndUpdate();
     if(dropdown.toggled){
       manualShort.backEndUpdate();
       camera.backEndUpdate();
       timer.backEndUpdate();
+      grade.backEndUpdate();
+      if(grade.clicked)storeItem('gradeSave',grade.toggled)
     }
     if(click)dropdown.toggled=false;
-  }
+  //}
 }
 
 function drawDropDown(){
   //stroke(240,240,250);
   //scaledEllipse(dropdown.x,dropdown.y,30,30,3);
-  if(!settingButtons[3].toggled){
-    manualShort.drawButton();
-    drawManual(-100,-300);
-  }
-  else{
+  //if(!settingButtons[3].toggled){
+  //  manualShort.drawButton();
+  //  drawManual(-100,-300);
+  //}
+  //else{
   if(dropdown.toggled){
     noStroke();
     fill(30,30,35);
-    scaledRect(-100,-217.5,55,55*4,15,15,15,15,0);
+    scaledRect(-100,-217.5+27.5,55,55*5,15,15,15,15,0);
     dropdown.drawButton();
     stroke(240,240,250);
     push();
@@ -715,6 +738,8 @@ function drawDropDown(){
     drawTimer(-100,-300+55*2);
     camera.drawButton();
     drawCamera(-100,-300+55*3);
+    grade.drawButton();
+    drawGrade(-100,-300+55*4);
   }
   else{
     dropdown.drawButton();
@@ -727,7 +752,7 @@ function drawDropDown(){
     scaledLine(-10,8,10,8);
     pop();
   }
-  }
+  //}
 }
 
 function drawManual(x,y){
@@ -781,6 +806,20 @@ function drawTimer(x,y){
   rotate(-0.5);
   scaledLine(0,0,6,0);
   pop();
+  pop();
+}
+
+function drawGrade(x,y){
+  push();
+  translate(x*screenScale,(y+1)*screenScale);
+  if(grade.toggled==0){
+    textFont(geomBold,16);
+    text("VRC",0,0)
+  }
+  else{
+    textFont(geomBold,13);
+    text("VEXU",0,0)
+  }
   pop();
 }
 
@@ -904,7 +943,7 @@ function updateManual(){
     manualButtons[i].updateButton();
   }
   fill(210,210,220);
-  scaledText("Version 2.1",0,-170+27,regular,13);
+  scaledText("Version 2.3",0,-170+27,regular,13);
 
 /*
   if(disableHover){
@@ -956,10 +995,11 @@ class Button{
   backEndUpdate(){
     this.hover=false;
     this.clicked=false;
-    if(mouseX>width*0.5+(this.x-this.w*0.5)*screenScale&&mouseX<width*0.5+(this.x+this.w*0.5)*screenScale&&mouseY>height*0.5+(this.y-this.h*0.5)*screenScale&&mouseY<height*0.5+(this.y+this.h*0.5)*screenScale){
+    if(!hovered&&mouseX>width*0.5+(this.x-this.w*0.5)*screenScale&&mouseX<width*0.5+(this.x+this.w*0.5)*screenScale&&mouseY>height*0.5+(this.y-this.h*0.5)*screenScale&&mouseY<height*0.5+(this.y+this.h*0.5)*screenScale){
       this.hover=true;
+      hovered=true;
       if(click){
-        if(this!=dropdown)dropdown.toggled=false;
+        if(this!=dropdown&&this!=grade)dropdown.toggled=false;
         this.clicked=true;
         click=false;
         forceRefresh+=2;
@@ -1004,7 +1044,7 @@ class Button{
       }
       if(this.strokeB==color(0,0))noStroke();
       else stroke(this.strokeB);
-      //if(this.hover&&settingButtons[3].toggled)stroke(purple.dark2);
+      if(this.hover&&settingButtons[3].toggled)stroke(purple.dark2);
       scaledRect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3],this.sWeight)
       //rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       fill(this.textColor);
@@ -1023,7 +1063,7 @@ class Button{
       }
       if(this.strokeA==color(0,0))noStroke();
       else stroke(this.strokeA);
-      //if(this.hover&&settingButtons[3].toggled)stroke(green.dark2);
+      if(this.hover&&settingButtons[3].toggled)stroke(green.dark2);
       //rect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3]);
       scaledRect(this.x,this.y,this.w,this.h,this.corners[0],this.corners[1],this.corners[2],this.corners[3],this.sWeight)
       fill(this.textColor);
@@ -1086,10 +1126,13 @@ class Camera{
       noStroke();
       this.titleSize=30;
       textSize(this.titleSize*screenScale);
-      if(textWidth(this.matchInput.value())>395)this.titleSize=23;
+      while(textWidth(this.matchInput.value())>360){
+        this.titleSize-=1;
+        textSize(this.titleSize*screenScale);
+      }
       scaledText(this.matchInput.value(), 0,-302,regular,this.titleSize);
     }
-    else scale(0.5);
+    else scale(0.6);
     mouseDisabled=true;
     if(this.id==1){
       matchField.updateField();
@@ -1155,7 +1198,6 @@ class Timer{
     this.timerState=0;//0=Not in use, 1=Running Auton, 2=Scoring Auton, 3=Running Driver, 4=Done Match
   }
   updateTimer(){
-
     fill(230,230,240);
     noStroke();
     scaledText("Timer", 0,-302,regular,30);
@@ -1184,7 +1226,10 @@ class Timer{
   drawSmallTimer(){
     this.updateMatchTimer();
     this.returnButton.updateButton();
-    if(this.returnButton.clicked)timer.toggled=true;
+    if(this.returnButton.clicked){
+      if(mogoSelected==-1)timer.toggled=true;
+      else mogoSelected=-1;
+    }
     this.min=floor(this.timeLeft/60);
     this.sec=ceil(this.timeLeft%60);
     if(this.sec>=10)scaledText(this.min+":"+this.sec, 0,-302,regular,42);
@@ -1195,13 +1240,14 @@ class Timer{
     if((this.timerState==1||this.timerState==3)&&this.timerStart.toggled){//&&!timerPause.toggled){
       this.timeLeft-=deltaTime/1000;
       forceRefresh=1;
+      console.log("refreshed")
     }
     if(this.timerState==1&&this.timeLeft<=0){
       this.timerStart.toggled=false;
       this.timerState=2;
       this.timerStart.textA="Start\nDriver";
-      if(!this.timerMode.toggled)this.timeLeft=105;
-      else if(this.timerMode.toggled)this.timeLeft=75;
+      if(!grade.toggled)this.timeLeft=105;
+      else if(grade.toggled)this.timeLeft=75;
     }
     else if(this.timerState==3&&this.timeLeft<=0){
       this.timerStart.toggled=false;
@@ -1217,39 +1263,63 @@ class Timer{
       if(this.timerState==0){
         this.timerState=1;
         this.timerStart.textA="Resume\nAuton";
-        if(!this.timerMode.toggled)this.timeLeft=15;
+        if(this.id==1)matchField.autoAuton=true;
+        else lrt.autoAuton=true;
+        if(!grade.toggled)this.timeLeft=15;
         else this.timeLeft=45;
       }
       else if(this.timerState==2){
+        if(this.id==1)matchField.autoAuton=false;
+        else remoteField.autoAuton=false;
         this.timerState=3;
         this.timerStart.textA="Resume\nDriver";
       }
     }
-    if(this.timerState==0)this.timerMode.updateButton();
+    if(this.timerState==0){
+      this.timerMode.toggled=grade.toggled;
+      /*if(!grade.toggled){
+        this.timerMode.textA="Mode:\nVRC";
+      }
+      else this.timerMode.textA="Mode:\nVEXU";
+      */
+      this.timerMode.updateButton();
+    }
     else this.timerReset.updateButton();
+    if(this.timerMode.clicked){
+      if(grade.toggled==0)grade.toggled=1;
+      else grade.toggled=0;
+    }
     if(this.timerReset.clicked){
       this.timerState=4;
       this.timerStart.clicked=true;
+      console.log('resetA\n')
+      this.timerReset.clicked=false;
     }
     if(this.timerStart.clicked&&this.timerState==4){
+      console.log('resetB')
       this.timerStart.type=2;
       this.timerStart.textA="Start\nAuton";
+      this.timerStart.toggled=false;
       this.timerState=0;
       this.timeLeft=-1;
+      this.timerStart.clicked=false;
     }
   }
 
   drawMatchTimer(){
+    console.log("drew timer")
     noFill();
     fill(20,20,22);
     noStroke();
     scaledEllipse(0,0,310,310,0);
     fill(230,200,10);
     noStroke();
-    push();
+
     this.tickCount=(this.timeLeft)/3;
     if(this.timeLeft==-1)this.tickCount=40;
-    if(!this.timerMode.toggled){
+
+    push();
+    if(!grade.toggled){
       if(this.timerState==1)this.tickCount+=35;
       for(let i=39;i>=0;i--){
         rotate(radians(9));
@@ -1257,9 +1327,33 @@ class Timer{
         else if(i>34)fill(purple.light2);
         else fill(yellow.light2);
         rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+        if(i==floor(this.tickCount)){
+
+          this.w=0;
+          if(this.timerState==1)this.w=floor((this.timeLeft+1-floor(this.tickCount)*3)*-1-101);
+          else this.w=floor((this.timeLeft+2-floor(this.tickCount)*3)*-1+5);
+          console.log(this.w)
+          fill(40,40,45,this.w*256/3);
+          rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+
+
+          /*
+          this.w=(this.tickCount-floor(this.tickCount))*2.1-0.55;
+          if(this.w>1)this.w=1;
+          else if(this.w<0)this.w=0;
+          fill(40,40,45);
+          rect((-5*this.w)*screenScale,-135*screenScale,(10-10*this.w)*screenScale,20*screenScale,5*screenScale,0*screenScale,0*screenScale,5*screenScale);
+          noFill();
+          stroke(20,20,25);
+          strokeWeight(6*screenScale)
+          rect(0,-135*screenScale,16*screenScale,26*screenScale,8*screenScale);
+          noStroke();
+          */
+        }
       }
     }
     else{
+      noStroke();
       if(this.timerState==1)this.tickCount+=25;
       for(let i=39;i>=0;i--){
         rotate(radians(9));
@@ -1267,6 +1361,15 @@ class Timer{
         else if(i>24)fill(purple.light2);
         else fill(yellow.light2);
         rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+
+        if(i==floor(this.tickCount)){
+          this.w=0;
+          if(this.timerState==1)this.w=floor((this.timeLeft+1-floor(this.tickCount)*3)*-1-71);
+          else this.w=floor((this.timeLeft+2-floor(this.tickCount)*3)*-1+5);
+          console.log(this.w)
+          fill(40,40,45,this.w*256/3);
+          rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+        }
       }
     }
     pop();
@@ -1349,6 +1452,16 @@ class Timer{
       if(i>=this.tickCount)fill(40,40,45);
       else fill(yellow.light2);
       rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+
+      if(i==floor(this.tickCount)){
+
+        this.w=0;
+        this.w=floor((this.timeLeft+1-floor(this.tickCount)*2)*-1+3);
+        console.log(this.w)
+        fill(40,40,45,this.w*256/3);
+        rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
+      }
+
     }
     pop();
     noStroke();
@@ -1412,11 +1525,23 @@ class Field{
     this.parked.sWeight=4;
     this.parked.setColors(0,0,0,0,0,color(50,50,55),0);
     //this.parked.strokeB=color(50,50,55);
+    this.autoAuton=false;
     this.auton=new Button(-27,246,122-6,120,"Auton:\nTied");
     this.auton.sWeight=10;
     this.awp=new Button(-27,246,122-6,120,"AWP:\nNo");
     this.awp.setExtraData(2,"AWP:\nYes",25);
     this.awp.setColors(0,0,0,0,0,color(210,210,220),0);
+
+    this.matchAwpRed=new Button(27+39,213.5,48,55,"AWP");
+    this.matchAwpRed.setExtraData(2,"AWP",15);
+    this.matchAwpRed.setColors(0,0,0,0,0,red.light2,red.light2);
+    this.matchAwpRed.yOffset=2;
+
+    this.matchAwpBlue=new Button(27+39,278.5,48,55,"AWP");
+    this.matchAwpBlue.setExtraData(2,"AWP",15);
+    this.matchAwpBlue.setColors(0,0,0,0,0,blue.light2,blue.light2);
+    this.matchAwpBlue.yOffset=2;
+
     this.reset=new Button(102,246,122-6,120,"FIELD\nRESET");
     this.skillsReset=new Button(130,246,60,120,"")
 
@@ -1624,6 +1749,17 @@ class Field{
        this.platforms[i].drawPlatform();
       }
 
+      /*
+      for(let i=0;i<this.platButtons[2].textA;i++){
+        push();
+        translate(-125*screenScale,(-35+70*i)*screenScale);
+        stroke(255);
+        scale(2);
+        this.drawRobotNoPlat();
+        pop();
+      }
+      */
+
         for(let i=0;i<7&&initialDragging&&!mouseDisabled;i++){
           this.mogos[i].checkDragged();
         }
@@ -1674,7 +1810,14 @@ class Field{
         //this.nodes[5][6][i].drawNode();
       }
 
-      if(this.parked.toggled||appState==2||mouseDisabled){
+
+
+      if(mouseDisabled){
+        this.matchSummary();
+      }
+
+
+      if((this.parked.toggled||appState==2)&&!mouseDisabled){
         fill(30,30,35);
         stroke(30,30,35);
         //strokeWeight(20);
@@ -1689,12 +1832,17 @@ class Field{
         scaledRect(27-32.5,246+32.5,55,55,15,15,15,15,3);
         scaledRect(27+32.5,246+32.5,55,55,15,15,15,15,3);
 
+        if(appState!=1&&!grade.toggled){
+          if(this.platButtons[2].textA==2)this.platButtons[2].textA=1;
+          else if(this.platButtons[2].textA+this.platButtons[3].textA>1)this.platButtons[3].textA-=1;
+        }
+
         if(this.platButtons[2].textA>0){
           stroke(red.light2);
           fill(red.light2);
           scaledRect(27-32.5,246+32.5,55,55,15,15,15,15,3);
         }
-        if(this.platButtons[2].textA<2&&appState!=3){
+        if(this.platButtons[2].textA<2&&(appState==1||grade.toggled)){
           //stroke(30,30,35);
           if(appState==2)
           {
@@ -1715,7 +1863,7 @@ class Field{
           //strokeWeight(3);
           scaledRect(27+32.5,246+32.5,55,55,15,15,15,15,3);
         }
-        if(this.platButtons[3].textA<2&&appState!=3){
+        if(this.platButtons[3].textA<2&&(appState==1||grade.toggled)){
           if(appState==2)
           {
               stroke(40,40,45);
@@ -1733,27 +1881,30 @@ class Field{
           this.platButtons[i].updateButton();
           if(i>1){
             if(this.platButtons[i].clicked)this.platButtons[i].textA=(this.platButtons[i].textA+1)%3;
-            if(appState==2&&this.platButtons[2].textA+this.platButtons[3].textA>=3){
+            if(appState!=1&&this.platButtons[2].textA+this.platButtons[3].textA>=3){
               this.platButtons[i+1-2*floor(i/3.0)].textA--;
             }
           }
         }
-        if(appState==3&&(this.platButtons[2].clicked||this.platButtons[3].clicked)){
-          if(this.platButtons[2].clicked){
-            if(this.platButtons[2].textA==2)this.platButtons[2].textA=0;
-            else if(this.platButtons[2].textA==1)this.platButtons[3].textA=0;
-          }
-          else if(this.platButtons[3].clicked){
-            if(this.platButtons[3].textA==2)this.platButtons[3].textA=0;
-            else if(this.platButtons[3].textA==1)this.platButtons[2].textA=0;
+        if(appState!=1&&!grade.toggled){
+          if(this.platButtons[2].clicked||this.platButtons[3].clicked){
+            if(this.platButtons[2].clicked){
+              if(this.platButtons[2].textA==2)this.platButtons[2].textA=0;
+              else if(this.platButtons[2].textA==1)this.platButtons[3].textA=0;
+            }
+            else if(this.platButtons[3].clicked){
+              if(this.platButtons[3].textA==2)this.platButtons[3].textA=0;
+              else if(this.platButtons[3].textA==1)this.platButtons[2].textA=0;
+            }
           }
         }
+
         fill(230,230,240);
         //textFont(regular,20);
         noStroke();
         scaledText("Robots:",27,246-32.5,regular,20);
       }
-      else{
+      else if(!mouseDisabled){
         //stroke(30,30,35);
         //strokeWeight(4);
         //fill(30,30,35);
@@ -1793,13 +1944,17 @@ class Field{
             simpleRect(this.auton.x-1.5,this.auton.y+this.auton.h*0.5,3,3);
             simpleRect(this.auton.x-1.5,this.auton.y-this.auton.h*0.5,3,3);
           }
+          this.matchAwpRed.updateButton();
+          this.matchAwpBlue.updateButton();
+          this.skillsReset.updateButton();
+          this.resetIcon();
         }
         else if(appState==3){
           this.awp.updateButton();
+          this.reset.updateButton();
         }
-        this.reset.updateButton();
       }
-      if(appState==2){
+      if(appState==2&&!mouseDisabled){
         this.skillsReset.updateButton();
         this.resetIcon();
       }
@@ -1812,6 +1967,7 @@ class Field{
       if(this.reset.clicked||this.skillsReset.clicked)this.resetField();
       if(appState==1){
         if(this.auton.clicked||this.auton.toggled){
+          this.autoAuton=false;
           if(this.auton.clicked)this.autonWinner=(this.autonWinner+1)%4;
           this.auton.toggled=false;
           if(this.autonWinner==0){
@@ -1843,7 +1999,7 @@ class Field{
     }
     if(mogoSelected!=5){
       this.displayScores();
-      if(!tmScreen.toggled&&appState!=3)this.drawRingCounter();
+      if(!tmScreen.toggled&&appState!=3&&!mouseDisabled)this.drawRingCounter();
     }
   }
 
@@ -1981,7 +2137,7 @@ class Field{
 
 
 
-      tmSave.updateButton();
+      if(!mouseDisabled)tmSave.updateButton();
       if(tmSave.clicked){
         skillsSave=[this.scoredRings[1][2]+this.scoredRings[2][2],this.scoredRings[1][1]+this.scoredRings[2][1],this.scoredRings[1][0]+this.scoredRings[2][0],this.scoredHomeZone[1]+this.scoredHomeZone[2],this.scoredPlatform[1]+this.scoredPlatform[2],this.platButtons[2].textA*this.platButtons[0].toggled+this.platButtons[3].textA*this.platButtons[1].toggled];
         storeItem('skillsSave',skillsSave)
@@ -1991,9 +2147,15 @@ class Field{
     translate(0,193*screenScale);
     this.mogos[1].drawPlat(color(210,210,220));
     pop();
-
     push();
-    translate(0,10*screenScale);
+    translate(0,253*screenScale)
+    this.drawRobot();
+    pop();
+  }
+
+  drawRobot(){
+    push();
+    translate(0,-243*screenScale);
     strokeWeight(10*screenScale);
     stroke(210,210,220);
     scaledLine(-20,260,20,260);
@@ -2027,13 +2189,32 @@ class Field{
     pop();
   }
 
+  drawRobotNoPlat(){
+    push();
+    noFill();
+    translate(0,-243*screenScale);
+    scaledEllipse(-10,250,5,5,3)
+    scaledEllipse(10,250,5,5,3);
+    scaledLine(-4,250,4,250);
+    scaledLine(-2,250,-2,242);
+    scaledLine(-2,242,4,238);
+    //stroke(210,210,220);
+    //noFill();
+    scaledArc(10,236,6,6,QUARTER_PI+0.3,TWO_PI-QUARTER_PI-0.75,3);
+    pop();
+  }
+
 
   drawRingCounter(){
     push();
     //stroke(yellow.light2);
     //stroke(yellow.medium);
     stroke(210,210,220);
-    if(appState==1)translate(135*screenScale,-280*screenScale);
+    if(mouseDisabled){
+      translate(22.5*screenScale,90*screenScale);
+      scale(1.85);
+    }
+    else if(appState==1)translate(135*screenScale,-280*screenScale);
     else translate(140*screenScale,-280*screenScale);
     strokeWeight(2*screenScale);
     noFill();
@@ -2201,6 +2382,205 @@ class Field{
     scaledRect(0,0,320,320,15,15,15,15,5);
   }
 
+  matchSummary() {
+    push();
+    this.tOffset=2;
+    translate(0,176*screenScale);
+    scale(0.664);
+    noStroke();
+
+    //Platforms
+    fill(28, 28, 32);
+    scaledRect(-153, 49, 184, 98, 20,20,20,20,0);
+    fill(255);
+    scaledText("PLATFORM BALANCED", -153, 29.5-this.tOffset,semibold,14);
+
+    //Check Marks
+    strokeWeight(5);
+
+    //If Red Balanced
+    stroke(214, 29, 35);
+    push();
+    translate(-203*screenScale,65.25*screenScale);
+    if(this.platButtons[0].toggled){
+      stroke(red.light2)
+      this.checkMark();
+    }
+    else{
+      stroke(red.light2);
+      this.xMark();
+    }
+    pop();
+
+    //If Blue Balanced
+    stroke(0, 95, 199);
+    //this.xMark(-103,65.25);
+    push();
+    translate(-103*screenScale,65.25*screenScale);
+    if(this.platButtons[1].toggled){
+      stroke(blue.light2)
+      this.checkMark();
+    }
+    else{
+      stroke(blue.light2);
+      this.xMark();
+    }
+    pop();
+
+    //Draw platform icon at -153,72.5
+    strokeWeight(3*screenScale);
+    noFill();
+    push();
+    translate(-153*screenScale,65.25*screenScale);
+    scale(0.8);
+    this.mogos[1].drawPlat(color(210,210,220));
+    pop();
+
+
+
+    //Robots Parked
+    noStroke();
+    fill(28, 28, 32);
+    scaledRect(-153, 161, 184, 98, 20,20,20,20,0);
+    fill(255);
+    scaledText("ROBOTS PARKED", -153, 141.5-this.tOffset,semibold,0);
+
+
+    noStroke();
+    //Make Bold Text
+
+    //Red Robots
+    fill(214, 29, 35);
+    scaledText(this.platButtons[2].textA, -203, 177.25,bold,25);
+
+    //Blue Robots
+    fill(0, 95, 199);
+    scaledText(this.platButtons[3].textA, -103, 177.25,bold,25);
+
+
+    strokeWeight(3*screenScale);
+    noFill();
+    push();
+    translate(-153*screenScale,170.25*screenScale);
+    scale(0.7);
+    this.drawRobot();
+    pop();
+
+
+    //Draw Ring Counter at 22.5, 69.5
+    noStroke();
+
+    fill(28, 28, 32);
+    scaledRect(22.5, 69.5, 139, 139, 20,20,20,20,0);
+    this.drawRingCounter();
+
+    //Goals
+    fill(28, 28, 32);
+    noStroke();
+    scaledRect(175.5, 69.5, 139, 139, 20,20,20,20,0);
+
+    //Home Icon at 175.5, 41.5
+    //Platform Icon at 175.5, 97.5
+    strokeWeight(3*screenScale);
+    noFill();
+    push();
+    translate(175.5*screenScale,41.5*screenScale);
+    scale(0.8);
+    this.mogos[1].drawHouse(color(210,210,220));
+    pop();
+    push();
+    translate(175.5*screenScale,97.5*screenScale);
+    scale(0.8);
+    this.mogos[1].drawPlat(color(210,210,220));
+    pop();
+
+
+    fill(214, 29, 35);
+    //Red Homezone
+    scaledText(this.scoredHomeZone[1], 136.1, 41.5-this.tOffset,bold,25);
+
+    //Red Platform
+    scaledText(this.scoredPlatform[1], 136.1, 97.5-this.tOffset,bold,25);
+
+    fill(0, 95, 199);
+    //Blue Homezone
+    scaledText(this.scoredHomeZone[2], 214.9, 41.5-this.tOffset,bold,25);
+
+    //Blue Platform
+    scaledText(this.scoredPlatform[2], 214.9, 97.5-this.tOffset,bold,25);
+
+    if(appState!=2){
+    //Auton
+      fill(28, 28, 32);
+    noStroke();
+    scaledRect(22.5, 181.5, 139, 57, 20,20,20,20,0);
+    scaledRect(175.5, 181.5, 139, 57, 20,20,20,20,0);
+
+    fill(255);
+    this.autText="AUTON: NONE";
+    this.aWin=0;
+    if(appState==1)this.aWin=this.autonWinner;
+    else if(appState==3)this.aWin=lrt.autonWinner;
+    if(this.aWin==1){
+      this.autText="AUTON: RED"
+      fill(red.light2)
+    }
+    else if(this.aWin==2){
+      this.autText="AUTON: BLUE"
+      fill(blue.light2)
+    }
+    else if(this.aWin==0){
+      this.autText="AUTON: TIED"
+    }
+    scaledText(this.autText,22.5,181.5-this.tOffset,semibold,16);
+
+    fill(255);
+    scaledText("AWP:",141.4,181.5-this.tOffset,semibold,16);
+
+
+    strokeWeight(5*screenScale)
+
+    stroke(red.light2);
+    push();
+    translate(182.6*screenScale,181.5*screenScale);
+    if(this.matchAwpRed.toggled)this.checkMark();
+    else this.xMark();
+    pop();
+
+    stroke(blue.light2);
+    push();
+    translate(215.9*screenScale,181.5*screenScale)
+    if(this.matchAwpBlue.toggled)this.checkMark();
+    else this.xMark();
+    pop();
+
+    stroke(255);
+    push();
+    translate(199.25*screenScale,181.5*screenScale)
+    if(this.awp.toggled)this.checkMark();
+    else this.xMark();
+    pop();
+    }
+
+    pop();
+  }
+
+  xMark(){//}(xP,yP){
+    //push();
+    //translate(this.xP*screenScale,this.yP*screenScale);
+    //scaledLine(-7,8,7,-8);
+    //scaledLine(-7,-8,7,8);
+    //pop();
+  }
+
+  checkMark(){//}(xP,yP){
+    //push();
+    //translate(this.xP*screenScale,this.yP*screenScale);
+    scaledLine(-8,2,-1,8);
+    scaledLine(-1,8,8,-8);
+    //pop();
+  }
+
   scoreField(){
     this.scores=[0,0,0,0];
     this.zonePoints=[0,0,0,0];
@@ -2216,17 +2596,12 @@ class Field{
       }
     }
 
+    this.runAuton=false;
+    //if(timers[appState].timerState==1||timers[appState].timerState==2)this.runAuton=true;
+
 
     if(appState==1||appState==2){
-    //Auton Points
-    if(appState==1&&this.autonWinner!=3){
-      this.scores[this.autonWinner]+=6;
-      if(this.autonWinner==0){
-        this.scores[0]=0;
-        this.scores[1]+=3;
-        this.scores[2]+=3;
-      }
-    }
+
 
     if(appState!=3){
       //Ring Points
@@ -2263,11 +2638,11 @@ class Field{
 
     //Mogo Zone Points
     for(let i=0;i<7;i++){
-      if((this.mogos[i].zone==1||(this.mogos[i].zone==0&&!this.platButtons[0].toggled))&&this.mogos[i].id!=2&&this.mogos[i].id!=3&&!this.mogos[i].scored.toggled){
+      if((this.mogos[i].zone==1||(this.mogos[i].zone==0&&(!this.platButtons[0].toggled||this.runAuton)))&&this.mogos[i].id!=2&&this.mogos[i].id!=3&&!this.mogos[i].scored.toggled){
         this.scores[1]+=20;
         this.scoredHomeZone[1]++;
       }
-      else if((this.mogos[i].zone==3||(this.mogos[i].zone==4&&!this.platButtons[1].toggled))&&this.mogos[i].id!=0&&this.mogos[i].id!=1&&!this.mogos[i].scored.toggled){
+      else if((this.mogos[i].zone==3||(this.mogos[i].zone==4&&(!this.platButtons[1].toggled||this.runAuton)))&&this.mogos[i].id!=0&&this.mogos[i].id!=1&&!this.mogos[i].scored.toggled){
         this.scores[2]+=20;
         this.scoredHomeZone[2]++;
       }
@@ -2275,7 +2650,7 @@ class Field{
 
 
     //Platform Points
-    if(this.platButtons[0].toggled){
+    if(this.platButtons[0].toggled&&!this.runAuton){
       this.scores[1]+=this.platButtons[2].textA*30;
       for(let j=0;j<this.zoneMogos[0].length;j++){
         if(this.zoneMogos[0][j].id!=2&&this.zoneMogos[0][j].id!=3&&!this.zoneMogos[0][j].scored.toggled){
@@ -2284,7 +2659,7 @@ class Field{
         }
       }
     }
-    if(this.platButtons[1].toggled){
+    if(this.platButtons[1].toggled&&!this.runAuton){
       this.scores[2]+=this.platButtons[3].textA*30;
       for(let j=0;j<this.zoneMogos[4].length;j++){
         if(this.zoneMogos[4][j].id!=0&&this.zoneMogos[4][j].id!=1&&!this.zoneMogos[4][j].scored.toggled){
@@ -2318,13 +2693,13 @@ class Field{
       //Mogo Zone Points
       for(let i=0;i<7;i++){
         if(!this.mogos[i].scored.toggled){
-          if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&!this.platButtons[0].toggled)){
+          if(this.mogos[i].zone==1||(this.mogos[i].zone==0&&(!this.platButtons[0].toggled||this.runAuton))){
             this.zonePoints[0]+=30;
           }
           else if(this.mogos[i].zone==2){
             this.zonePoints[1]+=10;
           }
-          else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&!this.platButtons[1].toggled)){
+          else if(this.mogos[i].zone==3||(this.mogos[i].zone==4&&(!this.platButtons[1].toggled||this.runAuton))){
             this.zonePoints[2]+=30;
           }
         }
@@ -2332,17 +2707,50 @@ class Field{
 
 
       //Platform Points
-      if(this.platButtons[0].toggled){
+      if(this.platButtons[0].toggled&&!this.runAuton){
         this.zonePoints[0]+=this.platButtons[2].textA*30;
         for(let j=0;j<this.zoneMogos[0].length;j++){
           if(!this.zoneMogos[0][j].scored.toggled)this.zonePoints[0]+=40;
         }
       }
-      if(this.platButtons[1].toggled){
+      if(this.platButtons[1].toggled&&!this.runAuton){
         this.zonePoints[2]+=this.platButtons[3].textA*30;
         for(let j=0;j<this.zoneMogos[4].length;j++){
           if(!this.zoneMogos[4][j].scored.toggled)this.zonePoints[2]+=40;
         }
+      }
+    }
+
+    if(this.autoAuton){
+      if(this.scores[1]>this.scores[2]){
+        this.autonWinner=1;
+        this.auton.strokeA=red.light2;
+        this.auton.textColor=red.light2;
+        this.auton.textA="Auton:\nRed";
+      }
+      else if(this.scores[2]>this.scores[1]){
+        this.autonWinner=2;
+        this.auton.strokeA=blue.light2;
+        this.auton.textColor=blue.light2;
+        this.auton.textA="Auton:\nBlue";
+      }
+      else{
+        this.autonWinner=0;
+        this.auton.strokeA=color(blue.light2);
+        this.auton.textColor=color(230,230,240);
+        this.auton.textA="Auton:\nTied";
+      }
+    }
+
+
+
+    //Auton Points
+    if(appState==1&&this.autonWinner!=3){
+      this.scores[this.autonWinner]+=6;
+      if(this.autonWinner==0){
+        this.scores[0]=0;
+        this.scores[1]+=3;
+        this.scores[2]+=3;
       }
     }
 
@@ -2507,7 +2915,7 @@ class remoteField{
     this.lrtScores=[[0,0,0],[0,0,0]];
     this.lrtWP=[0,0];
 
-
+    this.autoAuton=false;
     this.fieldButtons=[];
     this.fieldButtons[0]=new Button(-80-5,-240,150,50,"Red");
     this.fieldButtons[0].setColors(0,0,0,0,0,color(red.light2),color(red.light2));
@@ -2518,6 +2926,7 @@ class remoteField{
     this.lrtAuton=new Button(-85,246,150,120,"Auton:\nTie");
     this.lrtReset=new Button(85,246,150,120,"Reset\nFields");
     this.autonWinner=0; //0: Tied, 1:Red, 2:Blue
+    this.autoAuton=false;
   }
 
   updateLRT(){
@@ -2545,6 +2954,7 @@ class remoteField{
         simpleRect(this.lrtAuton.x-1.5,this.lrtAuton.y-this.lrtAuton.h*0.5,3,3);
       }
       if(this.lrtAuton.clicked||this.lrtAuton.toggled){
+        this.autoAuton=false;
         if(this.lrtAuton.toggled)this.lrtAuton.toggled=false;
         if(this.lrtAuton.clicked)this.autonWinner=(this.autonWinner+1)%4;
         if(this.autonWinner==0){
@@ -2571,7 +2981,7 @@ class remoteField{
       }
 
 
-      this.lrtReset.updateButton();
+      if(!mouseDisabled)this.lrtReset.updateButton();
       if(this.lrtReset.clicked)this.resetLRT();
     }
     else{
@@ -2754,6 +3164,28 @@ class remoteField{
     this.lrtWP=[0,0];
     this.lrtScores[0]=this.rFields[0].scoreField();
     this.lrtScores[1]=this.rFields[1].scoreField();
+
+    if(this.autoAuton){
+      if(this.rFields[0].scores[3]>this.rFields[1].scores[3]){
+        this.autonWinner=1;
+        this.lrtAuton.strokeA=red.light2;
+        this.lrtAuton.textColor=red.light2;
+        this.lrtAuton.textA="Auton:\nRed";
+      }
+      else if(this.rFields[0].scores[3]<this.rFields[1].scores[3]){
+        this.autonWinner=2;
+        this.lrtAuton.strokeA=blue.light2;
+        this.lrtAuton.textColor=blue.light2;
+        this.lrtAuton.textA="Auton:\nBlue";
+      }
+      else{
+        this.autonWinner=0;
+        this.lrtAuton.strokeA=color(blue.light2);
+        this.lrtAuton.textColor=color(230,230,240);
+        this.lrtAuton.textA="Auton:\nTied";
+      }
+    }
+
     if(this.autonWinner!=0&&this.autonWinner!=3)this.rFields[this.autonWinner-1].scores[3]+=6;
     else if(this.autonWinner==0){
       this.rFields[0].scores[3]+=3;
@@ -2805,6 +3237,7 @@ class ColorBase{
   this.dark4=color(this.r-40,this.g-40,this.b-40);
   this.dark5=color(this.r,this.g,this.b,45);
   this.mediumFade=color(this.r-20,this.g-20,this.b-20);
+  this.lightFade=color(this.r+10,this.g+10,this.g+10,150)
   }
 }
 
@@ -2858,8 +3291,8 @@ class RingCounter{
     this.plus.updateButton();
     this.minus.updateButton();
     let ringLimit=72;
-    if(appState==2)ringLimit=66;
-    else if(appState==3)ringLimit=63;
+    if(appState!=1&&grade.toggled)ringLimit=66;
+    else if(appState!=1&&!grade.toggled)ringLimit=63;
     if(this.plus.clicked&&fields[appState+remoteFieldSelected].totalRings<ringLimit){
       this.ringCount++;
       let nPoleMax=7;
@@ -2918,7 +3351,6 @@ class RingCounter{
     return this.ringCount;
   }
 }
-
 
 
 
