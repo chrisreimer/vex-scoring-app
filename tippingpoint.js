@@ -1,4 +1,4 @@
-let version="Version 1.2.0"
+let version="Version 1.2.0a"
 let rndm;
 
 let yellow; //Color Presets
@@ -292,7 +292,7 @@ function setup() {
 
   let appSave=getItem('appSave');
   if(!(appSave===null)){
-    console.log(appSave);
+    console.log("Appsave: "+appSave);
     if(appSave==1||appSave==2||appSave==3)appState=appSave;
   }
 
@@ -309,6 +309,8 @@ function setup() {
       matchField.platButtons[1].toggled=mfSave.platButtons[1].toggled;
       matchField.platButtons[2].textA=mfSave.platButtons[2].textA;
       matchField.platButtons[3].textA=mfSave.platButtons[3].textA;
+      matchField.matchAwpRed.toggled=mfSave.matchAwpRed.toggled;
+      matchField.matchAwpBlue.toggled=mfSave.matchAwpBlue.toggled;
       //matchField.mogos[i].zone=mfSave.mogos[i].zone;
     }
     matchField.zoneMogos=[[],[],[],[],[],[]]
@@ -354,8 +356,8 @@ function setup() {
       for(let j=0;j<sfSave.zoneMogos[i].length;j++){
         if(!(sfSave.zoneMogos[i][j]===null)){
           if(!(sfSave.zoneMogos[i][j].id===null)){
-            console.log(i+", "+j);
-            console.log(sfSave.zoneMogos[i][j].id)
+            //console.log(i+", "+j);
+            //console.log(sfSave.zoneMogos[i][j].id)
             skillsField.zoneMogos[i][j]=skillsField.mogos[sfSave.zoneMogos[i][j].id];
           }
         }
@@ -404,7 +406,7 @@ function setup() {
   catch{
     console.log("Remote Loading Failed")
   }
-  
+
   lrt.rFields[0].updateMogoList();
   lrt.rFields[1].updateMogoList();
   fields[4]=lrt.rFields[0];
@@ -879,6 +881,7 @@ function updateMenu(){
     if(menuButtons[i].clicked)appState=i+1;
     if(appState==1||appState==2||appState==3)storeItem('appSave',appState)
   }
+
   backButton.updateButton();
   if(backButton.clicked){
     //storeItem('fieldsSave',fields);
@@ -1240,7 +1243,7 @@ class Timer{
     if((this.timerState==1||this.timerState==3)&&this.timerStart.toggled){//&&!timerPause.toggled){
       this.timeLeft-=deltaTime/1000;
       forceRefresh=1;
-      console.log("refreshed")
+      //console.log("refreshed")
     }
     if(this.timerState==1&&this.timeLeft<=0){
       this.timerStart.toggled=false;
@@ -1292,11 +1295,11 @@ class Timer{
     if(this.timerReset.clicked){
       this.timerState=4;
       this.timerStart.clicked=true;
-      console.log('resetA\n')
+      //console.log('resetA\n')
       this.timerReset.clicked=false;
     }
     if(this.timerStart.clicked&&this.timerState==4){
-      console.log('resetB')
+      //console.log('resetB')
       this.timerStart.type=2;
       this.timerStart.textA="Start\nAuton";
       this.timerStart.toggled=false;
@@ -1307,7 +1310,7 @@ class Timer{
   }
 
   drawMatchTimer(){
-    console.log("drew timer")
+    //console.log("drew timer")
     noFill();
     fill(20,20,22);
     noStroke();
@@ -1332,7 +1335,7 @@ class Timer{
           this.w=0;
           if(this.timerState==1)this.w=floor((this.timeLeft+1-floor(this.tickCount)*3)*-1-101);
           else this.w=floor((this.timeLeft+2-floor(this.tickCount)*3)*-1+5);
-          console.log(this.w)
+          //console.log(this.w)
           fill(40,40,45,this.w*256/3);
           rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
 
@@ -1366,7 +1369,7 @@ class Timer{
           this.w=0;
           if(this.timerState==1)this.w=floor((this.timeLeft+1-floor(this.tickCount)*3)*-1-71);
           else this.w=floor((this.timeLeft+2-floor(this.tickCount)*3)*-1+5);
-          console.log(this.w)
+          //console.log(this.w)
           fill(40,40,45,this.w*256/3);
           rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
         }
@@ -1457,7 +1460,7 @@ class Timer{
 
         this.w=0;
         this.w=floor((this.timeLeft+1-floor(this.tickCount)*2)*-1+3);
-        console.log(this.w)
+        //console.log(this.w)
         fill(40,40,45,this.w*256/3);
         rect(0,-135*screenScale,10*screenScale,20*screenScale,5*screenScale);
       }
@@ -2597,7 +2600,13 @@ class Field{
     }
 
     this.runAuton=false;
-    //if(timers[appState].timerState==1||timers[appState].timerState==2)this.runAuton=true;
+    //if(timers[1].timerState==1||timers[1].timerState==2)this.runAuton=true;
+    try{
+      if((timers[appState].timerState==1||timers[appState].timerState==2)&&appState!=2)this.runAuton=true;
+    }
+    catch{
+
+    }
 
 
     if(appState==1||appState==2){
@@ -2763,7 +2772,7 @@ class Field{
     }
     else if(appState==2){
       storeItem('skillsFieldSave',skillsField);
-      console.log("skills saved");
+      //console.log("skills saved");
     }
     else if(appState==3){
       storeItem('remoteFieldSave',lrt)
@@ -2783,6 +2792,8 @@ class Field{
     this.auton.sWeight=4;
     this.auton.strokeA=blue.light2;
     this.awp.toggled=false;
+    this.matchAwpRed.toggled=false;
+    this.matchAwpBlue.toggled=false;
     this.parked.toggled=false;
     this.parked.x=-130;
     this.platButtons[0].toggled=true;
