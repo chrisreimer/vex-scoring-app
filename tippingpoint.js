@@ -870,8 +870,13 @@ function updateMenu(){
   //textFont(regular,20);
 
 
-  fill(150);
-  scaledText(version,0,-200,regular,15);
+  //fill(150);
+  //scaledText(version,0,-200,regular,15);
+  
+  fill(green.light2);
+  scaledText("Free stickers at NXS pit!",0,-208,semibold,20);
+  scaledText("May 3-5 in the VEXU Division",0,-188,regular,12);
+  
   /*
   fill(red.dark1);
   scaledText("BETA "+version,0,-200,regular,20);
