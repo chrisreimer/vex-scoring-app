@@ -86,7 +86,7 @@ function draw(){
     fill(200);
     noStroke();
     text("Loading...",0,-20);
-    window.open("/tip.html","_self");
+    window.open("./tip.html","_self");
   }
   else if(appState==0){
     textFont(regular,30);
@@ -114,7 +114,7 @@ function draw(){
       fill(200);
       noStroke();
       text("Loading...",0,-20);
-      window.open("/tip.html","_self");
+      window.open("./tip.html","_self");
     }
     infoButton.updateButton();
     if(infoButton.clicked){
