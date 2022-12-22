@@ -1,6 +1,8 @@
 // obtain cookieconsent plugin
 var cc = initCookieConsent();
 
+window.cookieConsentComplete = false;
+
 // run plugin with config object
 cc.run({
     current_lang: 'en',
@@ -39,7 +41,7 @@ cc.run({
     },
 
     onAccept: function (cookie) {
-        console.log('onAccept fired!')
+        window.cookieConsentComplete = true;
     },
 
     onChange: function (cookie, changed_preferences) {
