@@ -43,6 +43,10 @@ let pFieldSelected=[0,0]
 let gear;
 let gearFound=false;
 
+function cookieConsentComplete(){
+  console.log("cookie consent complete, now in P5")
+}
+
 function preload(){
 
   gear=loadImage('https://vexscoring.app/gear.png')

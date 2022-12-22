@@ -19,6 +19,10 @@ let discordButton;
 let preloaded=0;
 
 
+function cookieConsentComplete(){
+  console.log("cookie consent complete, now in P5")
+}
+
 function preload(){
   gear=loadImage('https://vexscoring.app/gear.png');
 

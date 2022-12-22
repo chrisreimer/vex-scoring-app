@@ -84,6 +84,10 @@ let ogOrientation
 let clickAnimation=0;
 let animationTrigger=0; //0=mouse click, 1=touchpad
 
+function cookieConsentComplete(){
+  console.log("cookie consent complete, now in P5")
+}
+
 function preload(){
 
   gear=loadImage('https://vexscoring.app/gear.png');
